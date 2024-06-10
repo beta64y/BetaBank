@@ -1,0 +1,260 @@
+﻿
+@{
+    ViewData["Title"] = "Register";
+}
+
+
+
+    <!-- Start Slider Area -->
+    <div class="login-area area-padding fix">
+        <div class="login-overlay"></div>
+        <div class="table">
+            <div class="table-cell">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-offset-3 col-md-6 col-sm-offset-2 col-sm-8 col-xs-12">
+                            <div class="login-form signup-form">
+                                <h4 class="login-title text-center">REGISTER</h4>
+                                <div class="row">
+                                    @* <form id="contactForm" method="POST" class="log-form">
+                                         <div asp-validation-summary="All" class="text-danger"></div>
+                                         <div class="col-md-12 col-sm-12 col-xs-12">
+                                             <input type="email" id="name" class="form-control" asp-for="Model.Email" placeholder="Email" required data-error="Please enter your name">
+                                             <span asp-validation-for="Model.Email" class="text-danger"></span>
+                                         </div>
+                                         <div class="col-md-12 col-sm-12 col-xs-12">
+                                             <input type="text" id="text" class="form-control" asp-for="Model.FirstName" placeholder="Your FirstName" required data-error="Please enter your name">
+                                             <span asp-validation-for="Model.FirstName" class="text-danger"></span>
+                                         </div>
+                                         <div class="col-md-12 col-sm-12 col-xs-12">
+                                             <input type="text" id="msg_subject" class="form-control" asp-for="Model.LastName" placeholder="Your LastName" required data-error="Please enter your message subject">
+                                             <span asp-validation-for="Model.LastName" class="text-danger"></span>
+                                         </div>
+                                         <div class="col-md-12 col-sm-12 col-xs-12">
+                                             <input type="tel" id="cmsg_subject" class="form-control" asp-for="Model.PhoneNumber" placeholder="Phone Number" required data-error="Please enter your message subject">
+                                             <span asp-validation-for="Model.PhoneNumber" class="text-danger"></span>
+                                         </div>
+                                         <div class="col-md-12 col-sm-12 col-xs-12">
+                                             <input type="text" id="cmsg_subject" class="form-control" asp-for="Model.Address" placeholder="Address" required data-error="Please enter your message subject">
+                                             <span asp-validation-for="Model.Address" class="text-danger"></span>
+                                         </div>
+                                         <div class="col-md-12 col-sm-12 col-xs-12">
+                                             <input type="text" id="cmsg_subject" class="form-control" asp-for="Model.State" placeholder="State" required data-error="Please enter your message subject">
+                                             <span asp-validation-for="Model.State" class="text-danger"></span>
+                                         </div>
+                                         <div class="col-md-12 col-sm-12 col-xs-12">
+                                             <input type="text" id="cmsg_subject" class="form-control" asp-for="Model.Country" placeholder="Country" required data-error="Please enter your message subject">
+                                             <span asp-validation-for="Model.Country" class="text-danger"></span>
+                                         </div>
+                                         <div class="col-md-12 col-sm-12 col-xs-12">
+                                             <input type="text" id="cmsg_subject" class="form-control" asp-for="Model.Occupation" placeholder="Occupation" required data-error="Please enter your message subject">
+                                             <span asp-validation-for="Model.Occupation" class="text-danger"></span>
+                                         </div>
+                                         <div class="col-md-12 col-sm-12 col-xs-12">
+                                             <input type="password" id="cmsg_subject" class="form-control" asp-for="Model.Password" placeholder=" Password" required data-error="Please enter your message subject">
+                                             <span asp-validation-for="Model.Password" class="text-danger"></span>
+                                         </div>
+                                         <div class="col-md-12 col-sm-12 col-xs-12">
+                                             <input type="password" id="cmsg_subject" class="form-control" asp-for="Model.ConfirmPassword" placeholder="Confirm Password" required data-error="Please enter your message subject">
+                                             <span asp-validation-for="Model.ConfirmPassword" class="text-danger"></span>
+                                         </div>
+                                         <div class="col-md-12 col-sm-12 col-xs-12">
+                                             <div class="t-big-mag-btm" asp-for="Model.MarriageStatus">
+                                                 <div class="t-label">Account Type * </div>
+                                                 <label class="contain-radio">
+                                                     Dollar
+                                                     <input type="radio" value="Dollar" asp-for="Model.AccountType">
+                                                     <span class="radio-checkmark"></span>
+                                                 </label>
+                                                 <label class="contain-radio">
+                                                     Euros
+                                                     <input type="radio" value="Euros" asp-for="Model.AccountType">
+                                                     <span class="radio-checkmark"></span>
+                                                 </label>
+                                                 <label class="contain-radio">
+                                                     Pounds
+                                                     <input type="radio" value="Pounds" asp-for="Model.AccountType">
+                                                     <span class="radio-checkmark"></span>
+                                                 </label>
+                                                 <label class="contain-radio">
+                                                     Rupees
+                                                     <input type="radio" value="Rupees" asp-for="Model.AccountType">
+                                                     <span class="radio-checkmark"></span>
+                                                 </label>
+                                             </div>
+                                             <span asp-validation-for="Model.MarriageStatus" class="text-danger"></span>
+                                         </div>
+                                         <div class="col-md-12 col-sm-12 col-xs-12">
+                                             <div class="t-big-mag-btm" asp-for="Model.Gender">
+                                                 <div class="t-label">Gender * </div>
+                                                 <label class="contain-radio">
+                                                     Male
+                                                     <input type="radio" value="Male" asp-for="Model.Gender">
+                                                     <span class="radio-checkmark"></span>
+                                                 </label>
+                                                 <label class="contain-radio">
+                                                     Female
+                                                     <input type="radio" value="Female" asp-for="Model.Gender">
+                                                     <span class="radio-checkmark"></span>
+                                                 </label>
+                                                 <label class="contain-radio">
+                                                     Others
+                                                     <input type="radio" value="Others" asp-for="Model.Gender">
+                                                     <span class="radio-checkmark"></span>
+                                                 </label>
+                                             </div>
+                                             <span asp-validation-for="Model.MarriageStatus" class="text-danger"></span>
+                                         </div>
+                                         <div class="col-md-12 col-sm-12 col-xs-12">
+                                             <div class="t-big-mag-btm" asp-for="Model.MarriageStatus">
+                                                 <div class="t-label">Marital Status * </div>
+                                                 <label class="contain-radio">
+                                                     Single
+                                                     <input type="radio" value="Single" asp-for="Model.MarriageStatus">
+                                                     <span class="radio-checkmark"></span>
+                                                 </label>
+                                                 <label class="contain-radio">
+                                                     Married
+                                                     <input type="radio" value="Married" asp-for="Model.MarriageStatus">
+                                                     <span class="radio-checkmark"></span>
+                                                 </label>
+                                                 <label class="contain-radio">
+                                                     Divorced
+                                                     <input type="radio" value="Divorced" asp-for="Model.MarriageStatus">
+                                                     <span class="radio-checkmark"></span>
+                                                 </label>
+                                                 <label class="contain-radio">
+                                                     Widowed
+                                                     <input type="radio" value="Widowed" asp-for="Model.MarriageStatus">
+                                                     <span class="radio-checkmark"></span>
+                                                 </label>
+                                             </div>
+                                             <span asp-validation-for="Model.MarriageStatus" class="text-danger"></span>
+                                         </div>
+
+                                         <div class="col-md-12 col-sm-12 col-xs-12 text-center">
+                                             <div class="check-group flexbox">
+                                                 <label class="check-box">
+                                                     <input type="checkbox" class="check-box-input" checked>
+                                                     <span class="remember-text">I agree terms & conditions</span>
+                                                 </label>
+                                             </div>
+                                         </div>
+                                         <div class="col-md-12 col-sm-12 col-xs-12 text-center">
+                                             <button type="submit" id="submit" class="slide-btn login-btn">Signup</button>
+                                             <div id="msgSubmit" class="h3 text-center hidden"></div>
+                                             <div class="clearfix"></div>
+                                         </div>
+                                         <div class="col-md-12 col-sm-12 col-xs-12 text-center">
+                                             <div class="clear"></div>
+                                             <div class="separetor text-center"><span>Or with signup</span></div>
+                                             <div class="sign-icon">
+                                                 <ul>
+                                                     <li><a class="facebook" href="#"><i class="ti-facebook"></i></a></li>
+                                                     <li><a class="twitter" href="#"><i class="ti-twitter"></i></a></li>
+                                                     <li><a class="google" href="#"><i class="ti-google"></i></a></li>
+                                                 </ul>
+                                                 <div class="acc-not">have an account?  <a class="pages" asp-page="/Login">Login</a></div>
+                                             </div>
+                                         </div>
+                                </form>*@
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Slider Area -->
+    
+
+
+
+
+
+
+
+
+@*<div class="container mt-5">
+    <div class="row justify-content-center align-items-center">
+        <div class="col-sm-12 col-lg-4">
+            <h1 class="mb-3">Register</h1>
+
+            <form method="post">
+                <div asp-validation-summary="All" class="text-danger">
+                </div>
+                <div class="mb-3">
+                    <label class="col-form-label" asp-for="Model.Email">Email Address</label>
+                    <input type="email" asp-for="Model.Email" class="form-control" />
+                    <span asp-validation-for="Model.Email" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label class="col-form-label" asp-for="Model.FirstName">FirstName</label>
+                    <input type="text" asp-for="Model.FirstName" class="form-control" />
+                    <span asp-validation-for="Model.FirstName" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label class="col-form-label" asp-for="Model.LastName">LastName</label>
+                    <input type="text" asp-for="Model.LastName" class="form-control" />
+                    <span asp-validation-for="Model.LastName" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label class="col-form-label" asp-for="Model.PhoneNumber">PhoneNumber</label>
+                    <input type="tel" asp-for="Model.PhoneNumber" class="form-control" />
+                    <span asp-validation-for="Model.PhoneNumber" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label class="col-form-label" asp-for="Model.Gender">Gender</label>
+                    <input type="text" asp-for="Model.Gender" class="form-control" />
+                    <span asp-validation-for="Model.Gender" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label class="col-form-label" asp-for="Model.MarriageStatus">Marital Status</label>
+                    <input type="text" asp-for="Model.MarriageStatus" class="form-control" />
+                    <span asp-validation-for="Model.MarriageStatus" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label class="col-form-label" asp-for="Model.AccountType">Account Type</label>
+                    <input type="text" asp-for="Model.AccountType" class="form-control" />
+                    <span asp-validation-for="Model.AccountType" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label class="col-form-label" asp-for="Model.Occupation">Occupation</label>
+                    <input type="text" asp-for="Model.Occupation" class="form-control" />
+                    <span asp-validation-for="Model.Occupation" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label class="col-form-label" asp-for="Model.Address">Address</label>
+                    <input type="text" asp-for="Model.Address" class="form-control" />
+                    <span asp-validation-for="Model.Address" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label class="col-form-label" asp-for="Model.State"> State</label>
+                    <input type="text" asp-for="Model.State" class="form-control" />
+                    <span asp-validation-for="Model.State" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label class="col-form-label" asp-for="Model.Country">Country</label>
+                    <input type="text" asp-for="Model.Country" class="form-control" />
+                    <span asp-validation-for="Model.Country" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label class="col-form-label" asp-for="Model.Password"> Password</label>
+                    <input type="password" asp-for="Model.Password" class="form-control" />
+                    <span asp-validation-for="Model.Password" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label class="col-form-label" asp-for="Model.ConfirmPassword">Confirm Password</label>
+                    <input type="password" asp-for="Model.ConfirmPassword" class="form-control" />
+                    <span asp-validation-for="Model.ConfirmPassword" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <button type="submit" class="btn btn-primary">Register</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>*@
+
+
