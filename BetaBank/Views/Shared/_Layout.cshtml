@@ -87,7 +87,7 @@
                             <div class="col-md-3 col-sm-3">
                                 <div class="logo">
                                     <!-- Brand -->
-                                    <a class="navbar-brand page-scroll" asp-action="Index">
+                                    <a class="navbar-brand page-scroll" asp-controller="Home" asp-action="Index">
                                         <img src="img/logo/logo2.png" alt="">
                                     </a>
                                 </div>
@@ -97,7 +97,7 @@
                                 <div class="header-right-link">
                                     <!-- search option end -->
 
-                                    <a class="s-menu" asp-area="" asp-page="/Login">Login</a>
+                                    <a class="s-menu" asp-controller="Auth" asp-action="Login">Login</a>
 
 
 
@@ -108,12 +108,12 @@
                                             <ul class="nav navbar-nav navbar-right">
                                                 <li>
                                                 </li>
-                                                <li><a asp-action="About">About us</a></li>
+                                                <li><a asp-controller="Home" asp-action="About">About us</a></li>
                                                 <li>
                                                     <a class="pages" href="#">Info</a>
                                                     <ul class="sub-menu">
                                                         <li><a asp-page="/Team">team</a></li>
-                                                        <li><a asp-action="FAQ">FAQ</a></li>
+                                                        <li><a asp-controller="Home" asp-action="FAQ">FAQ</a></li>
                                                         <li><a asp-page="/Reviews">Reviews</a></li>
                                                         <li><a asp-page="/Privacy">Terms & Conditions</a></li>
                                                     </ul>
@@ -127,7 +127,7 @@
 
 
                                                 <li>
-                                                    <a class="pages" asp-page="/Register">Register</a>
+                                                    <a class="pages" asp-controller="User" asp-action="Register">Register</a>
                                                 </li>
 
 
@@ -172,10 +172,10 @@
 
 
                                     <li>
-                                        <a class="pages" asp-page="/Register">Register</a>
+                                        <a class="pages" asp-controller="User" asp-action="Register">Register</a>
                                     </li>
                                     <li>
-                                        <a class="pages" asp-page="/Login">Login</a>
+                                        <a class="pages" asp-controller="Auth" asp-action="Login">Login</a>
                                     </li>
 
 
@@ -227,11 +227,11 @@
                             <div class="footer-head">
                                 <h4>Products</h4>
                                 <ul class="footer-list">
-                                    <li><a asp-area="" asp-page="/Login">Bank Card</a></li>
-                                    <li><a asp-area="" asp-page="/Login">Deposit Skim</a></li>
-                                    <li><a asp-area="" asp-page="/Login">Affiliate</a></li>
-                                    <li><a asp-area="" asp-page="/Login">Software</a></li>
-                                    <li><a asp-area="" asp-page="/Login">Branding </a></li>
+                                    <li><a  asp-controller="Auth" asp-action="Login">Bank Card</a></li>
+                                    <li><a  asp-controller="Auth" asp-action="Login">Deposit Skim</a></li>
+                                    <li><a  asp-controller="Auth" asp-action="Login">Affiliate</a></li>
+                                    <li><a  asp-controller="Auth" asp-action="Login">Software</a></li>
+                                    <li><a  asp-controller="Auth" asp-action="Login">Branding </a></li>
                                     <li><a href="#">Promotion </a></li>
                                 </ul>
                             </div>
@@ -244,12 +244,12 @@
                             <div class="footer-head">
                                 <h4>Payments</h4>
                                 <ul class="footer-list">
-                                    <li><a asp-area="" asp-page="/Login">Send Mony</a></li>
-                                    <li><a asp-area="" asp-page="/Login">Receive Money </a></li>
-                                    <li><a asp-area="" asp-page="/Login">Shopping</a></li>
-                                    <li><a asp-area="" asp-page="/Login">Online payment</a></li>
-                                    <li><a asp-area="" asp-page="/Login">pay a Friend </a></li>
-                                    <li><a asp-area="" asp-page="/Login">pay a bill </a></li>
+                                    <li><a  asp-controller="Auth" asp-action="Login">Send Mony</a></li>
+                                    <li><a  asp-controller="Auth" asp-action="Login">Receive Money </a></li>
+                                    <li><a  asp-controller="Auth" asp-action="Login">Shopping</a></li>
+                                    <li><a  asp-controller="Auth" asp-action="Login">Online payment</a></li>
+                                    <li><a  asp-controller="Auth" asp-action="Login">pay a Friend </a></li>
+                                    <li><a  asp-controller="Auth" asp-action="Login">pay a bill </a></li>
                                 </ul>
                             </div>
                         </div>
@@ -261,12 +261,12 @@
                             <div class="footer-head">
                                 <h4>Company</h4>
                                 <ul class="footer-list">
-                                    <li><a asp-area="" asp-page="/About">About us</a></li>
-                                    <li><a asp-area="" asp-page="/Login">Services </a></li>
-                                    <li><a asp-area="" asp-page="/FAQ">FAQ</a></li>
-                                    <li><a asp-area="" asp-page="/Login">Promotion</a></li>
-                                    <li><a asp-area="" asp-page="/Login">Transition</a></li>
-                                    <li><a asp-area="" asp-page="/Contact">Social Media</a></li>
+                                    <li><a  asp-page="/About">About us</a></li>
+                                    <li><a  asp-controller="Auth" asp-action="Login">Services </a></li>
+                                    <li><a  asp-page="/FAQ">FAQ</a></li>
+                                    <li><a  asp-controller="Auth" asp-action="Login">Promotion</a></li>
+                                    <li><a  asp-controller="Auth" asp-action="Login">Transition</a></li>
+                                    <li><a  asp-page="/Contact">Social Media</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -278,12 +278,12 @@
                             <div class="footer-head">
                                 <h4>Support</h4>
                                 <ul class="footer-list">
-                                    <li><a asp-area="" asp-page="/Contact">Customer Care</a></li>
+                                    <li><a  asp-page="/Contact">Customer Care</a></li>
                                     <li><a href="#">Live chat</a></li>
                                     <li><a href="#">Notification</a></li>
-                                    <li><a asp-area="" asp-page="/Privacy">Privacy</a></li>
+                                    <li><a  asp-page="/Privacy">Privacy</a></li>
                                     <li><a href="#">Terms & Condition</a></li>
-                                    <li><a asp-area="" asp-page="/Contact">Contact us </a></li>
+                                    <li><a  asp-page="/Contact">Contact us </a></li>
                                 </ul>
                             </div>
                         </div>
@@ -312,7 +312,7 @@
 
     @*<footer class="border-top footer text-muted">
     <div class="container">
-    &copy; 2022 - Bank - <a asp-area="" asp-page="/Privacy">Privacy</a>
+    &copy; 2022 - Bank - <a  asp-page="/Privacy">Privacy</a>
     </div>
     </footer>*@
 
