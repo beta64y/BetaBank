@@ -1,0 +1,163 @@
+﻿@{
+    Layout = null;
+}
+@model HeaderViewModel
+<header class="header-one">
+    <!-- Start header top bar -->
+    <div class="topbar-area">
+        <div class="container">
+            <div class="row">
+                <div class=" col-md-6 col-sm-6 col-xs-12">
+                    <div class="topbar-left">
+                        <ul>
+                            <li><a href="#"><i class="fa fa-envelope"></i>customer-support@bankplc.com</a></li>
+                            <li><a href="#"><i class="fa fa-clock-o"></i> Live support</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <div class="topbar-right">
+                        <div id="google_translate_element"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End header top bar -->
+    <!-- Start header menu area -->
+    <div id="sticker" class="header-area hidden-xs">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 col-sm-12">
+                    <div class="row">
+                        <!-- logo start -->
+                        <div class="col-md-3 col-sm-3">
+                            <div class="logo">
+                                <!-- Brand -->
+                                <a class="navbar-brand page-scroll" asp-controller="Home" asp-action="Index">
+                                    <img src="img/logo/logo2.png" alt="">
+                                </a>
+                            </div>
+                            <!-- logo end -->
+                        </div>
+                        <div class="col-md-9 col-sm-9">
+                            <div class="header-right-link">
+                                <!-- search option end -->
+                                @if (User.Identity.IsAuthenticated)
+                                {
+                                    <a class="s-menu " asp-controller="Auth" asp-action="Logout">Logout</a>
+                         
+                                }
+                                else
+                                {
+                                    <a class="s-menu" asp-controller="Auth" asp-action="Login">Login</a>
+
+                                }
+
+
+
+                            </div>
+                            <nav class="navbar navbar-default">
+                                <div class="collapse navbar-collapse" id="navbar-example">
+                                    <div class="main-menu">
+                                        <ul class="nav navbar-nav navbar-right">
+                                            <li>
+                                            </li>
+                                            <li><a asp-controller="Home" asp-action="About">About us</a></li>
+                                            <li>
+                                                <a class="pages" href="#">Info</a>
+                                                <ul class="sub-menu">
+                                                    <li><a asp-page="/Team">team</a></li>
+                                                    <li><a asp-controller="Home" asp-action="FAQ">FAQ</a></li>
+                                                    <li><a asp-page="/Reviews">Reviews</a></li>
+                                                    <li><a asp-page="/Privacy">Terms & Conditions</a></li>
+                                                </ul>
+                                            </li>
+                                            <li><a asp-page="/Contact">contacts</a></li>
+                                            <li>
+                                                <a class="pages" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                                            </li>
+                                            <li>
+                                                <a class="pages" asp-controller="User" asp-action="Register">Register</a>
+                                            </li>
+                                            @if (User.Identity.IsAuthenticated)
+                                            {
+                                                <li>
+                                                    <a class="pages" asp-controller="User" asp-action="Profile">Profile</a>
+                                                    <ul class="sub-menu">
+                                                        <li><a asp-controller="User" asp-action="Profile">@Model.FirstName @Model.LastName</a></li>
+                                                        <li><a asp-controller="Accounts" asp-action="Index">Manage Accounts</a></li>
+                                                        <li><a asp-page="/Reviews">Reviews</a></li>
+                                                        <li><a asp-page="/Privacy">Terms & Conditions</a></li>
+                                                    </ul>
+                                                </li>
+                                            }
+
+
+
+                                        </ul>
+                                    </div>
+                                </div>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--Start mobile menu area-->
+    <div class="mobile-menu-area hidden-lg hidden-md hidden-sm">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="mobile-menu">
+                        <div class="logo">
+                            <a asp-page="/Index"><img src="img/logo/logo2.png" alt="" /></a>
+                        </div>
+                        <nav id="dropdown">
+                            <ul>
+                                <li>
+                                    <a class="pages" asp-page="/Index">Home</a>
+
+                                </li>
+                                <li><a asp-page="/About">About us</a></li>
+                                <li>
+                                    <a class="pages" href="#">Info</a>
+                                    <ul class="sub-menu">
+                                        <li><a asp-page="/Team">team</a></li>
+                                        <li><a asp-page="/FAQ">FAQ</a></li>
+                                        <li><a asp-page="/Reviews">Reviews</a></li>
+                                        <li><a asp-page="/Privacy">Terms & Conditions</a></li>
+                                    </ul>
+                                </li>
+
+                                <li><a asp-page="/Contact">contacts</a></li>
+
+
+
+                                <li>
+                                    <a class="pages" asp-controller="User" asp-action="Register">Register</a>
+                                </li>
+                                <li>
+                                    @if (User.Identity.IsAuthenticated)
+                                    {
+                                        <a class="pages" asp-controller="Auth" asp-action="Logout">Logout</a>
+                                    }
+                                    else
+                                    {
+                                        <a class="pages" asp-controller="Auth" asp-action="Login">Login</a>
+                                    }
+                                </li>
+
+
+
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End mobile menu area -->
+</header>
