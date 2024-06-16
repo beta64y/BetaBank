@@ -65,8 +65,8 @@ namespace BetaBank.Controllers
                 HttpContext.Request.Scheme, HttpContext.Request.Host.Value);
             string body = $"<a href=\"{link}\">lalaland</a>";
 
-            MailService emailHelper = new(_configuration);
-            await emailHelper.SendEmailAsync(new MailRequest { ToEmail = appUser.Email, Subject = "Confirm Email", Body = body });
+            MailService mailService = new(_configuration);
+            await mailService.SendEmailAsync(new MailRequest { ToEmail = appUser.Email, Subject = "Confirm Email", Body = body });
 
             await _userManager.AddToRoleAsync(appUser, Roles.User.ToString());
 
