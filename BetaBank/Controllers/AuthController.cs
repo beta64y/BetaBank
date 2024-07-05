@@ -12,13 +12,13 @@ namespace BetaBank.Controllers
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
-        //private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IConfiguration _configuration;
         private readonly IWebHostEnvironment _webHostEnvironment;
         public AuthController(UserManager<AppUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration, IWebHostEnvironment webHostEnvironment, SignInManager<AppUser> signInManager)
         {
 
-            //_roleManager = roleManager;
+            _roleManager = roleManager;
             _userManager = userManager;
             _configuration = configuration;
             _webHostEnvironment = webHostEnvironment;
@@ -94,8 +94,8 @@ namespace BetaBank.Controllers
             //string link = Url.Action("ResetPassword", "Auth", new { email = user.Email, token = token });
             string link = Url.Action("ResetPassword", "Auth", new { email = user.Email, token = token },
             HttpContext.Request.Scheme, HttpContext.Request.Host.Value);
-            Console.WriteLine(link);
-            string path = Path.Combine(_webHostEnvironment.WebRootPath, "templates", "index.html");
+            
+            string path = Path.Combine(_webHostEnvironment.WebRootPath, "templates", "ResetPassword.html");
             using StreamReader streamReader = new(path);
 
             string content = await streamReader.ReadToEndAsync();
@@ -103,7 +103,7 @@ namespace BetaBank.Controllers
             string body = content.Replace("[link]", link);
 
             MailService mailService = new(_configuration);
-            await mailService.SendEmailAsync(new MailRequest { ToEmail = user.Email, Subject = "ResetPassword", Body = body });
+            await mailService.SendEmailAsync(new MailRequest { ToEmail = user.Email, Subject = "Reset Password", Body = body });
             return RedirectToAction(nameof(Login));
         }
         public async Task<IActionResult> Logout()
@@ -167,17 +167,17 @@ namespace BetaBank.Controllers
 
             return RedirectToAction(nameof(Login));
         }
-        //public async Task<IActionResult> CreateRole()
-        //{
-        //    foreach (var items in Enum.GetNames(typeof(Roles)))
-        //    {
-        //        await _roleManager.CreateAsync(new IdentityRole { Name = items });
-        //    }
-        //    //await _roleManager.CreateAsync(new IdentityRole { Name = "Admin"});
-        //    //await _roleManager.CreateAsync(new IdentityRole { Name = "User" });
-        //    //await _roleManager.CreateAsync(new IdentityRole { Name = "Moderator" });
-        //    return Content("rollar yarandi");
+        public async Task<IActionResult> CreateRole()
+        {
+            foreach (var items in Enum.GetNames(typeof(Roles)))
+            {
+                await _roleManager.CreateAsync(new IdentityRole { Name = items });
+            }
+            //await _roleManager.CreateAsync(new IdentityRole { Name = "Admin"});
+            //await _roleManager.CreateAsync(new IdentityRole { Name = "User" });
+            //await _roleManager.CreateAsync(new IdentityRole { Name = "Moderator" });
+            return Content("rollar yarandi");
 
-        //}
+        }
     }
 }

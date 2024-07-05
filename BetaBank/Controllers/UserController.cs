@@ -2,6 +2,7 @@
 using BetaBank.Services.Implementations;
 using BetaBank.Utils.Enums;
 using BetaBank.ViewModels;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,11 +12,14 @@ namespace BetaBank.Controllers
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly IConfiguration _configuration;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public UserController(UserManager<AppUser> userManager, IConfiguration configuration)
+
+        public UserController(UserManager<AppUser> userManager, IConfiguration configuration, IWebHostEnvironment webHostEnvironment)
         {
             _userManager = userManager;
             _configuration = configuration;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         public IActionResult Register()
@@ -63,7 +67,12 @@ namespace BetaBank.Controllers
 
             string link = Url.Action("ConfirmEmail", "Auth", new { email = appUser.Email, token = token },
                 HttpContext.Request.Scheme, HttpContext.Request.Host.Value);
-            string body = $"<a href=\"{link}\">lalaland</a>";
+            string path = Path.Combine(_webHostEnvironment.WebRootPath, "templates", "ConfirmEmail.html");
+            using StreamReader streamReader = new(path);
+
+            string content = await streamReader.ReadToEndAsync();
+
+            string body = content.Replace("[link]", link);
 
             MailService mailService = new(_configuration);
             await mailService.SendEmailAsync(new MailRequest { ToEmail = appUser.Email, Subject = "Confirm Email", Body = body });
@@ -71,6 +80,23 @@ namespace BetaBank.Controllers
             await _userManager.AddToRoleAsync(appUser, Roles.User.ToString());
 
             return RedirectToAction("Index", "Home");
+        }
+
+        public async Task<IActionResult> DashBoard(/*DashBoardViewModel dashBoardViewModel*/)
+        {
+            var user = _userManager.FindByNameAsync(User.Identity.Name);
+            if(user == null)
+            {
+                return NotFound();
+            }
+
+
+
+
+
+
+
+            return View();
         }
 
     }

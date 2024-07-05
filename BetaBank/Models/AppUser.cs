@@ -13,6 +13,7 @@ namespace BetaBank.Models
         public DateTime CreatedDate { get; set; }
         public DateTime UpdateDate { get; set; }
         public bool IsActive { get; set; }
+        public bool Banned { get; set; } = false;
 
     }
 }

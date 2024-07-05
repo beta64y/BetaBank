@@ -1,0 +1,23 @@
+﻿@{
+    ViewData["Title"] = "GetCard";
+}
+@model GetBankCardViewModel
+<section class="get-card">
+    <div id="get-card" class="section" style="padding-top: 150px;">
+        <h2>Get Card</h2>
+        <form method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="cardType">Select Card Type:</label>
+                <select class="form-control" name="TypeId">
+                    @foreach (var element in ViewBag.BankCardTypes)
+                    {
+                        <option value="@element.Id">@element.Name</option>
+                    }
+
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Get Card</button>
+        </form>
+    </div>
+</section>
+

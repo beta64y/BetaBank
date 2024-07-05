@@ -4,6 +4,7 @@ using BetaBank.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BetaBank.Migrations
 {
     [DbContext(typeof(BetaBankDbContext))]
-    partial class BetaBankDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240705015913_INIT")]
+    partial class INIT
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -183,19 +185,11 @@ namespace BetaBank.Migrations
 
             modelBuilder.Entity("BetaBank.Models.BankCardStatus", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
                     b.Property<int>("CardId")
                         .HasColumnType("int");
 
                     b.Property<int>("StatusId")
                         .HasColumnType("int");
-
-                    b.HasKey("Id");
 
                     b.HasIndex("CardId");
 
@@ -223,19 +217,11 @@ namespace BetaBank.Migrations
 
             modelBuilder.Entity("BetaBank.Models.BankCardType", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
                     b.Property<int>("CardId")
                         .HasColumnType("int");
 
                     b.Property<int>("TypeId")
                         .HasColumnType("int");
-
-                    b.HasKey("Id");
 
                     b.HasIndex("CardId");
 
@@ -299,19 +285,11 @@ namespace BetaBank.Migrations
 
             modelBuilder.Entity("BetaBank.Models.TransactionStatus", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
                     b.Property<int>("StatusId")
                         .HasColumnType("int");
 
                     b.Property<int>("TransactionId")
                         .HasColumnType("int");
-
-                    b.HasKey("Id");
 
                     b.HasIndex("StatusId");
 
@@ -339,19 +317,11 @@ namespace BetaBank.Migrations
 
             modelBuilder.Entity("BetaBank.Models.TransactionType", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
                     b.Property<int>("TransactionId")
                         .HasColumnType("int");
 
                     b.Property<int>("TypeId")
                         .HasColumnType("int");
-
-                    b.HasKey("Id");
 
                     b.HasIndex("TransactionId");
 
