@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using BetaBank.Services.Validators;
+using System.ComponentModel.DataAnnotations;
 
 namespace BetaBank.ViewModels
 {
@@ -9,18 +10,22 @@ namespace BetaBank.ViewModels
         [RegularExpression("^[A-Z0-9]{7}$", ErrorMessage = "FIN can only contain uppercase letters (A-Z) and digits (0-9).")]
         public string FIN { get; set; }
 
-        [Required]
-        [MaxLength(50, ErrorMessage = "First name cannot be longer than 50 characters.")]
+
+        [Required(ErrorMessage = "First name is required.")]
+        [RegularExpression(@"^[\p{L}]+$", ErrorMessage = "First name can only contain letters.")]
         public string FirstName { get; set; }
 
-        [Required]
-        [MaxLength(50, ErrorMessage = "Last name cannot be longer than 50 characters.")]
+        [Required(ErrorMessage = "Last name is required.")]
+        [RegularExpression(@"^[\p{L}]+$", ErrorMessage = "Last name can only contain letters.")]
         public string LastName { get; set; }
 
         [Required]
+        [MinAge(18, ErrorMessage = "Yaşınız en az 18 olmalıdır.")]
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime DateOfBirth { get; set; }
 
-        [Required]
+        [Required,DataType(DataType.PhoneNumber)]
         public string PhoneNumber { get; set; }
 
         [Required, DataType(DataType.EmailAddress)]

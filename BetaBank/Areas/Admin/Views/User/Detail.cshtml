@@ -1,0 +1,89 @@
+﻿
+@{
+    ViewData["Title"] = "Detail";
+}
+@model UserDetailViewModel
+<div class="container mt-5">
+    <div class="row">
+        <!-- User and Bank Account Details -->
+        <div class="col-md-8">
+            <h2>User Details</h2>
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">@Model.User.FirstName @Model.User.LastName</h5>
+                    <p class="card-text">
+                        <strong>ID:</strong> @Model.User.Id<br>
+                        <strong>Date of Birth:</strong> @Model.User.DateOfBirth.ToString("yyyy-MM-dd")<br>
+                        <strong>Phone Number:</strong> @Model.User.PhoneNumber<br>
+                        <strong>Created Date:</strong> @Model.User.CreatedDate.ToString("yyyy-MM-dd")<br>
+                        <strong>Update Date:</strong> @Model.User.UpdateDate.ToString("yyyy-MM-dd")<br>
+                        <strong>Banned:</strong> @(Model.User.Banned ? "Yes" : "No")
+                    </p>
+                </div>
+            </div>
+
+            <h2>Bank Account Details</h2>
+            @if (Model.Account == null)
+            {
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <p class="card-text">
+                            User Have No Acoount
+                        </p>
+                    </div>
+                </div>
+            }
+            else
+            {
+               <div class="card mb-4">
+                <div class="card-body">
+                    <p class="card-text">
+                        <strong>Account ID:</strong> @Model.Account.Id<br>
+                        <strong>Account Number:</strong> @Model.Account.AccountNumber<br>
+                        <strong>IBAN:</strong> @Model.Account.IBAN<br>
+                        <strong>Balance:</strong> @Model.Account.Balance.ToString("C")<br>
+                        <strong>Account Status:</strong> @Model.Account.AccountStatus.Name
+                    </p>
+                </div>
+            </div> 
+            }
+            
+        </div>
+
+        <!-- Bank Card Details -->
+        <div class="col-md-4">
+            <h2>Bank Card Details</h2>
+            @if(Model.Cards.Count == 0)
+            {
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <p class="card-text">
+                            User Have No card
+                        </p>
+                    </div>
+                </div>
+            }
+            else
+            {
+                @foreach (var card in Model.Cards)
+                {
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <p class="card-text">
+                                <strong>Card ID:</strong> @card.Id<br>
+                                <strong>Card Number:</strong> @card.CardNumber<br>
+                                <strong>CVV:</strong> @card.CVV<br>
+                                <strong>Expiry Date:</strong> @card.ExpiryDate.ToString("yyyy-MM")<br>
+                                <strong>Balance:</strong> @card.Balance.ToString("C")<br>
+                                <strong>Card Status:</strong> @card.CardStatus.Name<br>
+                                <strong>Card Type:</strong> @card.CardType.Name
+                            </p>
+                        </div>
+                    </div>
+                }
+            }
+            
+        </div>
+    </div>
+</div>
+

@@ -6,10 +6,11 @@ using BetaBank.Services.Implementations;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BetaBank.Controllers
 {
-    //[Authorize]
+    [Authorize]
     public class BankCardController : Controller
     {
         private readonly UserManager<AppUser> _userManager;
@@ -43,10 +44,21 @@ namespace BetaBank.Controllers
             {
                 return NotFound();
             }
+            string cardNumber;
+            bool isUnique;
+
+            do
+            {
+                cardNumber = BankCardService.GenerateCardNumber();
+                isUnique = !await _context.BankCards.AnyAsync(bc => bc.CardNumber == cardNumber);
+            } while (!isUnique);
+
             var bankCard = new BankCard()
             {
-                CardNumber = BankCardService.GenerateCardNumber(),
+                Id = $"{Guid.NewGuid()}",
+                CardNumber = cardNumber,
                 CVV = BankCardService.GenerateCVV(),
+                CreatedDate = DateTime.UtcNow,
                 ExpiryDate = BankCardService.GenerateExpiryDate(),
                 Balance = 0,
                 UserId = user.Id,

@@ -610,5 +610,39 @@
     </div>
 </div>
 <!-- End apps download area -->
+@section Scripts {
+    <script>
 
 
+        document.querySelector(".nav-link.active").classList.remove("active");
+        document.querySelector(".tab-pane.fade.show.active").classList.remove("show", "active");
+
+        document.getElementById("@TempData["Tab"]-tab").classList.add("active");
+        document.getElementById("@TempData["Tab"]").classList.add("show", "active");
+
+        if ("@TempData["SuccessMessage"]" != "") {
+
+
+            toastr["success"]("@TempData["SuccessMessage"]")
+
+            toastr.options = {
+                "closeButton": false,
+                "debug": false,
+                "newestOnTop": false,
+                "progressBar": false,
+                "positionClass": "toast-top-right",
+                "preventDuplicates": false,
+                "onclick": null,
+                "showDuration": "300",
+                "hideDuration": "1000",
+                "timeOut": "5000",
+                "extendedTimeOut": "1000",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut"
+
+            }
+        }
+    </script>
+}

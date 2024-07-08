@@ -1,0 +1,51 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+}
+
+@model List<UserViewModel>
+
+<main>
+    <h1>Admin Dashboard</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Date of Birth</th>
+                <th>Phone Number</th>
+                <th>Created Date</th>
+                <th>Update Date</th>
+                <th>Banned</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in Model)
+            {
+                <tr>
+                    <td>@user.FirstName</td>
+                    <td>@user.LastName</td>
+                    <td>@user.DateOfBirth.ToString("yyyy-MM-dd")</td>
+                    <td>@user.PhoneNumber</td>
+                    <td>@user.CreatedDate.ToString("yyyy-MM-dd")</td>
+                    <td>@user.UpdateDate.ToString("yyyy-MM-dd")</td>
+                    <td>@user.Banned</td>
+                    <td>
+                        @if (user.Banned)
+                        {
+                            <a asp-action="UnBanUser" asp-route-id="@user.Id" class="unBanBtn">UnBan User</a>
+                        }
+                        else
+                        {
+                            <a asp-action="BanUser" asp-route-id="@user.Id" class="banBtn">Ban User</a>
+                        }
+                        <a asp-action="Detail" asp-route-id="@user.Id">Details</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</main>
+
+

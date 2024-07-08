@@ -2,7 +2,7 @@
 
 namespace BetaBank.Services.Implementations
 {
-    public class BankAccoutService
+    public static class BankAccountService
     {
         private static Random _random = new Random();
 
@@ -45,6 +45,16 @@ namespace BetaBank.Services.Implementations
                 throw new ArgumentException("Branch code must be 3 characters.");
 
             return $"{bankCode}{countryCode}{locationCode}{branchCode}";
+        }
+        public static string GenerateAccountNumber()
+        {
+            Random random = new Random();
+            string accountNumber = "";
+            for (int i = 0; i < 10; i++)
+            {
+                accountNumber += random.Next(0, 10).ToString();
+            }
+            return accountNumber;
         }
 
         private static string ConvertToNumericString(string input)

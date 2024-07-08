@@ -1,83 +1,89 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using BetaBank.Contexts;
+using BetaBank.Models;
+using BetaBank.Services.Implementations;
+using BetaBank.ViewModels;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace BetaBank.Controllers
 {
+    [Authorize]
     public class BankAccountController : Controller
     {
-        // GET: BankAccountController
-        public ActionResult Index()
-        {
-            return View();
-        }
+        private readonly BetaBankDbContext _context;
+        private readonly UserManager<AppUser> _userManager;
 
-        // GET: BankAccountController/Details/5
-        public ActionResult Details(int id)
+        public BankAccountController(BetaBankDbContext context, UserManager<AppUser> userManager)
         {
-            return View();
+            _context = context;
+            _userManager = userManager;
         }
-
-        // GET: BankAccountController/Create
-        public ActionResult Create()
+        public IActionResult CreateBankAccount()
         {
-            return View();
+            return View();       
         }
-
-        // POST: BankAccountController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<IActionResult> CreateBankAccount(CreateBankAccountViewModel createBankAccountViewModel)
         {
-            try
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+            if (user == null)
             {
-                return RedirectToAction(nameof(Index));
+                return NotFound();
             }
-            catch
+            string accountNumber;
+            string iban;
+            do
             {
-                return View();
-            }
-        }
+                accountNumber = BankAccountService.GenerateAccountNumber();
+                iban = BankAccountService.GenerateIBAN("TR", "00061", accountNumber); 
 
-        // GET: BankAccountController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
+                var existingAccount = await _context.BankAccounts.FirstOrDefaultAsync(x => x.IBAN == iban || x.AccountNumber == accountNumber);
+                if (existingAccount == null )
+                {
+                    break; 
+                }
+            } while (true);
 
-        // POST: BankAccountController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
+            var swiftCode = BankAccountService.GenerateSWIFT("1234", "AZ");
 
-        // GET: BankAccountController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
+            var bankAccount = new BankAccount
+            {
+                Id = $"{Guid.NewGuid()}",
+                AccountNumber = BankAccountService.GenerateAccountNumber(),
+                IBAN = iban,
+                SwiftCode = swiftCode,
+                Balance = 0,
+                CreatedDate = DateTime.UtcNow,
+                UserId = user.Id,
+            };
+            await _context.BankAccounts.AddAsync(bankAccount);
+            await _context.SaveChangesAsync();
 
-        // POST: BankAccountController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
+
+            var status = await _context.BankAccountStatusModels.FirstOrDefaultAsync(x => x.Name == "UnderReview");
+            if (status == null)
             {
-                return RedirectToAction(nameof(Index));
+                return NotFound();
             }
-            catch
+            var bankAccountStatus = new BankAccountStatus()
             {
-                return View();
-            }
+                AccountId = bankAccount.Id,
+                StatusId = status.Id
+            };
+
+            
+
+
+
+            await _context.BankAccountStatuses.AddAsync(bankAccountStatus);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Index", "Home");
+
         }
     }
+
 }

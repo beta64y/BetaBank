@@ -21,7 +21,7 @@
 
         public static DateTime GenerateExpiryDate()
         {
-            return DateTime.Now.AddYears(random.Next(3, 6)); // 3 ila 5 yıl arasında geçerlilik süresi
+            return DateTime.UtcNow.AddYears(random.Next(3, 6)); 
         }
 
         private static string CalculateLuhnCheckDigit(string number)

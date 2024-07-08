@@ -19,4 +19,14 @@
     <PackageReference Include="MimeKit" Version="4.6.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Areas\Admin\Data\" />
+    <Folder Include="Areas\Admin\Models\" />
+    <Folder Include="Areas\Moderator\Data\" />
+    <Folder Include="Areas\Moderator\Models\" />
+    <Folder Include="Areas\Support\Data\" />
+    <Folder Include="Areas\Support\Models\" />
+    <Folder Include="wwwroot\adminAssets\" />
+  </ItemGroup>
+
 </Project>

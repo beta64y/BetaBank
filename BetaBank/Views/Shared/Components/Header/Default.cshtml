@@ -4,26 +4,7 @@
 @model HeaderViewModel
 <header class="header-one">
     <!-- Start header top bar -->
-    <div class="topbar-area">
-        <div class="container">
-            <div class="row">
-                <div class=" col-md-6 col-sm-6 col-xs-12">
-                    <div class="topbar-left">
-                        <ul>
-                            <li><a href="#"><i class="fa fa-envelope"></i>customer-support@bankplc.com</a></li>
-                            <li><a href="#"><i class="fa fa-clock-o"></i> Live support</a></li>
-                        </ul>
-                    </div>
-                </div>
 
-                <div class="col-md-6 col-sm-6 col-xs-12">
-                    <div class="topbar-right">
-                        <div id="google_translate_element"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
     <!-- End header top bar -->
     <!-- Start header menu area -->
     <div id="sticker" class="header-area hidden-xs">
@@ -51,7 +32,7 @@
                                 }
                                 else
                                 {
-                                    <a class="s-menu" asp-controller="Auth" asp-action="Login">Login</a>
+                                    <a class="s-menu" asp-area="" asp-controller="Auth" asp-action="Login">Login</a>
 
                                 }
 

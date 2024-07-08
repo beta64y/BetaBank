@@ -2,7 +2,8 @@
 {
     public enum Roles
     {
-        Admin = 1,
+        SuperAdmin = 1,
+        Admin,
         Moderator,
         User,
         Support

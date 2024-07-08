@@ -57,11 +57,22 @@ namespace BetaBank.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "BankAccountStatusModels",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BankAccountStatusModels", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "BankCardStatusModels",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
@@ -73,8 +84,7 @@ namespace BetaBank.Migrations
                 name: "BankCardTypeModels",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
@@ -86,8 +96,7 @@ namespace BetaBank.Migrations
                 name: "TransactionStatusModels",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
@@ -99,8 +108,7 @@ namespace BetaBank.Migrations
                 name: "TransactionTypeModels",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
@@ -218,10 +226,10 @@ namespace BetaBank.Migrations
                 name: "BankAccounts",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     AccountNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    AccountType = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IBAN = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    SwiftCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Balance = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
@@ -241,8 +249,7 @@ namespace BetaBank.Migrations
                 name: "BankCards",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     CardNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CVV = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ExpiryDate = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -261,14 +268,41 @@ namespace BetaBank.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "BankCardStatuses",
+                name: "BankAccountStatuses",
                 columns: table => new
                 {
-                    CardId = table.Column<int>(type: "int", nullable: false),
-                    StatusId = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    AccountId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    StatusId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
+                    table.PrimaryKey("PK_BankAccountStatuses", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_BankAccountStatuses_BankAccounts_AccountId",
+                        column: x => x.AccountId,
+                        principalTable: "BankAccounts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_BankAccountStatuses_BankAccountStatusModels_StatusId",
+                        column: x => x.StatusId,
+                        principalTable: "BankAccountStatusModels",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "BankCardStatuses",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    CardId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    StatusId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BankCardStatuses", x => x.Id);
                     table.ForeignKey(
                         name: "FK_BankCardStatuses_BankCards_CardId",
                         column: x => x.CardId,
@@ -287,11 +321,13 @@ namespace BetaBank.Migrations
                 name: "BankCardTypes",
                 columns: table => new
                 {
-                    CardId = table.Column<int>(type: "int", nullable: false),
-                    TypeId = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    CardId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    TypeId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
+                    table.PrimaryKey("PK_BankCardTypes", x => x.Id);
                     table.ForeignKey(
                         name: "FK_BankCardTypes_BankCards_CardId",
                         column: x => x.CardId,
@@ -310,10 +346,9 @@ namespace BetaBank.Migrations
                 name: "Transactions",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    SourceCardId = table.Column<int>(type: "int", nullable: false),
-                    DestinationCardId = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    SourceCardId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    DestinationCardId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Commission = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     TransactionTime = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -340,11 +375,13 @@ namespace BetaBank.Migrations
                 name: "TransactionCardTypes",
                 columns: table => new
                 {
-                    TransactionId = table.Column<int>(type: "int", nullable: false),
-                    TypeId = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    TransactionId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    TypeId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
+                    table.PrimaryKey("PK_TransactionCardTypes", x => x.Id);
                     table.ForeignKey(
                         name: "FK_TransactionCardTypes_Transactions_TransactionId",
                         column: x => x.TransactionId,
@@ -363,11 +400,13 @@ namespace BetaBank.Migrations
                 name: "TransactionStatuses",
                 columns: table => new
                 {
-                    TransactionId = table.Column<int>(type: "int", nullable: false),
-                    StatusId = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    TransactionId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    StatusId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
+                    table.PrimaryKey("PK_TransactionStatuses", x => x.Id);
                     table.ForeignKey(
                         name: "FK_TransactionStatuses_Transactions_TransactionId",
                         column: x => x.TransactionId,
@@ -425,6 +464,16 @@ namespace BetaBank.Migrations
                 name: "IX_BankAccounts_UserId",
                 table: "BankAccounts",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BankAccountStatuses_AccountId",
+                table: "BankAccountStatuses",
+                column: "AccountId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BankAccountStatuses_StatusId",
+                table: "BankAccountStatuses",
+                column: "StatusId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_BankCards_UserId",
@@ -500,7 +549,7 @@ namespace BetaBank.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "BankAccounts");
+                name: "BankAccountStatuses");
 
             migrationBuilder.DropTable(
                 name: "BankCardStatuses");
@@ -516,6 +565,12 @@ namespace BetaBank.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "BankAccounts");
+
+            migrationBuilder.DropTable(
+                name: "BankAccountStatusModels");
 
             migrationBuilder.DropTable(
                 name: "BankCardStatusModels");

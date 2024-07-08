@@ -14,6 +14,7 @@ namespace BetaBank.Contexts
         public DbSet<BankAccount> BankAccounts { get; set; } = null!;
         public DbSet<BankCard> BankCards { get; set; } = null!;
         public DbSet<Transaction> Transactions { get; set; } = null!;
+        public DbSet<News> News { get; set; } = null!;
 
 
 
@@ -21,12 +22,14 @@ namespace BetaBank.Contexts
         public DbSet<BankCardType> BankCardTypes { get; set; } = null!;
         public DbSet<TransactionStatus> TransactionStatuses { get; set; } = null!;
         public DbSet<TransactionType> TransactionCardTypes { get; set; } = null!;
+        public DbSet<BankAccountStatus> BankAccountStatuses { get; set; } = null!;
 
 
         public DbSet<BankCardStatusModel> BankCardStatusModels { get; set; } = null!;
         public DbSet<BankCardTypeModel> BankCardTypeModels { get; set; } = null!;
         public DbSet<TransactionStatusModel> TransactionStatusModels { get; set; } = null!;
         public DbSet<TransactionTypeModel> TransactionTypeModels { get; set; } = null!;
+        public DbSet<BankAccountStatusModel> BankAccountStatusModels { get; set; } = null!;
 
 
 
@@ -43,12 +46,17 @@ namespace BetaBank.Contexts
                 .WithMany() 
                 .HasForeignKey(t => t.DestinationCardId)
                 .OnDelete(DeleteBehavior.Restrict); 
-
+            modelBuilder.Entity<AppUser>(entity =>
+            {
+                entity.HasIndex(e => e.FIN).IsUnique();
+            });
 
             base.OnModelCreating(modelBuilder);
 
-
             
+
+
+
 
         }
 

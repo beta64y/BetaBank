@@ -5,6 +5,7 @@ using BetaBank.ViewModels;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace BetaBank.Controllers
 {
@@ -56,7 +57,11 @@ namespace BetaBank.Controllers
                 ModelState.AddModelError("", "please confirm mail");
                 return View();
             }
-
+            if (user.Banned)
+            {
+                ModelState.AddModelError("", "Banlandiniz");
+                return View();
+            }
             var signInResult = await _signInManager.PasswordSignInAsync(user, loginViewModel.Password, loginViewModel.RememberMe, true);
             if (signInResult.IsLockedOut)
             {

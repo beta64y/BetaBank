@@ -2,10 +2,10 @@
 {
     public class BankCardStatus
     {
-        public int Id { get; set; }
-        public int CardId { get; set; }
+        public string Id { get; set; }
+        public string CardId { get; set; }
         public BankCard Card { get; set; }
-        public int StatusId { get; set; }
+        public string StatusId { get; set; }
         public BankCardStatusModel Status { get; set; }
 
         

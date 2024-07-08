@@ -21,19 +21,23 @@ namespace BetaBank.Controllers
         {
             foreach (var items in Enum.GetNames(typeof(BankCardStatus)))
             {
-                await _context.BankCardStatusModels.AddAsync(new Models.BankCardStatusModel { Name = items });
+                await _context.BankCardStatusModels.AddAsync(new Models.BankCardStatusModel {Id = $"{Guid.NewGuid()}", Name = items });
             }
             foreach (var items in Enum.GetNames(typeof(BankCardType)))
             {
-                await _context.BankCardTypeModels.AddAsync(new Models.BankCardTypeModel { Name = items });
+                await _context.BankCardTypeModels.AddAsync(new Models.BankCardTypeModel { Id = $"{Guid.NewGuid()}", Name = items });
             }
             foreach (var items in Enum.GetNames(typeof(TransactionStatus)))
             {
-                await _context.TransactionStatusModels.AddAsync(new Models.TransactionStatusModel { Name = items });
+                await _context.TransactionStatusModels.AddAsync(new Models.TransactionStatusModel { Id = $"{Guid.NewGuid()}", Name = items });
             }
             foreach (var items in Enum.GetNames(typeof(TransactionType)))
             {
-                await _context.TransactionTypeModels.AddAsync(new Models.TransactionTypeModel { Name = items });
+                await _context.TransactionTypeModels.AddAsync(new Models.TransactionTypeModel { Id = $"{Guid.NewGuid()}", Name = items });
+            }
+            foreach (var items in Enum.GetNames(typeof(BankAccountStatus)))
+            {
+                await _context.BankAccountStatusModels.AddAsync(new Models.BankAccountStatusModel { Id = $"{Guid.NewGuid()}", Name = items });
             }
             await _context.SaveChangesAsync();
             return Content("Hamisi yarandi");

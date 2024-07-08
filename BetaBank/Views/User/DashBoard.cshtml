@@ -2,123 +2,98 @@
 @{
     ViewData["Title"] = "DashBoard";
 }
+@model DashBoardViewModel
+<section style="display: flex;padding-top: 150px;color: black;">
+    <nav style="width: 200px; background: #f4f4f4; padding: 20px;">
+        <ul style="list-style-type: none; padding: 0;">
+            <li style="margin: 10px 0;"><a href="#" onclick="showSection('dashboard')">Dashboard</a></li>
+            <li style="margin: 10px 0;"><a href="#" onclick="showSection('account-cards')">Accounts and Cards</a></li>
+            <li style="margin: 10px 0;"><a href="#" onclick="showSection('payments')">Payments</a></li>
+            <li style="margin: 10px 0;"><a href="logout.html">Log Out</a></li>
+        </ul>
+    </nav>
+    <section style="flex-grow: 1; padding: 20px;">
+        <div id="dashboard" class="section" style="display: block;">
+            <h2>Dashboard</h2>
+             <form>
+                 <div>
+                     <label>First Name:</label>
+                     <input asp-for="User.FirstName"  id="name" name="name">
+                 </div>
+                 <div>
+                     <label >Last Name:</label>
+                     <input asp-for="User.LastName"  id="lastName" name="lastName" >
+                 </div>
+                 <div>
+                     <label >Phone Number:</label>
+                     <input asp-for="User.PhoneNumber"  id="phone" name="phone" >
+                 </div>
+                 <div>
+                     <label >Email:</label>
+                     <input asp-for="User.Email"  id="mail" name="mail" >
+                 </div>
+                 <div>
+                     <label >Date Of Birth:</label>
+                     <input asp-for="User.DateOfBirth" type="text" id="dateOfBirth" name="dateOfBirth" >
+                 </div>
+                 <div>
+                     <label>Created Date:</label>
+                     <input asp-for="User.CreatedDate" type="text" id="createdDate" name="createdDate">
+                 </div>
+                 <div>
+                     <label>Updated Date:</label>
+                     <input asp-for="User.UpdateDate" type="text" id="updatedDate" name="updatedDate">
+                 </div>
+             </form>
+        </div>
+        <div id="account-cards" class="section" style="display: none;">
+            <h2>Accounts and Cards</h2>
+                    @if(Model.BankAccount != null)
+                    {
+                <div style="border: 1px solid #ccc; padding: 10px; margin-bottom: 20px;">
+                    <h3>IBAN: @Model.BankAccount.IBAN</h3>
+                    <h3>Account Number: @Model.BankAccount.AccountNumber</h3>
+                    <p>Balance: @Model.BankAccount.Balance</p>
 
-<section class="profile">
-    <div class="container" style="display: flex; width: 100%; padding-top: 150px;">
-        <nav style="width: 200px; background: #f4f4f4; padding: 20px;">
-            <ul style="list-style-type: none; padding: 0;">
-                <li style="margin: 10px 0;"><a href="#" onclick="showSection('dashboard')">Dashboard</a></li>
-                <li style="margin: 10px 0;"><a href="#" onclick="showSection('profile-info')">Profile Information</a></li>
-                <li style="margin: 10px 0;"><a href="#" onclick="showSection('bank-accounts')">Bank Accounts</a></li>
-                <li style="margin: 10px 0;"><a href="#" onclick="logout()">Log Out</a></li>
-            </ul>
-        </nav>
-        <main style="flex-grow: 1; padding: 20px;">
-            <div id="dashboard" class="section">
-                <h2>Dashboard</h2>
-                <p>Welcome to your dashboard.</p>
-            </div>
-            <div id="profile-info" class="section" style="display: none;">
-                <h2>Profile Information</h2>
-                <form id="profileForm">
-                    <div>
-                        <label for="bankName">Bank Name:</label>
-                        <input type="text" id="bankName" name="bankName">
-                    </div>
-                    <div>
-                        <label for="accountHolder">Account Holder:</label>
-                        <input type="text" id="accountHolder" name="accountHolder">
-                    </div>
-                    <div>
-                        <label for="accountNumber">Account Number:</label>
-                        <input type="text" id="accountNumber" name="accountNumber">
-                    </div>
-                    <div>
-                        <label for="iban">IBAN:</label>
-                        <input type="text" id="iban" name="iban">
-                    </div>
-                    <div>
-                        <label for="swiftCode">SWIFT Code:</label>
-                        <input type="text" id="swiftCode" name="swiftCode">
-                    </div>
-                    <div>
-                        <label for="branchAddress">Branch Address:</label>
-                        <input type="text" id="branchAddress" name="branchAddress">
-                    </div>
-                    <div>
-                        <label for="branchCode">Branch Code:</label>
-                        <input type="text" id="branchCode" name="branchCode">
-                    </div>
-                    <div>
-                        <label for="country">Country:</label>
-                        <input type="text" id="country" name="country">
-                    </div>
-                    <div>
-                        <label for="currency">Currency:</label>
-                        <input type="text" id="currency" name="currency">
-                    </div>
-                    <button type="button" onclick="saveProfile()">Save</button>
-                </form>
-                <button type="button" onclick="logout()">Log Out</button>
-            </div>
-            <div id="bank-accounts" class="section" style="display: none;">
-                <h2>Bank Accounts</h2>
-                <div>
-                    <h3>Account 1</h3>
-                    <p>Bank Name: Example Bank</p>
-                    <p>Account Holder: John Doe</p>
-                    <p>Account Number: 123456789</p>
-                    <p>IBAN: EX12345678901234567890</p>
-                    <p>SWIFT Code: EXAMP123</p>
-                    <p>Branch Address: 123 Example St, Example City</p>
-                    <p>Branch Code: 001</p>
-                    <p>Country: Exampleland</p>
-                    <p>Currency: USD</p>
-                    <div>
-                        <h4>Card 1</h4>
-                        <p>Card Number: 4111 1111 1111 1111</p>
-                        <p>Expiry Date: 12/25</p>
-                        <p>CVV: 123</p>
-                    </div>
                 </div>
-                <div>
-                    <h3>Account 2</h3>
-                    <p>Bank Name: Another Bank</p>
-                    <p>Account Holder: Jane Smith</p>
-                    <p>Account Number: 987654321</p>
-                    <p>IBAN: AN98765432109876543210</p>
-                    <p>SWIFT Code: ANOTH123</p>
-                    <p>Branch Address: 456 Another St, Another City</p>
-                    <p>Branch Code: 002</p>
-                    <p>Country: Anotherland</p>
-                    <p>Currency: EUR</p>
-                    <div>
-                        <h4>Card 1</h4>
-                        <p>Card Number: 5222 2222 2222 2222</p>
-                        <p>Expiry Date: 11/24</p>
-                        <p>CVV: 456</p>
+                    }
+                    @if(Model.BankCards != null)
+                    {
+                        @foreach(var BankCard in Model.BankCards)
+                        {
+                    <div class="card" style="display: flex; justify-content: space-between; padding: 10px; border: 1px solid #ccc; margin-bottom: 10px;">
+                        <div>
+                            <h4>@BankCard.CardNumber</h4>
+                            <p>Balance: $@BankCard.Balance</p>
+                        </div>
+                        <div class="card-icon" style="width: 40px; height: 40px; background-color: #ddd;"></div>
                     </div>
-                </div>
-                <div>
-                    <h3>Account 3</h3>
-                    <p>Bank Name: Sample Bank</p>
-                    <p>Account Holder: Alice Johnson</p>
-                    <p>Account Number: 112233445</p>
-                    <p>IBAN: SA11223344556677889900</p>
-                    <p>SWIFT Code: SAMP1234</p>
-                    <p>Branch Address: 789 Sample St, Sample City</p>
-                    <p>Branch Code: 003</p>
-                    <p>Country: Sampleland</p>
-                    <p>Currency: GBP</p>
-                    <div>
-                        <h4>Card 1</h4>
-                        <p>Card Number: 6333 3333 3333 3333</p>
-                        <p>Expiry Date: 10/23</p>
-                        <p>CVV: 789</p>
-                    </div>
-                </div>
-            </div>
-        </main>
-    </div>
+                        }
+                    }
+            
+            
+        </div>
+        <div id="payments" class="section" style="display: none;">
+            <h2>Payments</h2>
+            <p>Coming Soon</p>
+        </div>
+    </section>
+
+    <script>
+        function showSection(sectionId) {
+            var sections = document.querySelectorAll('.section');
+            sections.forEach(function (section) {
+                section.style.display = 'none';
+            });
+            var selectedSection = document.getElementById(sectionId);
+            if (selectedSection) {
+                selectedSection.style.display = 'block';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            showSection('dashboard');
+        });
+    </script>
 </section>
 

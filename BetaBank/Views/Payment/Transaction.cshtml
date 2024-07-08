@@ -1,0 +1,45 @@
+﻿
+@{
+    ViewData["Title"] = "Transaction";
+}
+
+@model TransactionViewModel
+
+<div class="container mt-5">
+    <h2>Select Card and Transfer Money</h2>
+    <form method="post">
+        <div class="form-group">
+            <label for="selectedCard">Select Card</label>
+            <select asp-for="CardId" class="form-control"name="CardId">
+                @foreach (var card in Model.BankCards)
+                {
+                    <option value="@card.Id">@card.CardNumber - @card.Balance.ToString("C")</option>
+                }
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="recipientCardNumber">Recipient Card Number</label>
+            <input asp-for="DestinationCard" class="form-control"  />
+        </div>
+
+        <div class="form-group">
+            <label for="amount">Amount</label>
+            <input asp-for="Amount" class="form-control"  />
+        </div>
+
+        <div class="form-group">
+            <label for="currency">Currency</label>
+            <select class="form-control" id="currency" name="Currency">
+                <option value="TRY">TRY</option>
+                <option value="AZN">AZN</option>
+                <option value="USD">USD</option>
+                <option value="EUR">EUR</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Send Money</button>
+    </form>
+</div>
+
+
