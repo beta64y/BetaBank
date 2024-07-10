@@ -1,0 +1,31 @@
+﻿@model SupportBoxViewModel
+<div class="col-md-3">
+    <div class="list-group">
+        <a asp-action="Index"
+           class="list-group-item list-group-item-action active main-color-bg">
+             Dashboard
+        </a>
+        <a asp-action="FilteredSupports"
+           asp-route-id="@Model.UnderReviewId"
+           id="UnderReview-tab"
+           class="list-group-item list-group-item-action">
+            UnderReview
+            <span class="badge badge-secondary badge-pill">@Model.UnderReviewCount</span>
+        </a>
+        <a asp-action="FilteredSupports"
+           asp-route-id="@Model.AnsweredId"
+           id="Answered-tab"
+           class="list-group-item list-group-item-action">
+            Answered
+            <span class="badge badge-secondary badge-pill">@Model.AnsweredCount</span>
+        </a>
+        <a asp-action="FilteredSupports"
+           asp-route-id="@Model.PassedId"
+           id="Passed-tab"
+           class="list-group-item list-group-item-action">
+            Passed
+            <span class="badge badge-secondary badge-pill">@Model.PassedCount</span>
+        </a>
+    </div>
+
+</div>

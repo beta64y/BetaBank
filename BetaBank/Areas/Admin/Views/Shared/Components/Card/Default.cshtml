@@ -1,0 +1,51 @@
+﻿@{
+    Layout = null;
+}
+@model UserCountViewModel
+<div class="card">
+    <div class="card-header main-color-bg">
+        Website Overview
+    </div>
+</div>
+
+<div class="card-body">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="card dash-box">
+                <div class="card-body bg-light">
+                    <h2 class="font-weight-normal"><i class="fas fa-user"></i> @Model.MemberCount</h2>
+                    <h5 class="card-text font-weight-normal">Members</h4>
+
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card dash-box">
+                <div class="card-body bg-light">
+                    <h2 class="font-weight-normal"><i class="fas fa-list-alt"></i> @Model.AdminCount</h2>
+                    <h5 class="card-text font-weight-normal">Admins</h4>
+
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card dash-box">
+                <div class="card-body bg-light">
+                    <h2 class="font-weight-normal"><i class="fas fa-pencil-alt"></i> @Model.ModeratorCount</h2>
+                    <h5 class="card-text font-weight-normal">Moderators</h5>
+
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card dash-box">
+                <div class="card-body bg-light">
+                    <h2 class="font-weight-normal"><i class="fas fa-chart-bar"></i> <span>@Model.SupportCount</span></h2>
+                    <h5 class=" card-text font-weight-normal">Supports</h5>
+                </div>
+            </div>
+        </div>
+
+        </p>
+    </div>
+</div>

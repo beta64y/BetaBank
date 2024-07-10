@@ -1,0 +1,34 @@
+﻿
+@{
+    Layout = null;
+}
+@model SupportViewModel
+
+<form method="post" asp-action="Support">
+    <div class="row g-2 dz">
+        <div class="col-auto">
+            <label for="Name" class="form-label text-white half">Name</label>
+            <input asp-for="FirstName" class="form-control text-success ">
+            <span asp-validation-for="FirstName" class="text-danger"></span>
+
+        </div>
+        <div class="col-auto">
+            <label for="LastName" class="form-label text-white">LastName</label>
+            <input asp-for="LastName" class="form-control  text-success ">
+            <span asp-validation-for="LastName" class="text-danger"></span>
+
+        </div>
+    </div>
+
+    <label for="Email" class="form-label text-white">Email</label>
+    <input asp-for="Email" class="form-control text-success ">
+    <span asp-validation-for="Email" class="text-danger"></span>
+
+    <label for="Message" class="form-label text-white">Your Message:</label>
+    <textarea asp-for="Issue" class="form-control mb-3 text-success" rows="10">
+        </textarea>
+    <span asp-validation-for="Issue" class="text-danger"></span>
+
+    <button class="btn btn-outline-success my-1" type="submit">Save Changes</button>
+
+</form>

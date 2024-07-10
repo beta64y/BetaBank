@@ -1,0 +1,57 @@
+﻿@model List<News>
+<div class="col-md-9 mt-sm-3 mt-md-0">
+    <!--Panel for website overview-->
+    <div class="card">
+        <div class="card-header main-color-bg">
+            Support Requests
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-9">
+                    <input type="text"
+                           class="form-control"
+                           placeholder="Search Support..." />
+                    <br />
+                </div>
+                <div class="col-md-2">
+                    <button class="aplly-button">Search</button>
+
+                    <br />
+                </div>
+            </div>
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">Title</th>
+                        <th scope="col">First Image</th>
+                        <th scope="col">Second Image</th>
+                        <th scope="col">Created Date</th>
+                        
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var news in Model)
+                    {
+                        <tr>
+                            <td>@news.Title</td>
+                            <td><img class="w-100" src="~/img/website-images/@news.FirstImage" alt="NotFound" /></td>
+                            <td><img class="w-100" src="~/img/website-images/@news.SecondImage" alt="NotFound" /></td>
+                            <td>@news.CreatedDate</td>
+
+                            <td>
+                                <a asp-action="Edit" asp-route-id="@news.Id" class="btn btn-light">Edit</a>
+                            </td>
+                            <td><a asp-action="Details" asp-route-id="@news.Id" class="btn btn-warning">View</a></td>
+                            <td>
+                                <a asp-action="Delete" asp-route-id="@news.Id" class="btn btn-danger">Delete</a>
+                            </td>
+                        </tr>
+                    }
+
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

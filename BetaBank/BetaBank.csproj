@@ -7,6 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Areas\Support\Views\Shared\Components\SupportHeader\**" />
+    <Content Remove="Areas\Support\Views\Shared\Components\SupportHeader\**" />
+    <EmbeddedResource Remove="Areas\Support\Views\Shared\Components\SupportHeader\**" />
+    <None Remove="Areas\Support\Views\Shared\Components\SupportHeader\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="MailKit" Version="4.6.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.27" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.27" />
@@ -26,7 +33,7 @@
     <Folder Include="Areas\Moderator\Models\" />
     <Folder Include="Areas\Support\Data\" />
     <Folder Include="Areas\Support\Models\" />
-    <Folder Include="wwwroot\adminAssets\" />
+    <Folder Include="wwwroot\img\website-images\" />
   </ItemGroup>
 
 </Project>

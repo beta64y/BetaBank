@@ -7,14 +7,15 @@ using Microsoft.AspNetCore.Mvc;
 namespace BetaBank.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize(Roles = "Admin")]
     public class AuthController : Controller
     {
 
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
 
-        public AuthController(UserManager<AppUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration, IWebHostEnvironment webHostEnvironment, SignInManager<AppUser> signInManager)
+
+
+        public AuthController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager)
         {
 
             _userManager = userManager;
@@ -29,6 +30,7 @@ namespace BetaBank.Areas.Admin.Controllers
             return View();
         }
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel loginViewModel)
         {
             if (User.Identity.IsAuthenticated)
@@ -37,12 +39,12 @@ namespace BetaBank.Areas.Admin.Controllers
             }
             if (!ModelState.IsValid)
             {
-                Console.WriteLine(ModelState.ErrorCount);
                 ModelState.AddModelError("", "");
                 return View();
             }
             var user = await _userManager.FindByNameAsync(loginViewModel.Email);
-            if (user == null)
+            var userRoles = await _userManager.GetRolesAsync(user);
+            if (user == null || !(userRoles.Contains("SuperAdmin") || userRoles.Contains("Admin")))
             {
                 ModelState.AddModelError("", "Email or Password is incorrect");
                 return View();
@@ -68,7 +70,7 @@ namespace BetaBank.Areas.Admin.Controllers
                 ModelState.AddModelError("", "Email or Password is incorrect");
                 return View();
             }
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "DashBoard");
         }
     }
 }

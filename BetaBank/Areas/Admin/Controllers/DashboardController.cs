@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace BetaBank.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "SuperAdmin,Admin")]
     public class DashBoardController : Controller
     {
         public IActionResult Index()

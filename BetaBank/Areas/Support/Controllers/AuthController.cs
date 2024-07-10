@@ -1,4 +1,6 @@
-﻿using BetaBank.Models;
+﻿using BetaBank.Areas.Support.ViewModels;
+using BetaBank.Models;
+using BetaBank.Utils.Enums;
 using BetaBank.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -12,7 +14,9 @@ namespace BetaBank.Areas.Support.Controllers
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
 
-        public AuthController(UserManager<AppUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration, IWebHostEnvironment webHostEnvironment, SignInManager<AppUser> signInManager)
+        
+
+        public AuthController(UserManager<AppUser> userManager,SignInManager<AppUser> signInManager)
         {
 
             _userManager = userManager;
@@ -22,16 +26,17 @@ namespace BetaBank.Areas.Support.Controllers
         {
             if (User.Identity.IsAuthenticated)
             {
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Dashboard");
             }
             return View();
         }
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel loginViewModel)
         {
             if (User.Identity.IsAuthenticated)
             {
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Dashboard");
             }
             if (!ModelState.IsValid)
             {
@@ -40,7 +45,8 @@ namespace BetaBank.Areas.Support.Controllers
                 return View();
             }
             var user = await _userManager.FindByNameAsync(loginViewModel.Email);
-            if (user == null)
+            var userRoles = await _userManager.GetRolesAsync(user);
+            if (user == null || !userRoles.Contains("Support") )
             {
                 ModelState.AddModelError("", "Email or Password is incorrect");
                 return View();
@@ -66,7 +72,16 @@ namespace BetaBank.Areas.Support.Controllers
                 ModelState.AddModelError("", "Email or Password is incorrect");
                 return View();
             }
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Dashboard");
+        }
+        public async Task<IActionResult> Logout()
+        {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return BadRequest();
+            }
+            await _signInManager.SignOutAsync();
+            return RedirectToAction("Login", "Auth");
         }
     }
 }

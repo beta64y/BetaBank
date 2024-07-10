@@ -1,20 +1,186 @@
 ﻿<!DOCTYPE html>
-
-<html>
+<html lang="en">
 <head>
-    <meta name="viewport" content="width=device-width" />
-    <title>@ViewBag.Title</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous" />
+    <link href="~/areaAssets/style.css" rel="stylesheet" />
+    <script src="https://cdn.ckeditor.com/ckeditor5/42.0.0/ckeditor5.js"></script>
+
+    <title>Admin | Dashboard</title>
 </head>
 <body>
-    <div>
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport"
+              content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+        <title>Admin Dashboard</title>
+    </head>
+
+    <body>
+        <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+            <a class="navbar-brand" href="#"><img src="~/areaAssets/images/betabank-favicon.png" alt="betabank icon"><b>Admin Panel</b></a>
+            <button class="navbar-toggler"
+                    type="button"
+                    data-toggle="collapse"
+                    data-target="#navbarsExampleDefault"
+                    aria-controls="navbarsExampleDefault"
+                    aria-expanded="false"
+                    aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="index.html">Dashboard <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="pages.html">Pages</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="posts.html">Posts</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="users.html">Users</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav">
+                    <li class="nav-item mr-4">
+                        <a class="nav-link text-white" href="#">Welcome, Ethan</a>
+                    </li>
+                    <li>
+                        <a id="log-out" class="nav-link text-white" href="login.html">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Header -->
+        <header id="header">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-10">
+                        <h3 class="font-weight-light">
+                            <i class="fas fa-cog"></i> Dashboard
+                            <small class="text-muted small">Manage Your Site</small>
+                        </h3>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="dropdown create">
+                            <button class="btn btn-sm dropdown-toggle"
+                                    type="button"
+                                    id="dropdownMenuButton"
+                                    data-toggle="dropdown"
+                                    aria-haspopup="true"
+                                    aria-expanded="false">
+                                Create Content
+                            </button>
+                            <!-- Make Links display modals from below-->
+                            <div class="dropdown-menu"
+                                 aria-labelledby="dropdownMenuButton">
+                                <button class="dropdown-item btn" data-toggle="modal" data-target="#addPage">Add Page</button>
+                                <a class="dropdown-item" href="#">Add Post</a>
+                                <a class="dropdown-item" href="#">Add User</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <section id="breadcrumb">
+            <div class="container" aria-lable="breadcrumb">
+                <ol class="breadcrumb">
+                    <li><a href="index.html">Dashboard</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">
+                    </li>
+                </ol>
+            </div>
+        </section>
+
         @RenderBody()
-    </div>
+        <!-- footer -->
+        <footer id="footer">
+            <p>BetaBank &copy; All Rights Reserved</p>
+        </footer>
+
+        <!-- Modals -->
+        <!-- Add Page Modal -->
+        <div class="modal fade" id="addPage" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <form>
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Add Page</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form>
+                                <div class="form-group">
+                                    <label for="exampleFormControlInput1">Page Title</label>
+                                    <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="Page Title">
+                                </div>
+                                <div class="form-group">
+                                    <label for="exampleFormControlTextarea1">Page Body</label>
+                                    <textarea name="editor1" class="form-control" id="exampleFormControlTextarea1" placeholder="Page Body..." rows=""></textarea>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+                                    <label class="form-check-label" for="defaultCheck1">
+                                        Published
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label for="exampleFormControlInput1">Meta Tags</label>
+                                    <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="Add Some Tags...">
+                                </div>
+                                <div class="form-group">
+                                    <label for="exampleFormControlInput1">Meta Description</label>
+                                    <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="Add Meta Description">
+                                </div>
+
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Save changes</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
 
 
 
+        <script>
+            CKEDITOR.replace('editor1');
+        </script>
 
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="~/backend/admin-script.js" asp-append-version="true"></script>
+        <!-- Bootstrap core JavaScript
+        ================================================== -->
+        <!-- Placed at the end of the document so the pages load faster -->
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+                integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+                crossorigin="anonymous"></script>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+                integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+                crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+                integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+                crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script src="~/backend/admin-script.js" asp-append-version="true"></script>
+    </body>
+</html>
 </body>
 </html>
+

@@ -25,7 +25,7 @@
                         <div class="col-md-9 col-sm-9">
                             <div class="header-right-link">
                                 <!-- search option end -->
-                                @if (User.Identity.IsAuthenticated)
+                                @if (User.Identity.IsAuthenticated && User.IsInRole("User"))
                                 {
                                     <a class="s-menu " asp-controller="Auth" asp-action="Logout">Logout</a>
                          

@@ -11,7 +11,9 @@ namespace BetaBank.Areas.Moderator.Controllers
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
 
-        public AuthController(UserManager<AppUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration, IWebHostEnvironment webHostEnvironment, SignInManager<AppUser> signInManager)
+
+
+        public AuthController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager)
         {
 
             _userManager = userManager;
@@ -21,16 +23,17 @@ namespace BetaBank.Areas.Moderator.Controllers
         {
             if (User.Identity.IsAuthenticated)
             {
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Dashboard");
             }
             return View();
         }
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel loginViewModel)
         {
             if (User.Identity.IsAuthenticated)
             {
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Dashboard");
             }
             if (!ModelState.IsValid)
             {
@@ -39,7 +42,8 @@ namespace BetaBank.Areas.Moderator.Controllers
                 return View();
             }
             var user = await _userManager.FindByNameAsync(loginViewModel.Email);
-            if (user == null)
+            var userRoles = await _userManager.GetRolesAsync(user);
+            if (user == null || !userRoles.Contains("Moderator"))
             {
                 ModelState.AddModelError("", "Email or Password is incorrect");
                 return View();
@@ -65,7 +69,16 @@ namespace BetaBank.Areas.Moderator.Controllers
                 ModelState.AddModelError("", "Email or Password is incorrect");
                 return View();
             }
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Dashboard");
+        }
+        public async Task<IActionResult> Logout()
+        {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return BadRequest();
+            }
+            await _signInManager.SignOutAsync();
+            return RedirectToAction("Login", "Auth");
         }
     }
 }

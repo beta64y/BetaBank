@@ -15,6 +15,7 @@ namespace BetaBank.Contexts
         public DbSet<BankCard> BankCards { get; set; } = null!;
         public DbSet<Transaction> Transactions { get; set; } = null!;
         public DbSet<News> News { get; set; } = null!;
+        public DbSet<Support> Supports { get; set; } = null!;
 
 
 
@@ -23,6 +24,8 @@ namespace BetaBank.Contexts
         public DbSet<TransactionStatus> TransactionStatuses { get; set; } = null!;
         public DbSet<TransactionType> TransactionCardTypes { get; set; } = null!;
         public DbSet<BankAccountStatus> BankAccountStatuses { get; set; } = null!;
+        public DbSet<SupportStatus> SupportStatuses { get; set; } = null!;
+
 
 
         public DbSet<BankCardStatusModel> BankCardStatusModels { get; set; } = null!;
@@ -30,6 +33,8 @@ namespace BetaBank.Contexts
         public DbSet<TransactionStatusModel> TransactionStatusModels { get; set; } = null!;
         public DbSet<TransactionTypeModel> TransactionTypeModels { get; set; } = null!;
         public DbSet<BankAccountStatusModel> BankAccountStatusModels { get; set; } = null!;
+        public DbSet<SupportStatusModel> SupportStatusModels { get; set; } = null!;
+
 
 
 

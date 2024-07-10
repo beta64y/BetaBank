@@ -1,0 +1,22 @@
+﻿@model SupportSearchViewModel
+<div class="row">
+    <form method="post" asp-action="Search">
+
+        <div class="col-md-9">
+
+
+            <input asp-for="SearchTerm"
+                   class="form-control"
+                   placeholder="Search Support..." />
+            <br />
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="aplly-button">Search</button>
+
+            <br />
+
+
+        </div>
+    </form>
+   
+</div>
