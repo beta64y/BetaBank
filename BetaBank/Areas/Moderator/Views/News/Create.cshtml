@@ -1,38 +1,51 @@
-﻿@model NewsCreateViewModel
-
+﻿@{
+    ViewData["Title"] = "News";
+}
+@model NewsCreateViewModel
+@await Component.InvokeAsync("ModeratorBox")
 <div class="col-md-9 mt-sm-3 mt-md-0">
     <!-- Panel for new entry creation -->
     <div class="card">
         <div class="card-header main-color-bg">
-            Create New Entry
+            Create News
         </div>
         <div class="card-body">
             <form asp-action="Create" method="post" enctype="multipart/form-data">
                 <div class="form-group">
                     <label for="title">Title</label>
-                    <input type="text" class="form-control" id="title" name="Title" placeholder="Enter title" required />
+                    <input asp-for="Title" class="form-control" id="title"  placeholder="Enter title" required />
                     <span asp-validation-for="Title" class="text-danger"></span>
                 </div>
                 <div class="form-group">
                     <label for="description">Description</label>
-                    <textarea class="form-control" id="description" name="Description" placeholder="Enter description" required></textarea>
+                    <textarea asp-for="Description" class="form-control" id="description" placeholder="Enter description" required rows="10"></textarea>
                     <span asp-validation-for="Description" class="text-danger"></span>
                 </div>
                 <div class="form-group">
                     <label for="firstImage">First Image</label>
-                    <input type="file" class="form-control-file" id="firstImage" name="FirstImage" required />
+                    <input asp-for="FirstImage"  class="form-control-file"  name="FirstImage" required />
                     <span asp-validation-for="FirstImage" class="text-danger"></span>
                 </div>
                 <div class="form-group">
                     <label for="secondImage">Second Image</label>
-                    <input type="file" class="form-control-file" id="secondImage" name="SecondImage" required />
+                    <input asp-for="SecondImage" class="form-control-file" name="SecondImage" required />
                     <span asp-validation-for="SecondImage" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <input type="submit" class="btn btn-primary" value="Create" />
+                    <input type="submit" class="btn main-color-bg" value="Create" />
                     <a href="javascript:history.back()" class="btn btn-secondary">Cancel</a>
                 </div>
             </form>
         </div>
     </div>
 </div>
+@section Scripts {
+    <script>
+
+
+        document.getElementById("@TempData["Tab"]-tab").classList.add("active", "main-color-bg");
+        document.getElementById("@TempData["Tab"]-nav-item").classList.add("active");
+
+
+    </script>
+}

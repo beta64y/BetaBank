@@ -2,12 +2,15 @@
 using BetaBank.Contexts;
 using BetaBank.Models;
 using BetaBank.Services.Implementations;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using NuGet.Versioning;
 
 namespace BetaBank.Areas.Support.Controllers
 {
     [Area("Support")]
+    [Authorize(Roles = "Support")]
     public class DashboardController : Controller
     {
         private readonly BetaBankDbContext _context;
@@ -41,8 +44,13 @@ namespace BetaBank.Areas.Support.Controllers
 
                 });
             }
+            SupportComponentsViewModel supportComponentsViewModel = new()
+            {
+                Supports = supportsViewModel,
 
-            return View(supportsViewModel);
+            };
+
+            return View(supportComponentsViewModel);
         }
         
         public async Task<IActionResult> FilteredSupports(string id )
@@ -66,15 +74,20 @@ namespace BetaBank.Areas.Support.Controllers
 
                 });
             }
+            SupportComponentsViewModel supportComponentsViewModel = new()
+            {
+                Supports = supportsViewModel,
+
+            };
             TempData["Tab"] = supportStatusModel.Name;
-            return View(supportsViewModel);
+            return View(supportComponentsViewModel);
         }
         public async Task<IActionResult> ManageSupport(string id)
         {
             Models.Support support = await _context.Supports.FirstOrDefaultAsync(x => x.Id == id);
             SupportStatus supportStatus = await _context.SupportStatuses.FirstOrDefaultAsync(x => x.SupportId == support.Id);
             SupportStatusModel supportStatusModel = await _context.SupportStatusModels.FirstOrDefaultAsync(x => x.Id == supportStatus.StatusId);
-
+            
 
             TempData["Id"] = support.Id;
             TempData["FirstName"] = support.FirstName;
@@ -126,13 +139,32 @@ namespace BetaBank.Areas.Support.Controllers
             await mailService.SendEmailAsync(new MailRequest { ToEmail = appUser.Email, Subject = "Confirm Email", Body = body });*/
         }
         [HttpPost]
-        public async Task<IActionResult> Search(SupportSearchViewModel supportSearchViewModel)
+        public async Task<IActionResult> Search(SupportComponentsViewModel supportComponentViewModel)
         {
-            if (supportSearchViewModel != null)
+            if (supportComponentViewModel.SupportSearch.SearchTerm != null)
             {
-                var searchTerm = supportSearchViewModel.SearchTerm.ToLower();
-                var filteredSupports = await _context.Supports.Where(p => (p.Email.ToLower().Contains(searchTerm) || p.FirstName.ToLower().Contains(searchTerm) || p.LastName.ToLower().Contains(searchTerm))).Where(p => !p.isDeleted).Include(p => p.Category).ToListAsync();
-                return View(filteredSupports);
+                var searchTerm = supportComponentViewModel.SupportSearch.SearchTerm.ToLower();
+                var filteredSupports = await _context.Supports.Where(p => (p.Email.ToLower().Contains(searchTerm) || p.FirstName.ToLower().Contains(searchTerm) || p.LastName.ToLower().Contains(searchTerm))).ToListAsync();
+                List<SupportViewModel> supportViewModels = new();
+                foreach (var support in filteredSupports)
+                {
+                    SupportStatus supportStatus = await _context.SupportStatuses.FirstOrDefaultAsync(x => x.SupportId == support.Id);
+                    supportViewModels.Add(new SupportViewModel()
+                    {
+                        Email = support.Email,
+                        Id = support.Id,
+                        FirstName = support.FirstName,
+                        LastName = support.LastName,
+                        CreatedDate = DateTime.Now,
+                        Status = await _context.SupportStatusModels.FirstOrDefaultAsync(x => x.Id == supportStatus.StatusId)
+                    });
+                }
+                SupportComponentsViewModel ViewModel = new SupportComponentsViewModel()
+                {
+                    Supports = supportViewModels,
+                    SupportSearch = supportComponentViewModel.SupportSearch
+                };
+                return View("Index" , ViewModel);
             }
             else
             {

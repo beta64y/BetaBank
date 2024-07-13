@@ -1,6 +1,7 @@
 ﻿@{
     Layout = null;
 }
+@model SubscribeViewModel
 <footer class="footer-1">
     <div class="footer-area">
         <div class="container">
@@ -17,8 +18,11 @@
                             </p>
                             <div class="subs-feilds">
                                 <div class="suscribe-input">
-                                    <input type="email" class="email form-control width-80" id="sus_email" placeholder="Type Email">
-                                    <button type="submit" id="sus_submit" class="add-btn">Subscribe</button>
+                                    <form asp-controller="Home" asp-action="Subscribe" method="post">
+                                        <span asp-validation-for="Email" class="text-danger"></span>
+                                        <input asp-for="Email" class="email form-control width-80" id="sus_email" placeholder="Type Email">
+                                        <button asp-controller="Home" asp-action="Subscribe" type="submit" id="sus_submit" class="add-btn">Subscribe</button>
+                                    </form> 
                                 </div>
                             </div>
                         </div>

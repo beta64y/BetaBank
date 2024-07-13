@@ -1,4 +1,5 @@
-﻿using BetaBank.Contexts;
+﻿using BetaBank.Areas.Support.ViewModels;
+using BetaBank.Contexts;
 using BetaBank.Models;
 using BetaBank.Services.Implementations;
 using BetaBank.Utils.Enums;
@@ -93,6 +94,31 @@ namespace BetaBank.Controllers
 
             MailService mailService = new(_configuration);
             await mailService.SendEmailAsync(new MailRequest { ToEmail = appUser.Email, Subject = "Confirm Email", Body = body });
+
+
+
+            Subscriber subscriber = await _context.Subscribers.FirstOrDefaultAsync(x => x.Mail == registerViewModel.Email);
+            if (subscriber != null)
+            {
+                if (!subscriber.IsSubscribe)
+                {
+                    subscriber.IsSubscribe = true;
+                    await _context.SaveChangesAsync();
+                }
+            }
+            else
+            {
+                Subscriber newSubscriber = new()
+                {
+                    Id = $"{Guid.NewGuid()}",
+                    Mail = registerViewModel.Email,
+                    IsSubscribe = true
+                };
+                await _context.Subscribers.AddAsync(subscriber);
+                await _context.SaveChangesAsync();
+            }
+
+
 
             await _userManager.AddToRoleAsync(appUser, Roles.User.ToString());
 

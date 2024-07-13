@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace BetaBank.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize(Roles = "SuperAdmin,Admin")]
+    [Authorize(Roles = "Admin")]
     public class UserController : Controller
     {
         private readonly BetaBankDbContext _context;

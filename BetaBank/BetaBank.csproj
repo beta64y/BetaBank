@@ -7,13 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Areas\Support\Views\Shared\Components\SupportHeader\**" />
-    <Content Remove="Areas\Support\Views\Shared\Components\SupportHeader\**" />
-    <EmbeddedResource Remove="Areas\Support\Views\Shared\Components\SupportHeader\**" />
-    <None Remove="Areas\Support\Views\Shared\Components\SupportHeader\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="MailKit" Version="4.6.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.27" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.27" />
@@ -22,7 +15,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.16" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.17" />
     <PackageReference Include="MimeKit" Version="4.6.0" />
   </ItemGroup>
 
@@ -31,9 +24,14 @@
     <Folder Include="Areas\Admin\Models\" />
     <Folder Include="Areas\Moderator\Data\" />
     <Folder Include="Areas\Moderator\Models\" />
+    <Folder Include="Areas\Moderator\NewFolder\" />
     <Folder Include="Areas\Support\Data\" />
     <Folder Include="Areas\Support\Models\" />
     <Folder Include="wwwroot\img\website-images\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Areas\Support\Views\Shared\Components\SupportHeader\Default.cshtml" />
   </ItemGroup>
 
 </Project>

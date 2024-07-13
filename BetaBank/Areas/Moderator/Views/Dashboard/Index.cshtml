@@ -1,8 +1,20 @@
 ﻿
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Dashboard";
 }
 
 
+@model List<News>
+@await Component.InvokeAsync("ModeratorBox")
 
-@await Component.InvokeAsync("ModeratorNews")
+@section Scripts {
+    <script>
+
+
+        document.getElementById("@TempData["Tab"]-tab").classList.add("active", "main-color-bg");
+        document.getElementById("@TempData["Tab"]-nav-item").classList.add("active");
+
+
+    </script>
+}
+

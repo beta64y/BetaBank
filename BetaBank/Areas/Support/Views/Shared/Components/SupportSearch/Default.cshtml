@@ -1,11 +1,11 @@
-﻿@model SupportSearchViewModel
+﻿@model SupportComponentsViewModel
+<form method="post" asp-action="Search">
 <div class="row">
-    <form method="post" asp-action="Search">
 
         <div class="col-md-9">
 
 
-            <input asp-for="SearchTerm"
+            <input asp-for="SupportSearch.SearchTerm" 
                    class="form-control"
                    placeholder="Search Support..." />
             <br />
@@ -17,6 +17,7 @@
 
 
         </div>
-    </form>
-   
+    
+
 </div>
+</form>

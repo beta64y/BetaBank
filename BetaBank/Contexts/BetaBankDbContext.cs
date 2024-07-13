@@ -14,8 +14,9 @@ namespace BetaBank.Contexts
         public DbSet<BankAccount> BankAccounts { get; set; } = null!;
         public DbSet<BankCard> BankCards { get; set; } = null!;
         public DbSet<Transaction> Transactions { get; set; } = null!;
-        public DbSet<News> News { get; set; } = null!;
+        public DbSet<Models.News> News { get; set; } = null!;
         public DbSet<Support> Supports { get; set; } = null!;
+        public DbSet<SendedNotificationMail> SendedNotificationMails { get; set; } = null!;
 
 
 
@@ -34,6 +35,8 @@ namespace BetaBank.Contexts
         public DbSet<TransactionTypeModel> TransactionTypeModels { get; set; } = null!;
         public DbSet<BankAccountStatusModel> BankAccountStatusModels { get; set; } = null!;
         public DbSet<SupportStatusModel> SupportStatusModels { get; set; } = null!;
+        public DbSet<Subscriber> Subscribers { get; set; } = null!;
+
 
 
 
@@ -54,6 +57,10 @@ namespace BetaBank.Contexts
             modelBuilder.Entity<AppUser>(entity =>
             {
                 entity.HasIndex(e => e.FIN).IsUnique();
+            });
+            modelBuilder.Entity<Subscriber>(entity =>
+            {
+                entity.HasIndex(e => e.Mail).IsUnique();
             });
 
             base.OnModelCreating(modelBuilder);

@@ -3,13 +3,15 @@ using BetaBank.Contexts;
 using BetaBank.Models;
 using BetaBank.Services.Implementations;
 using BetaBank.Services.Validators;
-using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace BetaBank.Areas.Moderator.Controllers
 {
     [Area("Moderator")]
+    [Authorize(Roles = "Moderator")]
     public class NewsController : Controller
     {
         private readonly BetaBankDbContext _context;
@@ -23,15 +25,17 @@ namespace BetaBank.Areas.Moderator.Controllers
 
         public async Task<IActionResult> Index()
         {
-            List<News> news = await _context.News
-                .AsNoTracking()
-                .OrderBy(b => b.CreatedDate)
-                .Where(r => !r.IsDeleted)
-                .ToListAsync();
-            return View(news);
+            List<News> news = await _context.News.AsNoTracking().OrderBy(b => b.CreatedDate).Where(r => !r.IsDeleted).ToListAsync();
+            ModeratorNewsViewModel ViewModel = new ModeratorNewsViewModel()
+            {
+                News = news,
+            };
+            TempData["Tab"] = "News";
+            return View(ViewModel);
         }
         public IActionResult Create()
         {
+            TempData["Tab"] = "News";
             return View();
         }
         [HttpPost]
@@ -79,6 +83,7 @@ namespace BetaBank.Areas.Moderator.Controllers
                 FirstImage = firstImageFileName,
                 SecondImage = secondImageFileName,
                 CreatedDate = DateTime.UtcNow,
+                UpdatedDate = DateTime.UtcNow,
                 IsDeleted = false,
 
 
@@ -90,94 +95,129 @@ namespace BetaBank.Areas.Moderator.Controllers
             return RedirectToAction(nameof(Index));
 
         }
+       
+        public async Task<IActionResult> Delete(string id)
+        {
+            var news = await _context.News.FirstOrDefaultAsync(r => r.Id == id);
+            if (news == null)
+            {
+                return NotFound();
+            }
+            news.IsDeleted = true;
+            await _context.SaveChangesAsync();
+
+            return Json(new { message = "Your news has been deleted." });
+        }
+        public async Task<IActionResult> Detail(string id)
+        {
+            TempData["Tab"] = "News";
+            var news = await _context.News.FirstOrDefaultAsync(p => p.Id == id && !p.IsDeleted);
+            return View(news);
+        }
+
+
+        public async Task<IActionResult> Edit(string id)
+        {
+            TempData["Tab"] = "News";
+            var news = await _context.News.AsNoTracking().FirstOrDefaultAsync(r => r.Id == id && !r.IsDeleted);
+            if (news == null)
+            {
+                return NotFound();
+            }
+
+            NewsUpdateViewModel newsUpdateViewModel = new()
+            {
+                Title = news.Title,
+                Description = news.Description,
+            };
+            return View(newsUpdateViewModel);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         
-        
-        
-        
-        
-        
-        
-        
-        
-        //public async Task<IActionResult> Edit(string id)
-        //{
+        public async Task<IActionResult> Edit(NewsUpdateViewModel newsUpdateViewModel, string id)
+        {
+            var news = await _context.News.FirstOrDefaultAsync(r => r.Id == id);
+            if (news == null)
+            {
+                return NotFound();
+            }
 
-        //    var news = await _context.News.AsNoTracking().FirstOrDefaultAsync(r => r.Id == id && !r.IsDeleted);
-        //    if (news == null)
-        //    {
-        //        return NotFound();
-        //    }
+            if (newsUpdateViewModel.FirstImage != null)
+            {
 
-        //    ProductUpdateViewModel productUpdateViewModel = new()
-        //    {
-        //        Name = product.Name,
-        //        Description = product.Description,
-        //        Price = product.Price,
-        //        DiscountPercent = product.DiscountPercent,
-        //        Rating = product.Rating,
+                if (!newsUpdateViewModel.FirstImage.CheckFileSize(3000))
+                {
+                    ModelState.AddModelError("Image", "get ariqla");
+                    return View();
+                }
 
-        //        CategoryId = product.CategoryId,
-        //    };
+                if (!newsUpdateViewModel.FirstImage.CheckFileType("image/"))
+                {
+                    ModelState.AddModelError("Image", "get ariqla");
+                    return View();
+                }
+                string basePath = Path.Combine(_webHostEnvironment.WebRootPath, "img", "website-images");
+                string path = Path.Combine(basePath, news.FirstImage);
+                if (System.IO.File.Exists(path))
+                {
+                    System.IO.File.Delete(path);
+                }
+                string firstImageFileName = await ImageSaverService.SaveImage(newsUpdateViewModel.FirstImage, _webHostEnvironment.WebRootPath);
+                news.FirstImage = firstImageFileName;
+            }
+            if (newsUpdateViewModel.SecondImage != null)
+            {
+                if (!newsUpdateViewModel.SecondImage.CheckFileSize(3000))
+                {
+                    ModelState.AddModelError("Image", "get ariqla");
+                    return View();
+                }
 
-        //    ViewBag.Categories = await _context.Categories.AsNoTracking().ToListAsync();
+                if (!newsUpdateViewModel.SecondImage.CheckFileType("image/"))
+                {
+                    ModelState.AddModelError("Image", "get ariqla");
+                    return View();
+                }
+                string basePath = Path.Combine(_webHostEnvironment.WebRootPath, "img", "website-images");
+                string path = Path.Combine(basePath, news.SecondImage);
+                if (System.IO.File.Exists(path))
+                {
+                    System.IO.File.Delete(path);
+                }
+                string secondImageFileName = await ImageSaverService.SaveImage(newsUpdateViewModel.SecondImage, _webHostEnvironment.WebRootPath);
+                news.SecondImage = secondImageFileName;
+            }
 
-        //    return View(productUpdateViewModel);
-        //}
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //[ActionName(nameof(Edit))]
-        //public async Task<IActionResult> Update(ProductUpdateViewModel productUpdateViewModel, int id)
-        //{
-        //    if (!productUpdateViewModel.Image.CheckFileSize(3000))
-        //    {
-        //        ModelState.AddModelError("Image", "get ariqla");
-        //        return View();
-        //    }
+            news.Title = newsUpdateViewModel.Title;
+            news.Description = newsUpdateViewModel.Description;
+            news.UpdatedDate = DateTime.UtcNow;
 
-        //    if (!productUpdateViewModel.Image.CheckFileType("image/"))
-        //    {
-        //        ModelState.AddModelError("Image", "get ariqla");
-        //        return View();
-        //    }
-        //    var product = await _context.Products.FirstOrDefaultAsync(r => r.Id == id);
-        //    if (product == null)
-        //    {
-        //        return NotFound();
-        //    }
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+        [HttpPost]
+        public async Task<IActionResult> Search(ModeratorNewsViewModel moderatorNewsViewModel)
+        {
+            if (moderatorNewsViewModel.Search.SearchTerm != null)
+            {
+                var searchTerm = moderatorNewsViewModel.Search.SearchTerm.ToLower();
+                var filteredNews = await _context.News.Where(p => (p.Title.ToLower().Contains(searchTerm))).ToListAsync();
+                ModeratorNewsViewModel ViewModel = new ModeratorNewsViewModel()
+                {
+                    News = filteredNews,
+                    Search = moderatorNewsViewModel.Search
+                };
+                TempData["Tab"] = "News";
 
-        //    if (productUpdateViewModel.Image != null)
-        //    {
-        //        string basePath = Path.Combine(_webHostEnvironment.WebRootPath, "assets", "images", "website-images");
-        //        string path = Path.Combine(basePath, product.Image);
-        //        if (System.IO.File.Exists(path))
-        //        {
-        //            System.IO.File.Delete(path);
-        //        }
-        //        string fileName = $"{Guid.NewGuid()}-{productUpdateViewModel.Image.FileName}";
-        //        path = Path.Combine(basePath, fileName);
-        //        using (FileStream stream = new(path, FileMode.Create))
-        //        {
-        //            await productUpdateViewModel.Image.CopyToAsync(stream);
-        //        }
-        //        product.Image = fileName;
-        //    }
+                return View("Index", ViewModel);
+            }
+            else
+            {
+                TempData["Tab"] = "News";
 
-
-
-
-
-        //    product.Name = productUpdateViewModel.Name;
-        //    product.Description = productUpdateViewModel.Description;
-        //    product.Price = productUpdateViewModel.Price;
-        //    product.DiscountPercent = productUpdateViewModel.DiscountPercent;
-        //    product.Rating = productUpdateViewModel.Rating;
-        //    //product.Image = productUpdateViewModel.Image.FileName;
-        //    product.CategoryId = productUpdateViewModel.CategoryId;
-        //    product.UpdateDate = DateTime.UtcNow;
-
-        //    await _context.SaveChangesAsync();
-        //    return RedirectToAction(nameof(Index));
-        //}
-
+                return View(null);
+            }
+        }
     }
 }

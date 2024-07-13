@@ -1,4 +1,5 @@
 ﻿using BetaBank.Contexts;
+using BetaBank.Models;
 using BetaBank.Utils.Enums;
 using BetaBank.ViewComponents;
 using BetaBank.ViewModels;
@@ -14,10 +15,12 @@ namespace BetaBank.Controllers
         
         
         private readonly BetaBankDbContext _context;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public HomeController(BetaBankDbContext context)
+        public HomeController(BetaBankDbContext context, IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         //public async Task<IActionResult> CreateEnums()
@@ -97,6 +100,18 @@ namespace BetaBank.Controllers
                 StatusId = status.Id,
             };
 
+            bool IsMailExists = await _context.Subscribers.Where(x => x.Mail == supportViewModel.Email).AnyAsync();
+            if (!IsMailExists)
+            {
+                Subscriber subscriber = new()
+                {
+                    Id = $"{Guid.NewGuid()}",
+                    Mail = supportViewModel.Email,
+                    IsSubscribe = true
+                };
+                await _context.Subscribers.AddAsync(subscriber);
+            }
+
 
 
             await _context.Supports.AddAsync(support);
@@ -105,6 +120,50 @@ namespace BetaBank.Controllers
 
             @TempData["SuccessMessage"] = "Your Issue has been sent !";
             return RedirectToAction("FAQ","");
-        } 
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Subscribe(SubscribeViewModel subscribeViewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View("Index");
+            }
+            
+            Subscriber subscriber = await _context.Subscribers.FirstOrDefaultAsync(x => x.Mail == subscribeViewModel.Email);
+            if (subscriber != null)
+            {
+                if(subscriber.IsSubscribe)
+                {
+                    @TempData["SuccessMessage"] = "You are already subscribed!";
+                }
+                else
+                {
+                    subscriber.IsSubscribe = true;
+                    @TempData["SuccessMessage"] = "You are subscribed!";
+                    await _context.SaveChangesAsync();
+                }
+                return View("Index");
+
+            }
+            else
+            {
+                Subscriber newSubscriber = new()
+                {
+                    Id = $"{Guid.NewGuid()}",
+                    Mail = subscribeViewModel.Email,
+                    IsSubscribe = true
+                };
+                await _context.Subscribers.AddAsync(newSubscriber);
+                await _context.SaveChangesAsync();
+                @TempData["SuccessMessage"] = "You are subscribed!";
+            }
+            //string refererUrl = Request.Headers["Referer"].ToString();
+            // Burani Duzeldecekdin ama sonra erindin 
+
+            return View("Index");
+        }
+
+
     }
 }

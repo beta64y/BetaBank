@@ -54,7 +54,7 @@ button.navbar-toggle:focus {
   color: var(--main-text-color) !important;
 }
 .navbar .navbar-nav .nav-link {
-  color: var(--soft-text) !important;
+  color: var(--soft-text);
   margin: 0 0.75em;
   padding: 0;
 }

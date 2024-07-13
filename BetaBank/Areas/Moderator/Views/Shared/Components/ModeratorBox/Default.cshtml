@@ -1,0 +1,25 @@
+﻿<div class="col-md-3">
+    <div class="list-group">
+        <a asp-controller="Dashboard" asp-action="Index"
+           class="list-group-item list-group-item-action" id="Dashboard-tab">
+            Dashboard
+        </a>
+        <a asp-controller="News" asp-action="Index"
+           class="list-group-item list-group-item-action" id="News-tab">
+           News
+            <span class="badge badge-secondary badge-pill">@TempData["NewsCount"]</span>
+        </a>
+        <a asp-controller="Subscribers" asp-action="Index"
+           class="list-group-item list-group-item-action" id="Subscribers-tab">
+            Subscribers
+            <span class="badge badge-secondary badge-pill">@TempData["SubscribersCount"]</span>
+        </a>
+        <a asp-controller="NotificationMails" asp-action="Index"
+           class="list-group-item list-group-item-action" id="NotificationMails-tab">
+            Notification Mails
+            <span class="badge badge-secondary badge-pill">@TempData["NotificationMailsCount"]</span>
+        </a>
+       
+    </div>
+    
+</div>
