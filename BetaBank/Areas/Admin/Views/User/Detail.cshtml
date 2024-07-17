@@ -3,21 +3,28 @@
     ViewData["Title"] = "Detail";
 }
 @model UserDetailViewModel
-<div class="container mt-5">
-    <div class="row">
-        <!-- User and Bank Account Details -->
-        <div class="col-md-8">
+
+        <div class="col-md-6">
             <h2>User Details</h2>
             <div class="card mb-4">
                 <div class="card-body">
+            <img src="~/img/data/@Model.User.ProfilePhoto" alt="Profile Photo" class="img-fluid  mb-3" style="width: 150px; height: 150px; object-fit: cover;">
                     <h5 class="card-title">@Model.User.FirstName @Model.User.LastName</h5>
                     <p class="card-text">
-                        <strong>ID:</strong> @Model.User.Id<br>
+                        <strong>Email:</strong> @Model.User.Email<br>
+                        <strong>Email Confirmed:</strong> @Model.User.EmailConfirmed<br>
+                        <strong>Age:</strong> @Model.User.Age<br>
                         <strong>Date of Birth:</strong> @Model.User.DateOfBirth.ToString("yyyy-MM-dd")<br>
                         <strong>Phone Number:</strong> @Model.User.PhoneNumber<br>
                         <strong>Created Date:</strong> @Model.User.CreatedDate.ToString("yyyy-MM-dd")<br>
                         <strong>Update Date:</strong> @Model.User.UpdateDate.ToString("yyyy-MM-dd")<br>
-                        <strong>Banned:</strong> @(Model.User.Banned ? "Yes" : "No")
+                        <strong>Banned:</strong> @if(Model.User.Banned){
+                            <span class="badge bg-danger">Banned</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-success text-dark">Not Banned</span>
+                        }
                     </p>
                 </div>
             </div>
@@ -51,7 +58,7 @@
         </div>
 
         <!-- Bank Card Details -->
-        <div class="col-md-4">
+        <div class="col-md-6">
             <h2>Bank Card Details</h2>
             @if(Model.Cards.Count == 0)
             {
@@ -84,6 +91,4 @@
             }
             
         </div>
-    </div>
-</div>
 

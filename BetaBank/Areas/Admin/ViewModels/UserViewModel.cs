@@ -10,5 +10,9 @@
         public DateTime CreatedDate { get; set; }
         public DateTime UpdateDate { get; set; }
         public bool Banned { get; set; }
+        public string ProfilePhoto {  get; set; }
+        public string Email { get; set; }
+        public int Age {get; set; }
+        public bool EmailConfirmed { get; set; }
     }
 }

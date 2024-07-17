@@ -64,8 +64,7 @@ namespace BetaBank.Controllers
                 UserId = user.Id,
             };
 
-            await _context.BankCards.AddAsync(bankCard);
-            await _context.SaveChangesAsync();
+            
 
 
 
@@ -76,6 +75,7 @@ namespace BetaBank.Controllers
             }
             var bankCardStatus = new BankCardStatus()
             {
+                Id = $"{Guid.NewGuid()}",
                 CardId = bankCard.Id,
                 StatusId = status.Id
 
@@ -88,12 +88,13 @@ namespace BetaBank.Controllers
             }
             var bankCardType = new BankCardType()
             {
+                Id = $"{Guid.NewGuid()}",
                 CardId = bankCard.Id,
                 TypeId = type.Id
             };
 
 
-            
+            await _context.BankCards.AddAsync(bankCard);
             await _context.BankCardStatuses.AddAsync(bankCardStatus);
             await _context.BankCardTypes.AddAsync(bankCardType);
             await _context.SaveChangesAsync();

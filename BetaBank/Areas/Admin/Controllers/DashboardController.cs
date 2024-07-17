@@ -9,7 +9,9 @@ namespace BetaBank.Areas.Admin.Controllers
     {
         public IActionResult Index()
         {
+            TempData["Tab"] = "Dashboard";
             return View();
+
         }
     }
 }

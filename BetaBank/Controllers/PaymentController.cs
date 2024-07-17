@@ -27,7 +27,7 @@ namespace BetaBank.Controllers
         {
             return View();
         }
-        public async Task<IActionResult> Transaction()
+        public async Task<IActionResult> TransferAnotherCard()
         {
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
             if (user == null)
@@ -46,24 +46,38 @@ namespace BetaBank.Controllers
                     
                 });
             }
-            TransactionViewModel transactionViewModel = new()
-            {
-                BankCards = bankCardsViewModel,
-            };
+            //TransactionViewModel transactionViewModel = new()
+            //{
+            //    BankCards = bankCardsViewModel,
+            //};
+            ViewData["DataList"] = bankCardsViewModel;
 
-
-            return View(transactionViewModel);
+            return View();
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Transaction(TransactionViewModel transferViewModel)
+        public async Task<IActionResult> TransferAnotherCard(TransferCardViewModel transferCardViewModel)
         {
-            Console.WriteLine(transferViewModel.CardId);
-            Console.WriteLine(transferViewModel.Amount);
-            Console.WriteLine(transferViewModel.DestinationCard);
+            if (!ModelState.IsValid)
+            {
+                ModelState.AddModelError("", "");
+                return View();
+            }
+            BankCard sourceCard = await _context.BankCards.FirstOrDefaultAsync(x => x.CardNumber == transferCardViewModel.CardNumber);
+            if (sourceCard == null)
+            {
+                return NotFound();  
+            }
+            BankCard destinationCard = await _context.BankCards.FirstOrDefaultAsync(x => x.CardNumber == transferCardViewModel.DestinationCardNumber);
+            if (sourceCard == null)
+            {
+                return NotFound();
+            }
 
 
-            return Content(transferViewModel.DestinationCard);
+
+
+            return View();
         }
     }
 }

@@ -12,7 +12,7 @@ namespace BetaBank.Models
         public string LastName { get; set; }
         public DateTime DateOfBirth { get; set; }
         public override string PhoneNumber { get; set; }
-        public string ProfilePhoto { get; set; } = "default.jpg";
+        public string ProfilePhoto { get; set; } = "default.png";
         public DateTime CreatedDate { get; set; }
         public DateTime UpdateDate { get; set; }
         public bool IsActive { get; set; }

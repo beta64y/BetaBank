@@ -1,0 +1,60 @@
+﻿@{
+    ViewData["Title"] = "News";
+}
+@model News
+<div class="col-md-12 mt-sm-3 mt-md-0">
+    <!-- Panel for new entry creation -->
+    <div class="card">
+        <div class="card-header main-color-bg">
+            Details
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <!-- First Image and Title -->
+                <div class="col-md-3">
+                    <div class="card mb-3">
+                        <img src="~/img/website-images/@Model.FirstImage" class="card-img-top" alt="First Image">
+                        <div class="card-body">
+                            <h5 class="card-title">@Html.Raw(@Model.Title)</h5>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Second Image, Title and Description -->
+                <div class="col-md-9">
+                    <div class="card mb-3">
+                        <img src="~/img/website-images/@Model.SecondImage" class="card-img-top" alt="Second Image">
+                        <div class="card-body">
+                            <h5 class="card-title">@Html.Raw(@Model.Title)</h5>
+                            <p class="card-text">@Html.Raw(@Model.Description)</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Created Date and Updated Date -->
+            <div class="row">
+                <div class="col-md-6">
+                    <p><strong>Created Date:</strong> <span id="created-date">@Model.CreatedDate</span></p>
+                </div>
+                <div class="col-md-6">
+                    <p><strong>Updated Date:</strong> <span id="updated-date">@Model.UpdatedDate</span></p>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-md-12">
+                    <button onclick="javascript:history.back()" class="btn btn-secondary">Back</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script>
+
+
+        document.getElementById("@TempData["Tab"]-nav-item").classList.add("active");
+
+
+    </script>
+}

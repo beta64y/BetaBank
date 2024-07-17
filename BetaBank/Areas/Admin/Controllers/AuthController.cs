@@ -25,7 +25,7 @@ namespace BetaBank.Areas.Admin.Controllers
         {
             if (User.Identity.IsAuthenticated)
             {
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Dashboard");
             }
             return View();
         }
@@ -35,7 +35,7 @@ namespace BetaBank.Areas.Admin.Controllers
         {
             if (User.Identity.IsAuthenticated)
             {
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Dashboard");
             }
             if (!ModelState.IsValid)
             {
@@ -44,7 +44,7 @@ namespace BetaBank.Areas.Admin.Controllers
             }
             var user = await _userManager.FindByNameAsync(loginViewModel.Email);
             var userRoles = await _userManager.GetRolesAsync(user);
-            if (user == null || !(userRoles.Contains("SuperAdmin") || userRoles.Contains("Admin")))
+            if (user == null || !(userRoles.Contains("Admin")))
             {
                 ModelState.AddModelError("", "Email or Password is incorrect");
                 return View();
@@ -71,6 +71,15 @@ namespace BetaBank.Areas.Admin.Controllers
                 return View();
             }
             return RedirectToAction("Index", "DashBoard");
+        }
+        public async Task<IActionResult> Logout()
+        {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return BadRequest();
+            }
+            await _signInManager.SignOutAsync();
+            return RedirectToAction("Login", "Auth");
         }
     }
 }

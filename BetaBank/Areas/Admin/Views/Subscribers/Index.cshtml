@@ -1,0 +1,75 @@
+﻿@{
+    ViewData["Title"] = "Subscribers";
+}
+
+
+@model AdminSubscribersViewModel
+@await Component.InvokeAsync("AdminBox")
+<div class="col-md-9 mt-sm-3 mt-md-0">
+    <!--Panel for website overview-->
+    <div class="card">
+        <div class="card-header main-color-bg">
+            Subscribers
+        </div>
+        <div class="card-body">
+            @await Component.InvokeAsync("AdminSubscribersSearch")
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">Mail</th>
+                        <th scope="col">IsSubcribe</th>
+
+
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var subscriber in Model.Subscribers)
+                    {
+                        <tr>
+                            <td>@subscriber.Mail</td>
+                            <td>
+                                @if (subscriber.IsSubscribe)
+                                {
+                                    <div class="badge bg-success text-dark">Subscribed</div>
+                                }
+                                else
+                                {
+                                    <div class="badge bg-danger text-dark">Unsubscribed</div>
+                                }
+
+                            </td>
+                            @if (subscriber.IsSubscribe)
+                            {
+                                 <td>
+                                    <a asp-controller="Subscribers" asp-action="Unsubscribe" asp-route-id="@subscriber.Id" class="btn bg-danger text-dark">Unsubscribe</a>
+                                </td>
+                            }
+                            else
+                            {
+                                <td>
+                                    <a asp-controller="Subscribers" asp-action="Subscribe" asp-route-id="@subscriber.Id" class="btn bg-success text-dark">Subscribe</a>
+                                </td>
+                            }
+
+                            
+                        </tr>
+                    }
+
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script>
+
+
+        document.getElementById("@TempData["Tab"]-tab").classList.add("active", "main-color-bg");
+        document.getElementById("@TempData["Tab"]-nav-item").classList.add("active");
+
+
+    </script>
+}
+

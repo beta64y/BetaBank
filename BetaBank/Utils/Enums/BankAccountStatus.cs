@@ -4,7 +4,6 @@
     {
         Active = 1,
         Closed,
-        UnderReview,
         Suspended // kecici bagli
     }
 }

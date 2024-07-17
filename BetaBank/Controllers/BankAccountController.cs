@@ -20,9 +20,23 @@ namespace BetaBank.Controllers
             _context = context;
             _userManager = userManager;
         }
-        public IActionResult CreateBankAccount()
+        public async Task<IActionResult> CreateBankAccount()
         {
-            return View();       
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+            BankAccount bankAccount = await _context.BankAccounts.FirstOrDefaultAsync(x => x.UserId == user.Id);
+
+            if (bankAccount != null)
+            {
+                return BadRequest();
+            }
+
+
+                return View();       
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -32,6 +46,12 @@ namespace BetaBank.Controllers
             if (user == null)
             {
                 return NotFound();
+            }
+            BankAccount bankAccount = await _context.BankAccounts.FirstOrDefaultAsync(x => x.UserId == user.Id);
+
+            if (bankAccount != null)
+            {
+                return BadRequest();
             }
             string accountNumber;
             string iban;
@@ -49,7 +69,7 @@ namespace BetaBank.Controllers
 
             var swiftCode = BankAccountService.GenerateSWIFT("1234", "AZ");
 
-            var bankAccount = new BankAccount
+            var newbankAccount = new BankAccount
             {
                 Id = $"{Guid.NewGuid()}",
                 AccountNumber = BankAccountService.GenerateAccountNumber(),
@@ -59,8 +79,8 @@ namespace BetaBank.Controllers
                 CreatedDate = DateTime.UtcNow,
                 UserId = user.Id,
             };
-            await _context.BankAccounts.AddAsync(bankAccount);
-            await _context.SaveChangesAsync();
+            
+            
 
 
             var status = await _context.BankAccountStatusModels.FirstOrDefaultAsync(x => x.Name == "UnderReview");
@@ -70,14 +90,16 @@ namespace BetaBank.Controllers
             }
             var bankAccountStatus = new BankAccountStatus()
             {
-                AccountId = bankAccount.Id,
+                Id = $"{Guid.NewGuid()}",
+                AccountId = newbankAccount.Id,
                 StatusId = status.Id
             };
 
-            
 
 
 
+
+            await _context.BankAccounts.AddAsync(newbankAccount);
             await _context.BankAccountStatuses.AddAsync(bankAccountStatus);
             await _context.SaveChangesAsync();
 

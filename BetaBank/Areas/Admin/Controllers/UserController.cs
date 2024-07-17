@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BetaBank.Areas.Admin.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using BetaBank.Services.Implementations;
 
 
 namespace BetaBank.Areas.Admin.Controllers
@@ -24,10 +25,13 @@ namespace BetaBank.Areas.Admin.Controllers
 
         public async Task<IActionResult> Index()
         {
-            List<AppUser> users = await _userManager.Users
+            var usersInRole = await _userManager.GetUsersInRoleAsync("User");
+
+            var users = usersInRole
+                .AsQueryable()
                 .AsNoTracking()
                 .OrderBy(b => b.CreatedDate)
-                .ToListAsync();
+                .ToList();
 
 
             List<UserViewModel> usersViewModel = new List<UserViewModel>();
@@ -43,10 +47,19 @@ namespace BetaBank.Areas.Admin.Controllers
                      CreatedDate = user.CreatedDate,
                      UpdateDate = user.UpdateDate,
                      Banned = user.Banned,
-            });
+                     ProfilePhoto = user.ProfilePhoto,
+                     Email= user.Email,
+                     Age = user.DateOfBirth.CalculateAge(),
+                    EmailConfirmed = user.EmailConfirmed ,
+                });
             }
 
-            return View(usersViewModel);
+            AdminUserViewModel ViewModel = new()
+            {
+                Users = usersViewModel,
+            };
+            TempData["Tab"] = "User";
+            return View(ViewModel);
         }
         public async Task<IActionResult> BanUser(string id)
         {
@@ -90,6 +103,10 @@ namespace BetaBank.Areas.Admin.Controllers
                 CreatedDate = user.CreatedDate,
                 UpdateDate = user.UpdateDate,
                 Banned = user.Banned,
+                ProfilePhoto = user.ProfilePhoto,
+                Email = user.Email,
+                Age = user.DateOfBirth.CalculateAge(),
+                EmailConfirmed = user.EmailConfirmed,
             };
 
 

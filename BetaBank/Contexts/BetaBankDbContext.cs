@@ -22,8 +22,7 @@ namespace BetaBank.Contexts
 
         public DbSet<BankCardStatus> BankCardStatuses { get; set; } = null!;
         public DbSet<BankCardType> BankCardTypes { get; set; } = null!;
-        public DbSet<TransactionStatus> TransactionStatuses { get; set; } = null!;
-        public DbSet<TransactionType> TransactionCardTypes { get; set; } = null!;
+
         public DbSet<BankAccountStatus> BankAccountStatuses { get; set; } = null!;
         public DbSet<SupportStatus> SupportStatuses { get; set; } = null!;
 
@@ -43,20 +42,31 @@ namespace BetaBank.Contexts
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Transaction>()
-                .HasOne(t => t.SourceCard)
-                .WithMany() 
-                .HasForeignKey(t => t.SourceCardId)
-                .OnDelete(DeleteBehavior.Restrict); 
+
+
+
 
             modelBuilder.Entity<Transaction>()
-                .HasOne(t => t.DestinationCard)
-                .WithMany() 
-                .HasForeignKey(t => t.DestinationCardId)
-                .OnDelete(DeleteBehavior.Restrict); 
+            .HasOne(t => t.DestinationType)
+            .WithMany()
+            .HasForeignKey(t => t.DestinationTypeId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Transaction>()
+                .HasOne(t => t.PaidByType)
+                .WithMany()
+                .HasForeignKey(t => t.PaidByTypeId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+         
+
             modelBuilder.Entity<AppUser>(entity =>
             {
                 entity.HasIndex(e => e.FIN).IsUnique();
+            });
+            modelBuilder.Entity<AppUser>(entity =>
+            {
+                entity.HasIndex(e => e.PhoneNumber).IsUnique();
             });
             modelBuilder.Entity<Subscriber>(entity =>
             {

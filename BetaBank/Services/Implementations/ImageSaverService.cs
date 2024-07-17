@@ -6,10 +6,10 @@ namespace BetaBank.Services.Implementations
 
     public static class ImageSaverService
     {
-        public async static Task<string> SaveImage(IFormFile file, string webRootPath)
+        public async static Task<string> SaveImage(IFormFile file, string webRootPath,string folder = "website-images")
         {
             string fileName = $"{Guid.NewGuid()}-{file.FileName}";
-            string path = Path.Combine(webRootPath, "img", "website-images", fileName);
+            string path = Path.Combine(webRootPath, "img", folder, fileName);
 
             using (FileStream stream = new FileStream(path, FileMode.Create))
             {

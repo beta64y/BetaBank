@@ -1,0 +1,46 @@
+﻿
+@{
+    ViewData["Title"] = "Transaction";
+    var BankCards = ViewData["DataList"] as List<BankCardViewModel>;
+}
+
+@model TransferCardViewModel
+
+<div class="container mt-5">
+    <h2>Select Card and Transfer Money</h2>
+    <form method="post">
+        <div class="form-group">
+            <label for="selectedCard">Select Card</label>
+            <select asp-for="CardNumber" class="form-control"name="CardId">
+                @foreach (var card in BankCards)
+                {
+                    <option value="@card.CardNumber">@card.CardNumber - @card.Balance.ToString("C")</option>
+                }
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="recipientCardNumber">Recipient Card Number</label>
+            <input asp-for="DestinationCardNumber" class="form-control"  />
+        </div>
+
+        <div class="form-group">
+            <label for="amount">Amount</label>
+            <input asp-for="Amount" class="form-control"  />
+        </div>
+
+        <div class="form-group">
+            <label for="currency">Currency</label>
+            <select class="form-control" id="currency" name="Currency">
+                <option value="TRY">TRY</option>
+                <option value="AZN">AZN</option>
+                <option value="USD">USD</option>
+                <option value="EUR">EUR</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Send Money</button>
+    </form>
+</div>
+
+

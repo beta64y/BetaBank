@@ -1,7 +1,7 @@
-﻿using BetaBank.Areas.Support.ViewModels;
-using BetaBank.Contexts;
+﻿using BetaBank.Contexts;
 using BetaBank.Models;
 using BetaBank.Services.Implementations;
+using BetaBank.Services.Validators;
 using BetaBank.Utils.Enums;
 using BetaBank.ViewModels;
 using Microsoft.AspNetCore.Authorization;
@@ -46,10 +46,16 @@ namespace BetaBank.Controllers
             {
                 return View();
             }
-            AppUser user = await _userManager.Users.FirstOrDefaultAsync(x => x.FIN ==  registerViewModel.FIN);
-            if (user != null)
+            AppUser userByFin = await _userManager.Users.FirstOrDefaultAsync(x => x.FIN ==  registerViewModel.FIN);
+            if (userByFin != null)
             {
                 ModelState.AddModelError("", "FIN must be unique");
+                return View(registerViewModel);
+            }
+            AppUser userByPhoneNumber = await _userManager.Users.FirstOrDefaultAsync(x => x.PhoneNumber == registerViewModel.PhoneNumber);
+            if (userByPhoneNumber != null)
+            {
+                ModelState.AddModelError("", "PhoneNumber must be unique");
                 return View(registerViewModel);
             }
 
@@ -207,8 +213,10 @@ namespace BetaBank.Controllers
                     FirstName = user.FirstName,
                     LastName = user.LastName,
                     Email = user.Email,
+                    
         }
             };
+            TempData["ProfilePhoto"] = user.ProfilePhoto;
             return View(userProfileViewModel);
         }
         [Authorize]
@@ -225,11 +233,44 @@ namespace BetaBank.Controllers
             {
                 return View(nameof(Profile), userProfileViewmodel);
             }
+
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
             if (user == null)
             {
                 return NotFound();
             }
+
+
+
+
+            if (userUpdateViewModel.ProfilePhoto != null)
+            {
+
+                if (!userUpdateViewModel.ProfilePhoto.CheckFileSize(3000))
+                {
+                    ModelState.AddModelError("Image", "get ariqla");
+                    return View();
+                }
+
+                if (!userUpdateViewModel.ProfilePhoto.CheckFileType("image/"))
+                {
+                    ModelState.AddModelError("Image", "get ariqla");
+                    return View();
+                }
+                string basePath = Path.Combine(_webHostEnvironment.WebRootPath, "img", "data");
+                string path = Path.Combine(basePath, user.ProfilePhoto);
+                if (System.IO.File.Exists(path) && user.ProfilePhoto !=  "default.png")
+                {
+                    System.IO.File.Delete(path);
+                }
+                string profilePhotoFileName = await ImageSaverService.SaveImage(userUpdateViewModel.ProfilePhoto, _webHostEnvironment.WebRootPath,"data");
+                user.ProfilePhoto = profilePhotoFileName;
+            }
+
+
+
+
+
 
             if (user.UserName != userUpdateViewModel.Email && _userManager.Users.Any(u => u.UserName == userUpdateViewModel.Email))
             {
@@ -280,6 +321,7 @@ namespace BetaBank.Controllers
 
             await _signInManager.RefreshSignInAsync(user);
             TempData["SuccessMessage"] = "Sizin profiliniz ugurla yenilendi";
+            TempData["ProfilePhoto"] = user.ProfilePhoto;
             return View(nameof(Profile), userProfileViewmodel);
 
 

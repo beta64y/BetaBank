@@ -6,7 +6,7 @@ namespace BetaBank.Areas.Moderator.ViewModels
     public class ModeratorNotificationMailViewModel
     {
         public List<SendedNotificationMail> NotificationMails { get; set; }
-        public SupportSearchViewModel Search { get; set; }
+        public ModeratorSearchViewModel Search { get; set; }
 
     }
 }

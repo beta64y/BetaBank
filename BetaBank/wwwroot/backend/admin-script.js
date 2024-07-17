@@ -4,19 +4,21 @@ const banBtns = document.querySelectorAll(".banBtn");
 const unBanBtns = document.querySelectorAll(".unBanBtn");
 const newsDeleteBtns = document.querySelectorAll(".newsDeleteBtn");
 
-banBtns.forEach(banBtn => {
-    banBtn.addEventListener("click", function (e) {
+banBtns.forEach(BanBtn => {
+    BanBtn.addEventListener("click", function (e) {
         e.preventDefault();
 
         let url = this.getAttribute("href");
 
         Swal.fire({
             title: "Are you sure?",
-            text: "You won't be able to ban this user!",
+            text: "You won't be able to Ban this user!",
             icon: "warning",
+            background: "#131311",
+            color: "#FFFFFF",
             showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
+            confirmButtonColor: "#74FA56",
+            cancelButtonColor: "#1E1D1B",
             confirmButtonText: "Yes, Ban this user!"
         }).then((result) => {
             if (result.isConfirmed) {
@@ -24,18 +26,19 @@ banBtns.forEach(banBtn => {
                     .then(response => response.json())
                     .then(data => {
                         Swal.fire({
-                            title: "Banned!",
+                            title: "Ban!",
                             text: data.message,
-                            icon: "success"
+                            icon: "success",
+                            background: "#131311",
+                            color: "#FFFFFF"
                         }).then(result => {
                             location.reload();
                         });
-                    })
-
+                    });
             }
         });
-    })
-})
+    });
+});
 
 
 unBanBtns.forEach(unBanBtn => {
