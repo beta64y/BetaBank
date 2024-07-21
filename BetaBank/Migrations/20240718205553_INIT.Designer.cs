@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BetaBank.Migrations
 {
     [DbContext(typeof(BetaBankDbContext))]
-    [Migration("20240717074615_INIT")]
+    [Migration("20240718205553_INIT")]
     partial class INIT
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -136,8 +136,8 @@ namespace BetaBank.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("Balance")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<double>("Balance")
+                        .HasColumnType("float");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -202,8 +202,8 @@ namespace BetaBank.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<decimal>("Balance")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<double>("Balance")
+                        .HasColumnType("float");
 
                     b.Property<string>("CVV")
                         .IsRequired()
@@ -300,6 +300,35 @@ namespace BetaBank.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("BankCardTypeModels");
+                });
+
+            modelBuilder.Entity("BetaBank.Models.CashBack", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<double>("Balance")
+                        .HasColumnType("float");
+
+                    b.Property<string>("CashBackNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("UpdatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("CashBacks");
                 });
 
             modelBuilder.Entity("BetaBank.Models.News", b =>
@@ -448,17 +477,17 @@ namespace BetaBank.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<decimal>("Amount")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<double>("Amount")
+                        .HasColumnType("float");
 
-                    b.Property<decimal>("BillingAmount")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<double>("BillingAmount")
+                        .HasColumnType("float");
 
-                    b.Property<decimal>("CashbackAmount")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<double>("CashbackAmount")
+                        .HasColumnType("float");
 
-                    b.Property<decimal>("Commission")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<double>("Commission")
+                        .HasColumnType("float");
 
                     b.Property<string>("DestinationId")
                         .IsRequired()
@@ -466,7 +495,11 @@ namespace BetaBank.Migrations
 
                     b.Property<string>("DestinationTypeId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Icon")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PaidById")
                         .IsRequired()
@@ -474,34 +507,49 @@ namespace BetaBank.Migrations
 
                     b.Property<string>("PaidByTypeId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ReceiptNumber")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("SourceCardId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("StatusId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("TransactionDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("TransactionStatusModelId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("DestinationTypeId");
-
-                    b.HasIndex("PaidByTypeId");
-
-                    b.HasIndex("SourceCardId");
-
-                    b.HasIndex("StatusId");
+                    b.HasIndex("TransactionStatusModelId");
 
                     b.ToTable("Transactions");
+                });
+
+            modelBuilder.Entity("BetaBank.Models.TransactionStatus", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("SupportId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("TransactionId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SupportId");
+
+                    b.HasIndex("TransactionId");
+
+                    b.ToTable("TransactionStatuses");
                 });
 
             modelBuilder.Entity("BetaBank.Models.TransactionStatusModel", b =>
@@ -516,6 +564,28 @@ namespace BetaBank.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("TransactionStatusModels");
+                });
+
+            modelBuilder.Entity("BetaBank.Models.TransactionType", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("TransactionId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("TypeId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TransactionId");
+
+                    b.HasIndex("TypeId");
+
+                    b.ToTable("TransactionTypes");
                 });
 
             modelBuilder.Entity("BetaBank.Models.TransactionTypeModel", b =>
@@ -744,6 +814,17 @@ namespace BetaBank.Migrations
                     b.Navigation("Type");
                 });
 
+            modelBuilder.Entity("BetaBank.Models.CashBack", b =>
+                {
+                    b.HasOne("BetaBank.Models.AppUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("BetaBank.Models.SupportStatus", b =>
                 {
                     b.HasOne("BetaBank.Models.SupportStatusModel", "Status")
@@ -765,37 +846,47 @@ namespace BetaBank.Migrations
 
             modelBuilder.Entity("BetaBank.Models.Transaction", b =>
                 {
-                    b.HasOne("BetaBank.Models.TransactionTypeModel", "DestinationType")
+                    b.HasOne("BetaBank.Models.TransactionStatusModel", null)
+                        .WithMany("Transactions")
+                        .HasForeignKey("TransactionStatusModelId");
+                });
+
+            modelBuilder.Entity("BetaBank.Models.TransactionStatus", b =>
+                {
+                    b.HasOne("BetaBank.Models.Transaction", "Support")
                         .WithMany()
-                        .HasForeignKey("DestinationTypeId")
+                        .HasForeignKey("SupportId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BetaBank.Models.TransactionTypeModel", "PaidByType")
+                    b.HasOne("BetaBank.Models.TransactionStatusModel", "Transaction")
                         .WithMany()
-                        .HasForeignKey("PaidByTypeId")
+                        .HasForeignKey("TransactionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BetaBank.Models.BankCard", "SourceCard")
+                    b.Navigation("Support");
+
+                    b.Navigation("Transaction");
+                });
+
+            modelBuilder.Entity("BetaBank.Models.TransactionType", b =>
+                {
+                    b.HasOne("BetaBank.Models.Transaction", "Transaction")
                         .WithMany()
-                        .HasForeignKey("SourceCardId")
+                        .HasForeignKey("TransactionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BetaBank.Models.TransactionStatusModel", "Status")
+                    b.HasOne("BetaBank.Models.TransactionTypeModel", "Type")
                         .WithMany()
-                        .HasForeignKey("StatusId")
+                        .HasForeignKey("TypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("DestinationType");
+                    b.Navigation("Transaction");
 
-                    b.Navigation("PaidByType");
-
-                    b.Navigation("SourceCard");
-
-                    b.Navigation("Status");
+                    b.Navigation("Type");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -847,6 +938,11 @@ namespace BetaBank.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("BetaBank.Models.TransactionStatusModel", b =>
+                {
+                    b.Navigation("Transactions");
                 });
 #pragma warning restore 612, 618
         }

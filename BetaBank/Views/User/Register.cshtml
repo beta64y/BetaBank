@@ -1,5 +1,6 @@
 ﻿@{
     ViewData["Title"] = "Register";
+
 }
 @model RegisterViewModel
 
@@ -22,19 +23,19 @@
                                         <span asp-validation-for="FirstName" class="text-danger"></span>
                                     </div>
                                     <div class="col-md-12 col-sm-12 col-xs-12">
-                                        <input  class="form-control" asp-for="LastName" placeholder="Your LastName" required data-error="Please enter your message subject">
+                                        <input class="form-control" asp-for="LastName" placeholder="Your LastName" required data-error="Please enter your message subject">
                                         <span asp-validation-for="LastName" class="text-danger"></span>
                                     </div>
                                     <div class="col-md-12 col-sm-12 col-xs-12">
-                                        <input class="form-control" asp-for="Email" placeholder="Email" required data-error="Please enter your name">
+                                        <input class="form-control"  asp-for="Email" placeholder="Email" required data-error="Please enter your name">
                                         <span asp-validation-for="Email" class="text-danger"></span>
                                     </div>
                                     <div class="col-md-12 col-sm-12 col-xs-12">
-                                        <input type="text" class="form-control" asp-for="FIN" placeholder="FIN" required data-error="Please enter your message subject">
+                                        <input  class="form-control" asp-for="FIN" placeholder="FIN" required data-error="Please enter your message subject">
                                         <span asp-validation-for="FIN" class="text-danger"></span>
                                     </div>
                                     <div class="col-md-12 col-sm-12 col-xs-12">
-                                        <input type="tel" class="form-control" asp-for="PhoneNumber" placeholder="Phone Number" required data-error="Please enter your message subject">
+                                        <input type="tel"  class="form-control" asp-for="PhoneNumber" placeholder="Phone Number" required data-error="Please enter your message subject">
                                         <span asp-validation-for="PhoneNumber" class="text-danger"></span>
                                     </div>
                                     

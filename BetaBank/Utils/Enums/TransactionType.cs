@@ -2,11 +2,13 @@
 {
     public enum TransactionType
     {
-        Transfer = 1,
-        BakuCard ,
-        Telecom, 
-        Utilities,
-        Other,
-
+        Card = 1,
+        BankAccount,
+        CashBack,
+        BakuCard,
+        Utility,
+        Internet,
+        MobileOperators,
+        
     }
 }

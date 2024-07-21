@@ -5,6 +5,5 @@
         Active = 1,
         Blocked,
         Disabled,
-        UnderReview
     }
 }

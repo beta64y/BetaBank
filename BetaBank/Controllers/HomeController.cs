@@ -23,36 +23,36 @@ namespace BetaBank.Controllers
             _webHostEnvironment = webHostEnvironment;
         }
 
-        //public async Task<IActionResult> CreateEnums()
-        //{
-        //    //foreach (var items in Enum.GetNames(typeof(BankCardStatus)))
-        //    //{
-        //    //    await _context.BankCardStatusModels.AddAsync(new Models.BankCardStatusModel { Id = $"{Guid.NewGuid()}", Name = items });
-        //    //}
-        //    //foreach (var items in Enum.GetNames(typeof(BankCardType)))
-        //    //{
-        //    //    await _context.BankCardTypeModels.AddAsync(new Models.BankCardTypeModel { Id = $"{Guid.NewGuid()}", Name = items });
-        //    //}
-        //    //foreach (var items in Enum.GetNames(typeof(TransactionStatus)))
-        //    //{
-        //    //    await _context.TransactionStatusModels.AddAsync(new Models.TransactionStatusModel { Id = $"{Guid.NewGuid()}", Name = items });
-        //    //}
-        //    //foreach (var items in Enum.GetNames(typeof(TransactionType)))
-        //    //{
-        //    //    await _context.TransactionTypeModels.AddAsync(new Models.TransactionTypeModel { Id = $"{Guid.NewGuid()}", Name = items });
-        //    //}
-        //    //foreach (var items in Enum.GetNames(typeof(BankAccountStatus)))
-        //    //{
-        //    //    await _context.BankAccountStatusModels.AddAsync(new Models.BankAccountStatusModel { Id = $"{Guid.NewGuid()}", Name = items });
-        //    //}
-        //    foreach (var items in Enum.GetNames(typeof(SupportStatus)))
-        //    {
-        //        await _context.SupportStatusModels.AddAsync(new Models.SupportStatusModel { Id = $"{Guid.NewGuid()}", Name = items });
-        //    }
-        //    await _context.SaveChangesAsync();
-        //    return Content("Hamisi yarandi");
+        public async Task<IActionResult> CreateEnums()
+        {
+            //foreach (var items in Enum.GetNames(typeof(Utils.Enums.BankCardStatus)))
+            //{
+            //    await _context.BankCardStatusModels.AddAsync(new Models.BankCardStatusModel { Id = $"{Guid.NewGuid()}", Name = items });
+            //}
+            //foreach (var items in Enum.GetNames(typeof(Utils.Enums.BankCardType)))
+            //{
+            //    await _context.BankCardTypeModels.AddAsync(new Models.BankCardTypeModel { Id = $"{Guid.NewGuid()}", Name = items });
+            //}
+            //foreach (var items in Enum.GetNames(typeof(Utils.Enums.TransactionStatus)))
+            //{
+            //    await _context.TransactionStatusModels.AddAsync(new Models.TransactionStatusModel { Id = $"{Guid.NewGuid()}", Name = items });
+            //}
+            foreach (var items in Enum.GetNames(typeof(Utils.Enums.TransactionType)))
+            {
+                await _context.TransactionTypeModels.AddAsync(new Models.TransactionTypeModel { Id = $"{Guid.NewGuid()}", Name = items });
+            }
+            //foreach (var items in Enum.GetNames(typeof(Utils.Enums.BankAccountStatus)))
+            //{
+            //    await _context.BankAccountStatusModels.AddAsync(new Models.BankAccountStatusModel { Id = $"{Guid.NewGuid()}", Name = items });
+            //}
+            //foreach (var items in Enum.GetNames(typeof(Utils.Enums.SupportStatus)))
+            //{
+            //    await _context.SupportStatusModels.AddAsync(new Models.SupportStatusModel { Id = $"{Guid.NewGuid()}", Name = items });
+            //}
+            await _context.SaveChangesAsync();
+            return Content("Hamisi yarandi");
 
-        //}
+        }
 
 
         public IActionResult Index()
@@ -150,6 +150,7 @@ namespace BetaBank.Controllers
             {
                 Subscriber newSubscriber = new()
                 {
+         
                     Id = $"{Guid.NewGuid()}",
                     Mail = subscribeViewModel.Email,
                     IsSubscribe = true

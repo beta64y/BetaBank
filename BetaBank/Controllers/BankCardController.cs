@@ -68,7 +68,7 @@ namespace BetaBank.Controllers
 
 
 
-            var status = await _context.BankCardStatusModels.FirstOrDefaultAsync(x => x.Name == "UnderReview");
+            var status = await _context.BankCardStatusModels.FirstOrDefaultAsync(x => x.Name == "Active");
             if(status == null)
             {
                 return NotFound();

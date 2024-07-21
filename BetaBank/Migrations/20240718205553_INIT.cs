@@ -304,7 +304,7 @@ namespace BetaBank.Migrations
                     AccountNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     IBAN = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     SwiftCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Balance = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Balance = table.Column<double>(type: "float", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
@@ -328,7 +328,7 @@ namespace BetaBank.Migrations
                     CVV = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ExpiryDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Balance = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Balance = table.Column<double>(type: "float", nullable: false),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
@@ -336,6 +336,28 @@ namespace BetaBank.Migrations
                     table.PrimaryKey("PK_BankCards", x => x.Id);
                     table.ForeignKey(
                         name: "FK_BankCards_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CashBacks",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    CashBackNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Balance = table.Column<double>(type: "float", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CashBacks", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_CashBacks_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
@@ -365,6 +387,35 @@ namespace BetaBank.Migrations
                         principalTable: "SupportStatusModels",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Transactions",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ReceiptNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Amount = table.Column<double>(type: "float", nullable: false),
+                    Commission = table.Column<double>(type: "float", nullable: false),
+                    BillingAmount = table.Column<double>(type: "float", nullable: false),
+                    CashbackAmount = table.Column<double>(type: "float", nullable: false),
+                    TransactionDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    PaidByTypeId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PaidById = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DestinationTypeId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DestinationId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    StatusId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Icon = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TransactionStatusModelId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Transactions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Transactions_TransactionStatusModels_TransactionStatusModelId",
+                        column: x => x.TransactionStatusModelId,
+                        principalTable: "TransactionStatusModels",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -443,47 +494,50 @@ namespace BetaBank.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Transactions",
+                name: "TransactionStatuses",
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    ReceiptNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    SourceCardId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    Commission = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    BillingAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    CashbackAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    TransactionDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    PaidByTypeId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    PaidById = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DestinationTypeId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    DestinationId = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    StatusId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    SupportId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    TransactionId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Transactions", x => x.Id);
+                    table.PrimaryKey("PK_TransactionStatuses", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Transactions_BankCards_SourceCardId",
-                        column: x => x.SourceCardId,
-                        principalTable: "BankCards",
+                        name: "FK_TransactionStatuses_Transactions_SupportId",
+                        column: x => x.SupportId,
+                        principalTable: "Transactions",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Transactions_TransactionStatusModels_StatusId",
-                        column: x => x.StatusId,
+                        name: "FK_TransactionStatuses_TransactionStatusModels_TransactionId",
+                        column: x => x.TransactionId,
                         principalTable: "TransactionStatusModels",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TransactionTypes",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    TransactionId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    TypeId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TransactionTypes", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Transactions_TransactionTypeModels_DestinationTypeId",
-                        column: x => x.DestinationTypeId,
-                        principalTable: "TransactionTypeModels",
+                        name: "FK_TransactionTypes_Transactions_TransactionId",
+                        column: x => x.TransactionId,
+                        principalTable: "Transactions",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Transactions_TransactionTypeModels_PaidByTypeId",
-                        column: x => x.PaidByTypeId,
+                        name: "FK_TransactionTypes_TransactionTypeModels_TypeId",
+                        column: x => x.TypeId,
                         principalTable: "TransactionTypeModels",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -581,6 +635,11 @@ namespace BetaBank.Migrations
                 column: "TypeId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_CashBacks_UserId",
+                table: "CashBacks",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Subscribers_Mail",
                 table: "Subscribers",
                 column: "Mail",
@@ -597,24 +656,29 @@ namespace BetaBank.Migrations
                 column: "SupportId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Transactions_DestinationTypeId",
+                name: "IX_Transactions_TransactionStatusModelId",
                 table: "Transactions",
-                column: "DestinationTypeId");
+                column: "TransactionStatusModelId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Transactions_PaidByTypeId",
-                table: "Transactions",
-                column: "PaidByTypeId");
+                name: "IX_TransactionStatuses_SupportId",
+                table: "TransactionStatuses",
+                column: "SupportId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Transactions_SourceCardId",
-                table: "Transactions",
-                column: "SourceCardId");
+                name: "IX_TransactionStatuses_TransactionId",
+                table: "TransactionStatuses",
+                column: "TransactionId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Transactions_StatusId",
-                table: "Transactions",
-                column: "StatusId");
+                name: "IX_TransactionTypes_TransactionId",
+                table: "TransactionTypes",
+                column: "TransactionId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TransactionTypes_TypeId",
+                table: "TransactionTypes",
+                column: "TypeId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -644,6 +708,9 @@ namespace BetaBank.Migrations
                 name: "BankCardTypes");
 
             migrationBuilder.DropTable(
+                name: "CashBacks");
+
+            migrationBuilder.DropTable(
                 name: "News");
 
             migrationBuilder.DropTable(
@@ -656,7 +723,10 @@ namespace BetaBank.Migrations
                 name: "SupportStatuses");
 
             migrationBuilder.DropTable(
-                name: "Transactions");
+                name: "TransactionStatuses");
+
+            migrationBuilder.DropTable(
+                name: "TransactionTypes");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
@@ -671,6 +741,9 @@ namespace BetaBank.Migrations
                 name: "BankCardStatusModels");
 
             migrationBuilder.DropTable(
+                name: "BankCards");
+
+            migrationBuilder.DropTable(
                 name: "BankCardTypeModels");
 
             migrationBuilder.DropTable(
@@ -680,16 +753,16 @@ namespace BetaBank.Migrations
                 name: "SupportStatusModels");
 
             migrationBuilder.DropTable(
-                name: "BankCards");
-
-            migrationBuilder.DropTable(
-                name: "TransactionStatusModels");
+                name: "Transactions");
 
             migrationBuilder.DropTable(
                 name: "TransactionTypeModels");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "TransactionStatusModels");
         }
     }
 }

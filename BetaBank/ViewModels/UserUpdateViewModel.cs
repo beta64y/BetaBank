@@ -20,7 +20,7 @@ namespace BetaBank.ViewModels
 
         [DataType(DataType.Password)]
         public string? ConfirmPassword { get; set; }
-        public IFormFile ProfilePhoto { get; set; }
+        public IFormFile? ProfilePhoto { get; set; }
 
 
 

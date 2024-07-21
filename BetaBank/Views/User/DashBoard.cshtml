@@ -1,8 +1,8 @@
 ﻿
 @{
     ViewData["Title"] = "DashBoard";
+    var data = ViewData["DashBoardViewModel"] as DashBoardViewModel;
 }
-@model DashBoardViewModel
 <section style="display: flex;padding-top: 150px;color: black;">
     <nav style="width: 200px; background: #f4f4f4; padding: 20px;">
         <ul style="list-style-type: none; padding: 0;">
@@ -18,58 +18,66 @@
              <form>
                  <div>
                      <label>First Name:</label>
-                     <input asp-for="User.FirstName"  id="name" name="name">
+                     <input asp-for="@data.User.FirstName"  id="name" name="name">
                  </div>
                  <div>
                      <label >Last Name:</label>
-                     <input asp-for="User.LastName"  id="lastName" name="lastName" >
+                     <input asp-for="@data.User.LastName"  id="lastName" name="lastName" >
                  </div>
                  <div>
                      <label >Phone Number:</label>
-                     <input asp-for="User.PhoneNumber"  id="phone" name="phone" >
+                     <input asp-for="@data.User.PhoneNumber"  id="phone" name="phone" >
                  </div>
                  <div>
                      <label >Email:</label>
-                     <input asp-for="User.Email"  id="mail" name="mail" >
+                     <input asp-for="@data.User.Email"  id="mail" name="mail" >
                  </div>
                  <div>
                      <label >Date Of Birth:</label>
-                     <input asp-for="User.DateOfBirth" type="text" id="dateOfBirth" name="dateOfBirth" >
+                     <input asp-for="@data.User.DateOfBirth" type="text" id="dateOfBirth" name="dateOfBirth" >
                  </div>
                  <div>
                      <label>Created Date:</label>
-                     <input asp-for="User.CreatedDate" type="text" id="createdDate" name="createdDate">
+                     <input asp-for="@data.User.CreatedDate" type="text" id="createdDate" name="createdDate">
                  </div>
                  <div>
                      <label>Updated Date:</label>
-                     <input asp-for="User.UpdateDate" type="text" id="updatedDate" name="updatedDate">
+                     <input asp-for="@data.User.UpdateDate" type="text" id="updatedDate" name="updatedDate">
                  </div>
              </form>
         </div>
         <div id="account-cards" class="section" style="display: none;">
             <h2>Accounts and Cards</h2>
-                    @if(Model.BankAccount != null)
+                    @if(data.BankAccount != null)
                     {
-                <div style="border: 1px solid #ccc; padding: 10px; margin-bottom: 20px;">
-                    <h3>IBAN: @Model.BankAccount.IBAN</h3>
-                    <h3>Account Number: @Model.BankAccount.AccountNumber</h3>
-                    <p>Balance: @Model.BankAccount.Balance</p>
+                <div style="border: 1px solid #000; padding: 10px; margin-bottom: 20px;">
+                    <h3 style="color: #000;">IBAN: @data.BankAccount.IBAN</h3>
+                    <h3 style="color: #000;">Account Number: @data.BankAccount.AccountNumber</h3>
+                    <p style="color: #000;">Balance: @data.BankAccount.Balance</p>
 
                 </div>
                     }
-                    @if(Model.BankCards != null)
+                @if (data.BankCards != null)
                     {
-                        @foreach(var BankCard in Model.BankCards)
+                @foreach (var BankCard in data.BankCards)
                         {
-                    <div class="card" style="display: flex; justify-content: space-between; padding: 10px; border: 1px solid #ccc; margin-bottom: 10px;">
+                    <div class="card" style="display: flex; justify-content: space-between; padding: 10px; border: 1px solid #000; margin-bottom: 10px;">
                         <div>
-                            <h4>@BankCard.CardNumber</h4>
-                            <p>Balance: $@BankCard.Balance</p>
+                            <h4 style="color: #000;">@BankCard.CardNumber</h4>
+                            <p style="color: #000;">Balance: $@BankCard.Balance</p>
                         </div>
-                        <div class="card-icon" style="width: 40px; height: 40px; background-color: #ddd;"></div>
+                        <div class="card-icon" style="width: 40px; height: 40px; background-color: #000;"></div>
                     </div>
                         }
                     }
+            @if (data.CashBack != null)
+            {
+                <div style="border: 1px solid #000; padding: 10px; margin-bottom: 20px;">
+                    <h3 style="color: #000;">CashBackBalance: @data.CashBack.Balance</h3>
+
+
+                </div>
+            }
             
             
         </div>

@@ -1,8 +1,8 @@
 ﻿namespace BetaBank.ViewModels
 {
-    public class DashBoardBankCardViewModel
+    public class CashBackViewModel
     {
-        public string CardNumber { get; set; }
         public double Balance { get; set; }
+        public string CashBackNumber { get; set; }
     }
 }

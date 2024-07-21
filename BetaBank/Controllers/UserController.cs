@@ -5,7 +5,6 @@ using BetaBank.Services.Validators;
 using BetaBank.Utils.Enums;
 using BetaBank.ViewModels;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -50,13 +49,14 @@ namespace BetaBank.Controllers
             if (userByFin != null)
             {
                 ModelState.AddModelError("", "FIN must be unique");
-                return View(registerViewModel);
+
+                return View();
             }
             AppUser userByPhoneNumber = await _userManager.Users.FirstOrDefaultAsync(x => x.PhoneNumber == registerViewModel.PhoneNumber);
             if (userByPhoneNumber != null)
             {
                 ModelState.AddModelError("", "PhoneNumber must be unique");
-                return View(registerViewModel);
+                return View();
             }
 
             AppUser appUser = new AppUser()
@@ -101,7 +101,7 @@ namespace BetaBank.Controllers
             MailService mailService = new(_configuration);
             await mailService.SendEmailAsync(new MailRequest { ToEmail = appUser.Email, Subject = "Confirm Email", Body = body });
 
-
+            //subscribe section
 
             Subscriber subscriber = await _context.Subscribers.FirstOrDefaultAsync(x => x.Mail == registerViewModel.Email);
             if (subscriber != null)
@@ -120,12 +120,85 @@ namespace BetaBank.Controllers
                     Mail = registerViewModel.Email,
                     IsSubscribe = true
                 };
-                await _context.Subscribers.AddAsync(subscriber);
-                await _context.SaveChangesAsync();
+                await _context.Subscribers.AddAsync(newSubscriber);
             }
 
+            //bank account section
 
 
+            string accountNumber;
+            string iban;
+            do
+            {
+                accountNumber = BankAccountService.GenerateAccountNumber();
+                iban = BankAccountService.GenerateIBAN("TR", "00061", accountNumber);
+
+                var existingAccount = await _context.BankAccounts.FirstOrDefaultAsync(x => x.IBAN == iban || x.AccountNumber == accountNumber);
+                if (existingAccount == null)
+                {
+                    break;
+                }
+            } while (true);
+
+            var swiftCode = BankAccountService.GenerateSWIFT("1234", "AZ");
+
+            var newbankAccount = new BankAccount
+            {
+                Id = $"{Guid.NewGuid()}",
+                AccountNumber = BankAccountService.GenerateAccountNumber(),
+                IBAN = iban,
+                SwiftCode = swiftCode,
+                Balance = 0,
+                CreatedDate = DateTime.UtcNow,
+                UserId = appUser.Id,
+            };
+
+
+
+
+            var status = await _context.BankAccountStatusModels.FirstOrDefaultAsync(x => x.Name == "Active");
+            if (status == null)
+            {
+                return NotFound();
+            }
+            var bankAccountStatus = new Models.BankAccountStatus()
+            {
+                Id = $"{Guid.NewGuid()}",
+                AccountId = newbankAccount.Id,
+                StatusId = status.Id
+            };
+
+            //cashback section
+            string cashBackNumber;
+            do
+            {
+                cashBackNumber = CashBackService.GenerateNumber();
+
+                var existingCashBack = await _context.CashBacks.FirstOrDefaultAsync(x => x.CashBackNumber == cashBackNumber);
+                if (existingCashBack == null)
+                {
+                    break;
+                }
+            } while (true);
+            CashBack newCashBack = new()
+            {
+                Id = $"{Guid.NewGuid()}",
+                CreatedDate = DateTime.UtcNow,
+                UpdatedDate = DateTime.UtcNow,
+                UserId = appUser.Id,
+                Balance = 0,
+                CashBackNumber = cashBackNumber,
+            };
+
+
+            await _context.CashBacks.AddAsync(newCashBack);
+
+
+            await _context.BankAccounts.AddAsync(newbankAccount);
+            await _context.BankAccountStatuses.AddAsync(bankAccountStatus);
+
+
+            await _context.SaveChangesAsync();
             await _userManager.AddToRoleAsync(appUser, Roles.User.ToString());
 
 
@@ -186,17 +259,19 @@ namespace BetaBank.Controllers
                     Balance = bankAccount.Balance
                 };
             }
-            
+            CashBack cashBack = await _context.CashBacks.FirstOrDefaultAsync(x => x.UserId == user.Id);
 
 
             DashBoardViewModel dashBoardViewModel = new()
             {
                 User = dashBoardUserViewModel,
                 BankCards = bankCardViewModels,
-                BankAccount = dashBoardBankAccountViewModel
+                BankAccount = dashBoardBankAccountViewModel,
+                CashBack = cashBack,
 
             };
-            return View(dashBoardViewModel);
+            ViewData["DashBoardViewModel"] = dashBoardViewModel;
+            return View();
         }
         [Authorize]
         public async Task<IActionResult> Profile()
@@ -214,31 +289,40 @@ namespace BetaBank.Controllers
                     LastName = user.LastName,
                     Email = user.Email,
                     
-        }
+                }
             };
             TempData["ProfilePhoto"] = user.ProfilePhoto;
-            return View(userProfileViewModel);
+            ViewData["UserProfileViewmodel"] = userProfileViewModel;
+
+
+
+            return View();
         }
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdateProfile(UserUpdateViewModel userUpdateViewModel)
+        public async Task<IActionResult> Profile(UserUpdateViewModel userUpdateViewModel)
         {
             TempData["Tab"] = "account-details";
+            
             UserProfileViewmodel userProfileViewmodel = new()
             {
                 userUpdateViewModel = userUpdateViewModel
             };
-            if (!ModelState.IsValid)
-            {
-                return View(nameof(Profile), userProfileViewmodel);
-            }
 
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
             if (user == null)
             {
                 return NotFound();
             }
+            TempData["ProfilePhoto"] = user.ProfilePhoto;
+            ViewData["UserProfileViewmodel"] = userProfileViewmodel;
+            if (!ModelState.IsValid)
+            {
+                return View(nameof(Profile));
+            }
+
+            
 
 
 
@@ -249,13 +333,13 @@ namespace BetaBank.Controllers
                 if (!userUpdateViewModel.ProfilePhoto.CheckFileSize(3000))
                 {
                     ModelState.AddModelError("Image", "get ariqla");
-                    return View();
+                    return View(nameof(Profile));
                 }
 
                 if (!userUpdateViewModel.ProfilePhoto.CheckFileType("image/"))
                 {
                     ModelState.AddModelError("Image", "get ariqla");
-                    return View();
+                    return View(nameof(Profile));
                 }
                 string basePath = Path.Combine(_webHostEnvironment.WebRootPath, "img", "data");
                 string path = Path.Combine(basePath, user.ProfilePhoto);
@@ -275,12 +359,12 @@ namespace BetaBank.Controllers
             if (user.UserName != userUpdateViewModel.Email && _userManager.Users.Any(u => u.UserName == userUpdateViewModel.Email))
             {
                 ModelState.AddModelError("UserName", "UserName Must be unique");
-                return View(nameof(Profile), userProfileViewmodel);
+                return View(nameof(Profile));
             }
             if (user.Email != userUpdateViewModel.Email && _userManager.Users.Any(u => u.Email == userUpdateViewModel.Email))
             {
                 ModelState.AddModelError("Email", "Email Must be unique");
-                return View(nameof(Profile), userProfileViewmodel);
+                return View(nameof(Profile));
             }
 
             if (userUpdateViewModel.CurrentPassword != null)
@@ -288,7 +372,7 @@ namespace BetaBank.Controllers
                 if (userUpdateViewModel.NewPassword == null)
                 {
                     ModelState.AddModelError("NewPassword", "new password bos ola bilmez");
-                    return View(nameof(Profile), userProfileViewmodel);
+                    return View(nameof(Profile));
 
                 }
                 IdentityResult identityResult = await _userManager.ChangePasswordAsync(user, userUpdateViewModel.CurrentPassword, userUpdateViewModel.NewPassword);
@@ -298,7 +382,7 @@ namespace BetaBank.Controllers
                     {
                         ModelState.AddModelError("", i.Description);
                     }
-                    return View(nameof(Profile), userProfileViewmodel);
+                    return View(nameof(Profile));
                 }
             }
 
@@ -315,14 +399,14 @@ namespace BetaBank.Controllers
                 {
                     ModelState.AddModelError("", i.Description);
                 }
-                return View(nameof(Profile), userProfileViewmodel);
+                return View(nameof(Profile));
 
             }
 
             await _signInManager.RefreshSignInAsync(user);
             TempData["SuccessMessage"] = "Sizin profiliniz ugurla yenilendi";
             TempData["ProfilePhoto"] = user.ProfilePhoto;
-            return View(nameof(Profile), userProfileViewmodel);
+            return View(nameof(Profile));
 
 
         }

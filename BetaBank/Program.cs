@@ -14,10 +14,10 @@ builder.Services.AddDbContext<BetaBankDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("Default"));
     //builder.Configuration["MailSettings:Mail"];
 });
-//builder.Services.AddDbContext<ExternalDbContext>(options =>
-//{
-//    options.UseSqlServer(builder.Configuration.GetConnectionString("Secondary"));
-//});
+builder.Services.AddDbContext<ExternalDbContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("Secondary"));
+});
 
 builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
 {
@@ -43,6 +43,7 @@ app.UseStaticFiles();
 app.UseAuthentication();
 
 app.UseAuthorization();
+app.UseExceptionHandler("/Error");
 
 app.MapControllerRoute(
     name: "areas",

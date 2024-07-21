@@ -17,7 +17,7 @@ namespace BetaBank.Services.Implementations
             if (string.IsNullOrWhiteSpace(accountNumber))
                 throw new ArgumentException("Account number cannot be null or empty.");
 
-            string checkDigits = "00"; // Initial placeholder for check digits
+            string checkDigits = "00"; 
             string bban = bankCode + accountNumber;
 
             string interimIBAN = countryCode + checkDigits + bban;

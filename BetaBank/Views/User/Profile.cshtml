@@ -1,22 +1,23 @@
 ﻿@{
     ViewData["Title"] = "Profile";
+    var data = ViewData["UserProfileViewmodel"] as UserProfileViewmodel;
     Layout = null;
 }
 @model UserProfileViewmodel
-<form asp-action="UpdateProfile" method="post" enctype="multipart/form-data">
+<form asp-action="Profile" method="post" enctype="multipart/form-data">
     <div class="form-group">
         <label asp-for="userUpdateViewModel.FirstName"></label>
-        <input asp-for="userUpdateViewModel.FirstName" class="form-control" />
+        <input asp-for="userUpdateViewModel.FirstName" value="@data.userUpdateViewModel.FirstName" class="form-control" />
         <span asp-validation-for="userUpdateViewModel.FirstName" class="text-danger"></span>
     </div>
     <div class="form-group">
         <label asp-for="userUpdateViewModel.LastName"></label>
-        <input asp-for="userUpdateViewModel.LastName" class="form-control" />
+        <input asp-for="userUpdateViewModel.LastName" value="@data.userUpdateViewModel.LastName" class="form-control" />
         <span asp-validation-for="userUpdateViewModel.LastName" class="text-danger"></span>
     </div>
     <div class="form-group">
         <label asp-for="userUpdateViewModel.Email"></label>
-        <input asp-for="userUpdateViewModel.Email" class="form-control" />
+        <input asp-for="userUpdateViewModel.Email" value="@data.userUpdateViewModel.Email" class="form-control" />
         <span asp-validation-for="userUpdateViewModel.Email" class="text-danger"></span>
     </div>
     <div class="form-group">

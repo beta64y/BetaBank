@@ -15,7 +15,7 @@ namespace BetaBank.Models
         public DateTime CreatedDate { get; set; }
         [DataType(DataType.Date)]
         public DateTime ExpiryDate { get; set; }
-        public decimal Balance { get; set; }
+        public double Balance { get; set; }
 
         public string UserId { get; set; }
         public AppUser User { get; set; }

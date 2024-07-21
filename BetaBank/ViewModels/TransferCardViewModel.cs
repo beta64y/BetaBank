@@ -2,8 +2,8 @@
 {
     public class TransferCardViewModel
     {
-        public string CardNumber { get; set; }
+        public string PaidById { get; set; }
         public string DestinationCardNumber { get; set; }
-        public string Amount {  get; set; }
+        public double Amount {  get; set; }
     }
 }

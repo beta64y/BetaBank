@@ -16,6 +16,6 @@ namespace BetaBank.Contexts
         //    base.OnModelCreating(modelBuilder);
 
         //}
-    
+
     }
 }
