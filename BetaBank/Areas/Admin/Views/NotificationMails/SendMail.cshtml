@@ -4,7 +4,8 @@
 
 
 @model AdminCreateNotificationMailViewModel
-<div class="col-md-12 mt-sm-3 mt-md-0">
+@await Component.InvokeAsync("AdminBox")
+<div class="col-md-9 mt-sm-3 mt-md-0">
     <div class="card">
         <div class="card-header main-color-bg">
             Send Notification Mail
@@ -30,4 +31,14 @@
         </div>
     </div>
 </div>
+@section Scripts {
+    <script>
+
+
+        document.getElementById("@TempData["Tab"]-tab").classList.add("active", "main-color-bg");
+        
+
+
+    </script>
+}
 

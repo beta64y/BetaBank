@@ -17,7 +17,7 @@ namespace BetaBank.Services.Implementations
         public async Task SendEmailAsync(MailRequest mailRequest)
         {
             var email = new MimeMessage();
-            email.Sender = MailboxAddress.Parse(_configuration["MailSettings:Mail"]);
+            email.Sender = MailboxAddress.Parse(_configuration["SecondaryMailSettings:Mail"]);
             email.To.Add(MailboxAddress.Parse(mailRequest.ToEmail));
             email.Subject = mailRequest.Subject;
             var builder = new BodyBuilder();
@@ -40,8 +40,8 @@ namespace BetaBank.Services.Implementations
             builder.HtmlBody = mailRequest.Body;
             email.Body = builder.ToMessageBody();
             using var smtp = new SmtpClient();
-            smtp.Connect(_configuration["MailSettings:Host"], int.Parse(_configuration["MailSettings:Port"]), SecureSocketOptions.StartTls);
-            smtp.Authenticate(_configuration["MailSettings:Mail"], _configuration["MailSettings:Password"]);
+            smtp.Connect(_configuration["SecondaryMailSettings:Host"], int.Parse(_configuration["SecondaryMailSettings:Port"]), SecureSocketOptions.StartTls);
+            smtp.Authenticate(_configuration["SecondaryMailSettings:Mail"], _configuration["SecondaryMailSettings:Password"]);
             await smtp.SendAsync(email);
             smtp.Disconnect(true);
         }

@@ -15,7 +15,7 @@
             @if (data.CashBackViewModel != null)
             {
                 <label class="radio-inline">
-                    <input type="radio" asp-for="PaidById" value="@data.CashBackViewModel.CashBackNumber">
+                    <input id="PaidById" type="radio" asp-for="PaidById" value="@data.CashBackViewModel.CashBackNumber">
                     CashBack - @data.CashBackViewModel.Balance.ToString("C")
                 </label>
 
@@ -24,14 +24,14 @@
             @if (data.BankAccountViewModel != null)
             {
                 <label class="radio-inline">
-                    <input type="radio" asp-for="PaidById" value="@data.BankAccountViewModel.AccountNumber">
+                    <input id="PaidById" type="radio" asp-for="PaidById" value="@data.BankAccountViewModel.AccountNumber">
                 @data.BankAccountViewModel.AccountNumber - @data.BankAccountViewModel.Balance.ToString("C")
             </label><br>
             }
             @foreach (var card in data.BankCardViewModels)
             {
                 <label class="radio-inline">
-                    <input type="radio" asp-for="PaidById" value="@card.CardNumber">
+                    <input id="PaidById" type="radio" asp-for="PaidById" value="@card.CardNumber">
                     @card.CardNumber - @card.Balance.ToString("C")
                 </label>
 

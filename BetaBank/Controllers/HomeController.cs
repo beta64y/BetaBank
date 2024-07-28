@@ -15,12 +15,51 @@ namespace BetaBank.Controllers
         
         
         private readonly BetaBankDbContext _context;
+        private readonly ExternalDbContext _externalContext;
+
         private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public HomeController(BetaBankDbContext context, IWebHostEnvironment webHostEnvironment)
+        public HomeController(BetaBankDbContext context, IWebHostEnvironment webHostEnvironment, ExternalDbContext externalContext)
         {
             _context = context;
             _webHostEnvironment = webHostEnvironment;
+            _externalContext = externalContext;
+        }
+        /* Start Create Section */
+        public async Task<IActionResult> AddInternetForExternal()
+        {
+            List<InternetForExternal> internetList = new List<InternetForExternal>
+            {
+                new InternetForExternal { SubscriberCode = "6437970093017", AppointmentType = "Individuals", Title = "BeeOnline" },
+new InternetForExternal { SubscriberCode = "8721489981745", AppointmentType = "Individuals", Title = "KatvInternet" },
+new InternetForExternal { SubscriberCode = "5540467233574", AppointmentType = "Individuals", Title = "AzEuroNet" },
+
+                //.... daha cox vardi sadece istifade ettiyini gostermek ucun saxladin
+
+            };
+
+            _externalContext.InternetProviders.AddRange(internetList);
+            _externalContext.SaveChanges();
+            return Content("sdasda");
+        }
+        public async Task<IActionResult> AddUtilityForExternal()
+        {
+            List<UtilityForExternal> utilitiesList = new List<UtilityForExternal>
+            {
+                new UtilityForExternal { SubscriberCode = "9663911807108", AppointmentType = "Commercial consumers", Title = "Azeriqaz" },
+new UtilityForExternal { SubscriberCode = "5627362014338", AppointmentType = "Individuals", Title = "NakhchivanElektrik" },
+new UtilityForExternal { SubscriberCode = "5228525615813", AppointmentType = "Individuals", Title = "AzerIstilikTechizat" },
+new UtilityForExternal { SubscriberCode = "3274612216103", AppointmentType = "Individuals", Title = "NakhchivanQaz" },
+new UtilityForExternal { SubscriberCode = "2549424323720", AppointmentType = "Commercial consumers", Title = "AzerSu" },
+new UtilityForExternal { SubscriberCode = "3624729778039", AppointmentType = "Individuals", Title = "NakhchivanElektrik" },
+
+                //.... daha cox vardi sadece istifade ettiyini gostermek ucun saxladin
+
+            };
+
+            _externalContext.Utilities.AddRange(utilitiesList);
+            _externalContext.SaveChanges();
+            return Content("sdasda");
         }
 
         public async Task<IActionResult> CreateEnums()
@@ -37,10 +76,22 @@ namespace BetaBank.Controllers
             //{
             //    await _context.TransactionStatusModels.AddAsync(new Models.TransactionStatusModel { Id = $"{Guid.NewGuid()}", Name = items });
             //}
-            foreach (var items in Enum.GetNames(typeof(Utils.Enums.TransactionType)))
-            {
-                await _context.TransactionTypeModels.AddAsync(new Models.TransactionTypeModel { Id = $"{Guid.NewGuid()}", Name = items });
-            }
+            //foreach (var items in Enum.GetNames(typeof(Utils.Enums.TransactionType)))
+            //{
+            //    await _context.TransactionTypeModels.AddAsync(new Models.TransactionTypeModel { Id = $"{Guid.NewGuid()}", Name = items });
+            //}
+            //foreach (var items in Enum.GetNames(typeof(Utils.Enums.Utilities)))
+            //{
+            //    await _context.UtilityModels.AddAsync(new Models.UtilityModel { Id = $"{Guid.NewGuid()}", Name = items, IsAppointmentTypeable = false });
+            //}
+            //foreach (var items in Enum.GetNames(typeof(Utils.Enums.Internet)))
+            //{
+            //    await _context.InternetModels.AddAsync(new Models.InternetModel { Id = $"{Guid.NewGuid()}", Name = items, IsAppointmentTypeable = false });
+            //}
+            //foreach (var items in Enum.GetNames(typeof(Utils.Enums.MobileOperators)))
+            //{
+            //    await _context.MobileOperatorModels.AddAsync(new Models.MobileOperatorModel { Id = $"{Guid.NewGuid()}", Name = items });
+            //}
             //foreach (var items in Enum.GetNames(typeof(Utils.Enums.BankAccountStatus)))
             //{
             //    await _context.BankAccountStatusModels.AddAsync(new Models.BankAccountStatusModel { Id = $"{Guid.NewGuid()}", Name = items });
@@ -53,7 +104,7 @@ namespace BetaBank.Controllers
             return Content("Hamisi yarandi");
 
         }
-
+        /* End Create Section */
 
         public IActionResult Index()
         {

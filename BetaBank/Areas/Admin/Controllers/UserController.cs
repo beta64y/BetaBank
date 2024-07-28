@@ -58,7 +58,7 @@ namespace BetaBank.Areas.Admin.Controllers
             {
                 Users = usersViewModel,
             };
-            TempData["Tab"] = "User";
+            TempData["Tab"] = "Users";
             return View(ViewModel);
         }
         public async Task<IActionResult> BanUser(string id)
@@ -124,7 +124,7 @@ namespace BetaBank.Areas.Admin.Controllers
                     bankCardViewModels.Add(new UserBankCardViewModel()
                     {
                         Id = bankCard.Id,
-                        CardNumber = bankCard.CardNumber,
+                        CardNumber = bankCard.CardNumber.ToCreditCardFormat(),
                         CVV = bankCard.CVV, 
                         ExpiryDate = bankCard.ExpiryDate,
                         Balance = bankCard.Balance,
@@ -174,6 +174,45 @@ namespace BetaBank.Areas.Admin.Controllers
 
 
             return View(userDetailViewModel);
+        }
+        public async Task<IActionResult> Search(AdminUserViewModel adminUsersViewModel)
+        {
+            if (adminUsersViewModel.Search.SearchTerm != null)
+            {
+                var searchTerm = adminUsersViewModel.Search.SearchTerm.ToLower();
+                var filteredUsers = await _context.Users.Where(p => p.FirstName.ToLower().Contains(searchTerm) || p.LastName.ToLower().Contains(searchTerm) || p.Email.ToLower().Contains(searchTerm) || p.PhoneNumber.ToLower().Contains(searchTerm)  ).ToListAsync();
+                List<UserViewModel> filteredUsersModel = new();
+                foreach (var user in filteredUsers)
+                {
+                    filteredUsersModel.Add(new UserViewModel
+                    {
+                        Id = user.Id,
+                        FirstName = user.FirstName,
+                        LastName = user.LastName,
+                        DateOfBirth = user.DateOfBirth,
+                        PhoneNumber = user.PhoneNumber,
+                        CreatedDate = user.CreatedDate,
+                        UpdateDate = user.UpdateDate,
+                        Banned = user.Banned,
+                        ProfilePhoto = user.ProfilePhoto,
+                        Email = user.Email,
+                        Age = user.DateOfBirth.CalculateAge(),
+                        EmailConfirmed = user.EmailConfirmed,
+                    });
+                }
+                AdminUserViewModel ViewModel = new AdminUserViewModel()
+                {
+                    Users = filteredUsersModel,
+                    Search = adminUsersViewModel.Search
+                };
+                TempData["Tab"] = "Subscribers";
+                return View("Index", ViewModel);
+            }
+            else
+            {
+                TempData["Tab"] = "Subscribers";
+                return View(null);
+            }
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace BetaBank.Utils.Enums
 {
-    public class MobileOperators
+    public enum MobileOperators
     {
         Azercell,
         Bakcell,

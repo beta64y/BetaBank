@@ -10,6 +10,8 @@ namespace BetaBank.Contexts
         }
 
         public DbSet<BankCardForExternal> BankCards { get; set; } = null!;
+        public DbSet<UtilityForExternal> Utilities { get; set; } = null!;
+        public DbSet<InternetForExternal> InternetProviders { get; set; } = null!;
 
         //protected override void OnModelCreating(ModelBuilder modelBuilder)
         //{

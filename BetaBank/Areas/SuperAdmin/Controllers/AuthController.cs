@@ -15,11 +15,12 @@ namespace BetaBank.Areas.SuperAdmin.Controllers
 
 
 
-        public AuthController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager)
+        public AuthController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IWebHostEnvironment webHostEnvironment, IConfiguration configuration)
         {
 
             _userManager = userManager;
             _signInManager = signInManager;
+  
         }
         public IActionResult Login()
         {
@@ -43,8 +44,14 @@ namespace BetaBank.Areas.SuperAdmin.Controllers
                 return View();
             }
             var user = await _userManager.FindByNameAsync(loginViewModel.Email);
+            if (user == null )
+            {
+                ModelState.AddModelError("", "Email or Password is incorrect");
+                return View();
+            }
+
             var userRoles = await _userManager.GetRolesAsync(user);
-            if (user == null || !(userRoles.Contains("SuperAdmin")))
+            if (!userRoles.Contains("SuperAdmin"))
             {
                 ModelState.AddModelError("", "Email or Password is incorrect");
                 return View();

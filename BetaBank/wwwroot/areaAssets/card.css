@@ -1,0 +1,237 @@
+/*cards css*/
+.card-container{
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    height: auto;
+    margin: 0;
+    background-color: transparent;
+}
+.card-container a{
+    text-decoration: none;
+    color: white;
+
+}
+  .debit-card{
+    position: relative;
+    width: 350px;
+    height:auto;
+    background: linear-gradient(90deg, #131311, #2FE404);
+    border-radius: 15px;
+    color: #fff;
+    padding: 20px;
+    margin: 15px 0;
+    font-family: Arial, sans-serif;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    position: relative;
+    transition: all .2s ease;
+    -webkit-transition: all .2s ease;
+    -moz-transition: all .2s ease;
+    -ms-transition: all .2s ease;
+    -o-transition: all .2s ease;
+}
+.betacard-card{
+    position: relative;
+    width: 350px;
+    height:auto;
+    background: linear-gradient(90deg, #131311, #013009);
+    border-radius: 15px;
+    color: #fff;
+    padding: 20px;
+    margin: 15px 0;
+    font-family: Arial, sans-serif;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    position: relative;
+    transition: all .2s ease;
+    -webkit-transition: all .2s ease;
+    -moz-transition: all .2s ease;
+    -ms-transition: all .2s ease;
+    -o-transition: all .2s ease;
+}
+.kredit-card{
+    position: relative;
+    width: 350px;
+    height:auto;
+    background: linear-gradient(180deg, #131311, #249f06,#131311);
+    border-radius: 15px;
+    color: #fff;
+    padding: 20px;
+    margin: 15px 0;
+    font-family: Arial, sans-serif;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    position: relative;
+    transition: all .2s ease;
+    -webkit-transition: all .2s ease;
+    -moz-transition: all .2s ease;
+    -ms-transition: all .2s ease;
+    -o-transition: all .2s ease;
+}
+.debit-card:hover,
+.kredit-card:hover,
+.betacard-card:hover{
+    box-shadow: 0px 0px 10px 1px #131311;
+    transform: translateY(-4px);
+    -webkit-transform: translateY(-4px);
+    -moz-transform: translateY(-4px);
+    -ms-transform: translateY(-4px);
+    -o-transform: translateY(-4px);
+}
+.debit-card{
+    background-image: url(images/debit-card-back.png);
+    background-size: cover;
+}
+.betacard-card {
+    background-image: url(images/beta-card-back.png);
+    background-size: cover;
+}
+.kredit-card {
+    background-image: url(images/kredit-card-back.png);
+    background-size: cover;
+}
+
+.block-overlay {
+    position: absolute;
+    top: 0;
+    z-index: 99;
+    border-radius: 15px;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    box-shadow: 0px 0px 4px 1px gray;
+    background: rgba(121, 119, 119, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 2em;
+    -webkit-border-radius: 15px;
+    -moz-border-radius: 15px;
+    -ms-border-radius: 15px;
+    -o-border-radius: 15px;
+    visibility: hidden;
+}
+.block-overlay i{
+    font-size: 1.2em;
+}
+.betacard-card.blocked .block-overlay{
+    visibility: visible;
+}
+
+.suspended-overlay {
+    position: absolute;
+    top: 0;
+    z-index: 99;
+    border-radius: 15px;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    box-shadow: 0px 0px 4px 1px red;
+    background: rgba(251, 158, 158, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 2em;
+    -webkit-border-radius: 15px;
+    -moz-border-radius: 15px;
+    -ms-border-radius: 15px;
+    -o-border-radius: 15px;
+    visibility: hidden;
+}
+.suspended-overlayx i{
+    font-size: 1.2em;
+    color: red;
+}
+.betacard-card.suspended .suspended-overlay{
+    visibility: visible;
+}
+.head{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.head h3{
+    margin: 0;
+    font-size: 20px;
+}
+#cardNumber{
+    letter-spacing: 2px;
+    font-size: 20px;
+    margin: 0;
+}
+.visa-word{
+    font-size: 24px;
+    font-weight: bold;
+    color: white;
+    font-style: italic;
+}
+.card-info{
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.copy-btn{
+    background: none;
+    border: none;
+    cursor: pointer;
+    outline: none;
+}
+.fa-copy{
+    font-size: 18px;
+    color: #fff;
+}
+.balance-div{
+    margin-top: 15px;
+    display: flex;
+    justify-content: flex-start;
+}
+.balance-text{
+    font-size: 15px;
+    color: #fff;
+    margin-right: 10px;
+}
+.balance-div p{
+    margin: 0;
+    font-size: 15px;
+}
+.cvv-div{
+    margin-top: 20px;
+    display: flex;
+    justify-content: flex-end;
+}
+.fas{
+    cursor: pointer;
+    color: #fff;
+    margin-right: 10px;
+}
+.fs-15 {
+    font-size: 15px;
+}
+.cvv-div p{
+    margin: 0;
+    font-size: 14px;
+}
+.card-owner{
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+.card-holder-p{
+    margin: 0;
+    font-size: 12px;
+    color: #d2d2d2;
+}
+.owner-name{
+    margin: 0;
+}
+.expires-text{
+    margin: 0;
+    font-size: 12px;
+    color: #d2d2d2;
+}
+.expires-date{
+    margin: 0;
+}

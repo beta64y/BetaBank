@@ -1,0 +1,110 @@
+﻿@{
+    ViewData["Title"] = "TransferToOwnCard";
+    var data = ViewData["TransferViewModel"] as TransferViewModel;
+    Layout = null;
+}
+
+@model TransactionViewModel
+
+<div class="container mt-5">
+    <h2>Select Card and Transfer Money</h2>
+    <form method="post" asp-action="TransferToCard">
+        <div class="form-group">
+            <label>Select Payment Method</label><br>
+
+            @if (data.CashBackViewModel != null)
+            {
+                <label class="radio-inline">
+                    <input id="PaidById" type="radio" asp-for="PaidById" value="@data.CashBackViewModel.CashBackNumber">
+                    CashBack - @data.CashBackViewModel.Balance.ToString("C")
+                </label>
+
+                <br>
+            }
+            @if (data.BankAccountViewModel != null)
+            {
+                <label class="radio-inline">
+                    <input id="PaidById" type="radio" asp-for="PaidById" value="@data.BankAccountViewModel.AccountNumber">
+                    @data.BankAccountViewModel.AccountNumber - @data.BankAccountViewModel.Balance.ToString("C")
+                </label>
+
+                <br>
+            }
+            @foreach (var card in data.BankCardViewModels)
+            {
+                <label class="radio-inline">
+                    <input id="PaidById" type="radio" asp-for="PaidById" value="@card.CardNumber">
+                    @card.CardNumber - @card.Balance.ToString("C")
+                </label>
+
+                <br>
+            }
+        </div>
+        <hr />
+        <div class="form-group">
+            <label for="recipientCardNumber">Recipient Card Number</label><br>
+            @foreach (var card in data.BankCardViewModels)
+            {
+                <label class="radio-inline">
+                    <input id="DestinationId" type="radio" asp-for="DestinationId" value="@card.CardNumber">
+                    @card.CardNumber - @card.Balance.ToString("C")
+                </label>
+
+                <br>
+            }
+        </div>
+
+        <div class="form-group">
+            <label for="amount">Amount</label>
+            <input asp-for="Amount" class="form-control" />
+        </div>
+
+
+
+        <button asp-action="TransferToCard" type="submit" class="btn btn-primary">Send Money</button>
+    </form>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const paidByInputs = document.querySelectorAll('input[name="PaidById"]');
+        const destinationInputs = document.querySelectorAll('input[name="DestinationId"]');
+
+        function updateVisibility() {
+            const selectedPaidBy = document.querySelector('input[name="PaidById"]:checked');
+            const selectedDestination = document.querySelector('input[name="DestinationId"]:checked');
+
+            paidByInputs.forEach(input => {
+                const label = input.closest('label');
+                if (selectedDestination && input.value === selectedDestination.value) {
+                    input.disabled = true;
+                    label.style.opacity = '0.5';
+                } else {
+                    input.disabled = false;
+                    label.style.opacity = '1';
+                }
+            });
+
+            destinationInputs.forEach(input => {
+                const label = input.closest('label');
+                if (selectedPaidBy && input.value === selectedPaidBy.value) {
+                    input.disabled = true;
+                    label.style.opacity = '0.5';
+                } else {
+                    input.disabled = false;
+                    label.style.opacity = '1';
+                }
+            });
+        }
+
+        paidByInputs.forEach(input => {
+            input.addEventListener('change', updateVisibility);
+        });
+
+        destinationInputs.forEach(input => {
+            input.addEventListener('change', updateVisibility);
+        });
+
+        updateVisibility(); // Initialize visibility on load
+    });
+</script>

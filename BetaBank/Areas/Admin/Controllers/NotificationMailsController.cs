@@ -34,6 +34,7 @@ namespace BetaBank.Areas.Admin.Controllers
         
         public async Task<IActionResult> SendMail()
         {
+            TempData["Tab"] = "NotificationMails";
             return View();
         }
 
@@ -64,12 +65,32 @@ namespace BetaBank.Areas.Admin.Controllers
             return RedirectToAction(nameof(Index));
 
         }
-        public async Task<IActionResult> View(string id)
+
+        public async Task<IActionResult> ViewMail(string id)
         {
             TempData["Tab"] = "NotificationMails";
             var sendedNotificationMail = await _context.SendedNotificationMails.FirstOrDefaultAsync(p => p.Id == id);
             return View(sendedNotificationMail);
         }
-
+        public async Task<IActionResult> Search(AdminNotificationMailViewModel adminNotificationMailViewModel)
+        {
+            if (adminNotificationMailViewModel.Search.SearchTerm != null)
+            {
+                var searchTerm = adminNotificationMailViewModel.Search.SearchTerm.ToLower();
+                var filteredMails = await _context.SendedNotificationMails.Where(p => (p.Title.ToLower().Contains(searchTerm))).ToListAsync();
+                AdminNotificationMailViewModel ViewModel = new AdminNotificationMailViewModel()
+                {
+                    NotificationMails = filteredMails,
+                    Search = adminNotificationMailViewModel.Search
+                };
+                TempData["Tab"] = "NotificationMails";
+                return View("Index", ViewModel);
+            }
+            else
+            {
+                TempData["Tab"] = "NotificationMails";
+                return View(null);
+            }
+        }
     }
 }

@@ -1,0 +1,96 @@
+﻿
+@{
+    ViewData["Title"] = "Create";
+    var data = ViewData["IdentityRoles"] as List<RoleViewModel>;
+}
+
+@model EmployeeCreateViewModel
+
+<div class="col-md-9 mt-sm-3 mt-md-0">
+    <!-- Panel for new entry creation -->
+    <div class="card">
+        <div class="card-header main-color-bg">
+            Create News
+        </div>
+        <div class="card-body">
+            <form asp-action="Create" method="post" enctype="multipart/form-data">
+               
+
+                <div class="form-group">
+                    <label >Username</label>
+                    <input asp-for="Username" class="form-control"  placeholder="Enter Username" required />
+                    <span asp-validation-for="Username" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label >FIN</label>
+                    <input asp-for="FIN" class="form-control"  placeholder="Enter FIN" required />
+                    <span asp-validation-for="FIN" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input asp-for="Email" class="form-control" placeholder="Enter Email" required />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label >FirstName</label>
+                    <input asp-for="FirstName" class="form-control"  placeholder="Enter FirstName" required />
+                    <span asp-validation-for="FirstName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label >LastName</label>
+                    <input asp-for="LastName" class="form-control"  placeholder="Enter LastName" required />
+                    <span asp-validation-for="LastName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label>DateOfBirth</label>
+                    <input asp-for="DateOfBirth" class="form-control"  required />
+                    <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label>PhoneNumber</label>
+                    <input asp-for="PhoneNumber" class="form-control" placeholder="Enter PhoneNumber" required />
+                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label for="roleSelect">Role</label>
+                    <select asp-for="RoleId"  class="form-control" id="roleSelect" required>
+                        @foreach(var item in data)
+                        {
+                            <option value="@item.RoleId">@item.RoleName</option>
+                        }
+                       
+                    </select>
+                    <span asp-validation-for="RoleId" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label for="description">Biography</label>
+                    <textarea asp-for="Biography" class="form-control" placeholder="Enter Biography" required rows="10"></textarea>
+                    <span asp-validation-for="Biography" class="text-danger"></span>
+                </div>
+                
+                <div class="form-group">
+                    <label for="ProfilePhoto">ProfilePhoto</label>
+                    <input asp-for="ProfilePhoto" class="form-control-file" name="ProfilePhoto" required />
+                    <span asp-validation-for="ProfilePhoto" class="text-danger"></span>
+                </div>
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <input type="submit" class="btn main-color-bg" value="Create" />
+                    <a href="javascript:history.back()" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script>
+
+
+        document.getElementById("@TempData["Tab"]-tab").classList.add("active", "main-color-bg");
+        
+
+
+    </script>
+}
+
+

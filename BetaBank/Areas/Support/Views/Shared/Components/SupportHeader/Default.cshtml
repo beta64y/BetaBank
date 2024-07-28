@@ -1,6 +1,6 @@
 ﻿@model BetaBank.Areas.Support.ViewModels.HeaderViewModel
 <nav class="navbar navbar-expand-md navbar-dark bg-dark">
-    <a class="navbar-brand" href="#"><img src="~/areaAssets/images/betabank-favicon.png" alt="betabank icon"><b>Support Panel</b></a>
+    <a class="navbar-brand" asp-controller="Dashboard" asp-action="Index"><img src="~/areaAssets/images/betabank-favicon.png" alt="betabank icon"><b>Support Panel</b></a>
     <button class="navbar-toggler"
             type="button"
             data-toggle="collapse"
@@ -14,16 +14,16 @@
     <div class="collapse navbar-collapse" id="navbarsExampleDefault">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
-                <a class="nav-link" asp-controller="Dashboard" asp-action="Index" >Dashboard</a>
+                <a class="nav-link" asp-controller="Supports" asp-action="Index" >Dashboard</a>
             </li>
             <li class="nav-item" id="UnderReview-nav-item">
-                <a class="nav-link" asp-controller="Dashboard" asp-action="FilteredSupports" asp-route-id="@Model.UnderReviewId">UnderReview</a>
+                <a class="nav-link" asp-controller="Supports" asp-action="FilteredSupports" asp-route-id="@Model.UnderReviewId">UnderReview</a>
             </li>
             <li class="nav-item" id="Answered-nav-item">
-                <a class="nav-link" asp-controller="Dashboard" asp-action="FilteredSupports" asp-route-id="@Model.AnsweredId">Answered</a>
+                <a class="nav-link" asp-controller="Supports" asp-action="FilteredSupports" asp-route-id="@Model.AnsweredId">Answered</a>
             </li>
             <li class="nav-item" id="Passed-nav-item">
-                <a class="nav-link" asp-controller="Dashboard" asp-action="FilteredSupports" asp-route-id="@Model.PassedId">Passed</a>
+                <a class="nav-link" asp-controller="Supports" asp-action="FilteredSupports" asp-route-id="@Model.PassedId">Passed</a>
             </li>
         </ul>
         <ul class="navbar-nav ml-auto">

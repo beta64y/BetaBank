@@ -45,8 +45,14 @@ namespace BetaBank.Areas.Support.Controllers
                 return View();
             }
             var user = await _userManager.FindByNameAsync(loginViewModel.Email);
+            if (user == null)
+            {
+                ModelState.AddModelError("", "Email or Password is incorrect");
+                return View();
+            }
+
             var userRoles = await _userManager.GetRolesAsync(user);
-            if (user == null || !userRoles.Contains("Support") )
+            if (!userRoles.Contains("Support"))
             {
                 ModelState.AddModelError("", "Email or Password is incorrect");
                 return View();

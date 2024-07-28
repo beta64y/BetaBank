@@ -9,7 +9,7 @@ banBtns.forEach(BanBtn => {
         e.preventDefault();
 
         let url = this.getAttribute("href");
-
+        console.log(url)
         Swal.fire({
             title: "Are you sure?",
             text: "You won't be able to Ban this user!",

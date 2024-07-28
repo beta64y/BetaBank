@@ -1,0 +1,36 @@
+﻿
+@{
+    ViewData["Title"] = "Subscriptions";
+    Layout = null;
+    var data = ViewData["SubscriptionsPaymentViewModel"] as List<SubscriptionsPaymentViewModel>;
+    var SecondaryData = ViewData["Subscription"] as string;
+}
+<h2>Subscriptions</h2>
+<ul>
+    @if (SecondaryData == "Utility")
+    {
+        @foreach (var item in data)
+        {
+            <li>
+                <a asp-action="UtilitySubscriptionTransaction" asp-route-id="@item.Id">
+                    <img src="@item.Name" alt="@item.Name" style="width:24px;height:24px;margin-right:10px;" />
+                    @item.Name
+                </a>
+            </li>
+        }
+    }
+    else if (SecondaryData == "Internet")
+    {
+        @foreach (var item in data)
+        {
+            <li>
+                <a asp-action="InternetProviderSubscriptionTransaction" asp-route-id="@item.Id">
+                    <img src="@item.Name" alt="@item.Name" style="width:24px;height:24px;margin-right:10px;" />
+                    @item.Name
+                </a>
+            </li>
+        }
+    }
+
+</ul>
+

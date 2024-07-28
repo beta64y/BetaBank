@@ -21,7 +21,7 @@
 
         public static DateTime GenerateExpiryDate()
         {
-            return DateTime.UtcNow.AddYears(random.Next(3, 6)); 
+            return DateTime.UtcNow.AddYears(4); 
         }
 
         private static string CalculateLuhnCheckDigit(string number)
@@ -48,6 +48,21 @@
 
             int checkDigit = (10 - (sum % 10)) % 10;
             return checkDigit.ToString();
+        }
+        public static string ToCreditCardFormat(this string cardNumber)
+        {
+            if (string.IsNullOrWhiteSpace(cardNumber))
+            {
+                return string.Empty;
+            }
+            cardNumber = cardNumber.Replace(" ", "");
+
+            if (!cardNumber.All(char.IsDigit))
+            {
+                throw new ArgumentException("Card number can only contain digits.");
+            }
+            var groupedCardNumber = string.Join(" ", Enumerable.Range(0, cardNumber.Length / 4).Select(i => cardNumber.Substring(i * 4, 4)));
+            return groupedCardNumber;
         }
     }
 }

@@ -23,9 +23,9 @@ namespace BetaBank.Contexts
 
 
 
+
         public DbSet<BankCardStatus> BankCardStatuses { get; set; } = null!;
         public DbSet<BankCardType> BankCardTypes { get; set; } = null!;
-        public DbSet<TransactionType> TransactionTypes { get; set; } = null!;
 
         public DbSet<TransactionStatus> TransactionStatuses { get; set; } = null!;
         public DbSet<BankAccountStatus> BankAccountStatuses { get; set; } = null!;
@@ -40,6 +40,9 @@ namespace BetaBank.Contexts
         public DbSet<BankAccountStatusModel> BankAccountStatusModels { get; set; } = null!;
         public DbSet<SupportStatusModel> SupportStatusModels { get; set; } = null!;
         public DbSet<Subscriber> Subscribers { get; set; } = null!;
+        public DbSet<InternetModel> InternetModels { get; set; } = null!; 
+        public DbSet<UtilityModel> UtilityModels { get; set; } = null!;
+        public DbSet<MobileOperatorModel> MobileOperatorModels { get; set; } = null!;
 
 
 

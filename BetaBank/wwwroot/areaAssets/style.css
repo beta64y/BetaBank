@@ -134,6 +134,10 @@ button.navbar-toggle:focus {
   background-color: var(--soft-green);
   color: var(--main-text-color);
 }
+.dropdown-toggle-2 {
+    background-color: var(--bacground-main) !important;
+    color: var(--main-text-color);
+}
 .dropdown-menu{
   background-color: var(--background-cards);
   padding: 2px;
@@ -278,8 +282,10 @@ button.navbar-toggle:focus {
 }
 /* Media Queries*/
 
+
+
 @media (max-width: 575px) {
-  .navbar-expand-sm .navbar-nav .show .dropdown-menu .dropdown-item {
+    .navbar-expand-sm .navbar-nav .show .dropdown-menu .dropdown-item {
     color: #ecf0f1 !important;
   }
   .navbar-expand-sm .navbar-nav .show .dropdown-menu .dropdown-item:hover,
