@@ -14,7 +14,10 @@
     <div class="collapse navbar-collapse" id="navbarsExampleDefault">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
-                <a class="nav-link" asp-controller="Supports" asp-action="Index" >Dashboard</a>
+                <a class="nav-link" asp-controller="Dashboard" asp-action="Index">Dashboard</a>
+            </li>
+            <li class="nav-item" id="Supports-nav-item">
+                <a class="nav-link" asp-controller="Supports" asp-action="Index">Supports</a>
             </li>
             <li class="nav-item" id="UnderReview-nav-item">
                 <a class="nav-link" asp-controller="Supports" asp-action="FilteredSupports" asp-route-id="@Model.UnderReviewId">UnderReview</a>
@@ -43,7 +46,7 @@
         <div class="row">
             <div class="col-md-10">
                 <h3 class="font-weight-light">
-                    <i class="fas fa-cog"></i> Support
+                    <i class="fas fa-headset"></i> Support
                 </h3>
             </div>
         </div>

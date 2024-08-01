@@ -2,6 +2,7 @@
 {
     public class SupportBoxViewModel
     {
+        public int SupportCount { get; set; }
         public int UnderReviewCount { get; set; }
         public int AnsweredCount { get; set; }
         public int PassedCount { get; set; }

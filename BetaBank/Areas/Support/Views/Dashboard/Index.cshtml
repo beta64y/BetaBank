@@ -1,1 +1,57 @@
-﻿
+﻿@{
+    ViewData["Title"] = "Dashboard";
+    var data = ViewData["SupportBoxViewModel"] as SupportBoxViewModel;
+}
+@model SupportComponentsViewModel
+
+
+
+<section id="main">
+    <div class="container">
+        <div class="row">
+
+            @await Component.InvokeAsync("SupportBox")
+
+            <div class="col-md-9 mt-sm-3 mt-md-0">
+                <!--Panel for website overview-->
+                <div class="card">
+                    <div class="card-header main-color-bg">
+                        Statics
+                    </div>
+                    <div class="card-body">
+                        <canvas id="myChart" style="width:100%;max-width:600px;margin-left: 10%; "></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+@section Scripts {
+    <script>
+        var xValues = ["Under Review", "Answered", "Passed"];
+        var yValues = [@data.UnderReviewCount,@data.AnsweredCount,@data.PassedCount];
+        var barColors = [
+            "#ffc107",
+            "#28a745",
+            "#dc3545",
+         
+        ];
+
+        new Chart("myChart", {
+            type: "pie",
+            data: {
+                labels: xValues,
+                datasets: [{
+                    backgroundColor: barColors,
+                    data: yValues
+                }]
+            },
+            options: {
+                title: {
+                    display: true,
+                    text: ""
+                }
+            }
+        });
+    </script>
+}

@@ -4,6 +4,9 @@ const banBtns = document.querySelectorAll(".banBtn");
 const unBanBtns = document.querySelectorAll(".unBanBtn");
 const newsDeleteBtns = document.querySelectorAll(".newsDeleteBtn");
 
+const disableBtns = document.querySelectorAll(".disableBtn");
+const unDisableBtns = document.querySelectorAll(".unDisableBtn");
+
 banBtns.forEach(BanBtn => {
     BanBtn.addEventListener("click", function (e) {
         e.preventDefault();
@@ -110,6 +113,80 @@ newsDeleteBtns.forEach(newsDeleteBtn => {
                             location.reload();
                         });
                     })
+            }
+        });
+    });
+});
+
+
+disableBtns.forEach(DisableBtn => {
+    DisableBtn.addEventListener("click", function (e) {
+        e.preventDefault();
+
+        let url = this.getAttribute("href");
+        console.log(url)
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to Disable this card!",
+            icon: "warning",
+            background: "#131311",
+            color: "#FFFFFF",
+            showCancelButton: true,
+            confirmButtonColor: "#74FA56",
+            cancelButtonColor: "#1E1D1B",
+            confirmButtonText: "Yes, Disable this card!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                fetch(url, { method: "POST" })
+                    .then(response => response.json())
+                    .then(data => {
+                        Swal.fire({
+                            title: "Disable!",
+                            text: data.message,
+                            icon: "success",
+                            background: "#131311",
+                            color: "#FFFFFF"
+                        }).then(result => {
+                            location.reload();
+                        });
+                    });
+            }
+        });
+    });
+});
+
+
+unDisableBtns.forEach(unDisableBtn => {
+    unDisableBtn.addEventListener("click", function (e) {
+        e.preventDefault();
+
+        let url = this.getAttribute("href");
+
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to unDisable this card!",
+            icon: "warning",
+            background: "#131311",
+            color: "#FFFFFF",
+            showCancelButton: true,
+            confirmButtonColor: "#74FA56",
+            cancelButtonColor: "#1E1D1B",
+            confirmButtonText: "Yes, unDisable this card!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                fetch(url, { method: "POST" })
+                    .then(response => response.json())
+                    .then(data => {
+                        Swal.fire({
+                            title: "UnDisable!",
+                            text: data.message,
+                            icon: "success",
+                            background: "#131311",
+                            color: "#FFFFFF"
+                        }).then(result => {
+                            location.reload();
+                        });
+                    });
             }
         });
     });

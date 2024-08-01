@@ -90,7 +90,7 @@ namespace BetaBank.Controllers
             if (/*transferViewModel.BankCardViewModels.Count == 0 &&*/ transferViewModel.CashBackViewModel == null && transferViewModel.BankAccountViewModel == null)
             {
                 ViewBag.Message = "Ooo, you ain't got no money to spend !";
-                return View("Waring");
+                return View("Warning");
             }
             ViewData["TransferViewModel"] = transferViewModel;
 
@@ -150,7 +150,7 @@ namespace BetaBank.Controllers
                     if (paidByCard.Balance < 0.5 + transactionViewModel.Amount)
                     {
                         ViewBag.Message = "Ooo, you ain't got no money to spend !";
-                        return View("Waring");
+                        return View("Warning");
                     }
                     var transactionCardTypeModel = await _context.TransactionTypeModels.FirstOrDefaultAsync(x => x.Name == "Card");
                     transactionViewModel.Commission = 0.5;
@@ -208,7 +208,7 @@ namespace BetaBank.Controllers
                     if (paidByCard.Balance < 0 + transactionViewModel.Amount)
                     {
                         ViewBag.Message = "Ooo, you ain't got no money to spend !";
-                        return View("Waring");
+                        return View("Warning");
                     }
                     var transactionCardTypeModel = await _context.TransactionTypeModels.FirstOrDefaultAsync(x => x.Name == "Card");
                     transactionViewModel.Commission = 0;
@@ -217,8 +217,8 @@ namespace BetaBank.Controllers
                         Id = $"{Guid.NewGuid()}",
                         ReceiptNumber = ReceiptNumberGenerator.GenerateReceiptNumber(),
                         Amount = transactionViewModel.Amount,
-                        Commission = transactionViewModel.Amount / 100,
-                        BillingAmount = transactionViewModel.Amount,
+                        Commission = transactionViewModel.Commission,
+                        BillingAmount = transactionViewModel.Amount + transactionViewModel.Commission,
                         CashbackAmount = await paidByCard.IsCardType(_context, "BetaCard") && await destinationCard.IsCardType(_context, "BetaCard") ? transactionViewModel.Amount / 2000 : 0,
                         TransactionDate = DateTime.UtcNow,
                         PaidByTypeId = transactionCardTypeModel.Id,
@@ -273,7 +273,7 @@ namespace BetaBank.Controllers
                     if (paidByBankAccount.Balance < 0.5 + transactionViewModel.Amount)
                     {
                         ViewBag.Message = "Ooo, you ain't got no money to spend !";
-                        return View("Waring");
+                        return View("Warning");
                     }
                     var transactionCardTypeModel = await _context.TransactionTypeModels.FirstOrDefaultAsync(x => x.Name == "Card");
                     var transactionBankAccountTypeModel = await _context.TransactionTypeModels.FirstOrDefaultAsync(x => x.Name == "BankAccount");
@@ -321,7 +321,7 @@ namespace BetaBank.Controllers
                     if (paidByBankAccount.Balance < 0 + transactionViewModel.Amount)
                     {
                         ViewBag.Message = "Ooo, you ain't got no money to spend !";
-                        return View("Waring");
+                        return View("Warning");
                     }
                     var transactionCardTypeModel = await _context.TransactionTypeModels.FirstOrDefaultAsync(x => x.Name == "Card");
                     var transactionBankAccountTypeModel = await _context.TransactionTypeModels.FirstOrDefaultAsync(x => x.Name == "BankAccount");
@@ -367,7 +367,7 @@ namespace BetaBank.Controllers
                 if (paidByCashBack.Balance < 5)
                 {
                     ViewBag.Message = "You need to have at least 5 dollars to use CashBack Wallet";
-                    return View("Waring");
+                    return View("Warning");
                 }
 
                 var destinationCard = await _context.BankCards.FirstOrDefaultAsync(x => x.CardNumber == transactionViewModel.DestinationId);
@@ -383,7 +383,7 @@ namespace BetaBank.Controllers
                     if (paidByCashBack.Balance < transactionViewModel.Commission + transactionViewModel.Amount)
                     {
                         ViewBag.Message = "Ooo, you ain't got no money to spend !";
-                        return View("Waring");
+                        return View("Warning");
                     }
                     var transactionCardTypeModel = await _context.TransactionTypeModels.FirstOrDefaultAsync(x => x.Name == "Card");
                     var transactionCashBackTypeModel = await _context.TransactionTypeModels.FirstOrDefaultAsync(x => x.Name == "CashBack");
@@ -430,7 +430,7 @@ namespace BetaBank.Controllers
                     if (paidByCashBack.Balance < 0 + transactionViewModel.Amount)
                     {
                         ViewBag.Message = "Ooo, you ain't got no money to spend !";
-                        return View("Waring");
+                        return View("Warning");
                     }
                     var transactionCardTypeModel = await _context.TransactionTypeModels.FirstOrDefaultAsync(x => x.Name == "Card");
                     var transactionCashBackTypeModel = await _context.TransactionTypeModels.FirstOrDefaultAsync(x => x.Name == "CashBack");
@@ -440,7 +440,7 @@ namespace BetaBank.Controllers
                         Id = $"{Guid.NewGuid()}",
                         ReceiptNumber = ReceiptNumberGenerator.GenerateReceiptNumber(),
                         Amount = transactionViewModel.Amount,
-                        Commission = transactionViewModel.Amount / 100,
+                        Commission = transactionViewModel.Commission,
                         BillingAmount = transactionViewModel.Amount,
                         CashbackAmount = 0,
                         TransactionDate = DateTime.UtcNow,
@@ -530,7 +530,7 @@ namespace BetaBank.Controllers
             if (transferViewModel.BankCardViewModels.Count == 0 && transferViewModel.CashBackViewModel == null && transferViewModel.BankAccountViewModel == null)
             {
                 ViewBag.Message = "Ooo, you ain't got no money to spend !";
-                return View("Waring");
+                return View("Warning");
             }
             ViewData["TransferViewModel"] = transferViewModel;
 
@@ -597,7 +597,7 @@ namespace BetaBank.Controllers
             if (/*transferViewModel.BankCardViewModels.Count == 0 &&*/ transferViewModel.CashBackViewModel == null && transferViewModel.BankAccountViewModel == null)
             {
                 ViewBag.Message = "Ooo, you ain't got no money to spend !";
-                return View("Waring");
+                return View("Warning");
             }
             ViewData["TransferViewModel"] = transferViewModel;
 
@@ -656,7 +656,7 @@ if (transactionViewModel.Amount < 2)
                 if (paidByCard.Balance < 0 + transactionViewModel.Amount)
                 {
                     ViewBag.Message = "Ooo, you ain't got no money to spend !";
-                    return View("Waring");
+                    return View("Warning");
                 }
                 var transactionCardTypeModel = await _context.TransactionTypeModels.FirstOrDefaultAsync(x => x.Name == "Card");
                 var transactionAccountTypeModel = await _context.TransactionTypeModels.FirstOrDefaultAsync(x => x.Name == "BankAccount");
@@ -708,7 +708,7 @@ if (transactionViewModel.Amount < 2)
                 if (paidByCashBack.Balance < 5)
                 {
                     ViewBag.Message = "You need to have at least 5 dollars to use CashBack Wallet";
-                    return View("Waring");
+                    return View("Warning");
                 }
 
                 var destinationAccount = await _context.BankAccounts.FirstOrDefaultAsync(x => x.UserId == user.Id);
@@ -723,7 +723,7 @@ if (transactionViewModel.Amount < 2)
                 if (paidByCashBack.Balance < 0 + transactionViewModel.Amount)
                 {
                     ViewBag.Message = "Ooo, you ain't got no money to spend !";
-                    return View("Waring");
+                    return View("Warning");
                 }
 
                 var transactionAccountTypeModel = await _context.TransactionTypeModels.FirstOrDefaultAsync(x => x.Name == "BankAccount");
@@ -860,7 +860,7 @@ if (transactionViewModel.Amount < 2)
             if (/*transferViewModel.BankCardViewModels.Count == 0 &&*/ transferViewModel.CashBackViewModel == null && transferViewModel.BankAccountViewModel == null)
             {
                 ViewBag.Message = "Ooo, you ain't got no money to spend !";
-                return View("Waring");
+                return View("Warning");
             }
             
 
@@ -938,7 +938,7 @@ if (transactionViewModel.Amount < 2)
         //            if (paidByCard.Balance < 0.5 + transactionViewModel.Amount)
         //            {
         //                ViewBag.Message = "Ooo, you ain't got no money to spend !";
-        //                return View("Waring");
+        //                return View("Warning");
         //            }
         //            var transactionCardTypeModel = await _context.TransactionTypeModels.FirstOrDefaultAsync(x => x.Name == "Card");
         //            transactionViewModel.Commission = 0.5;
@@ -996,7 +996,7 @@ if (transactionViewModel.Amount < 2)
         //            if (paidByCard.Balance < 0 + transactionViewModel.Amount)
         //            {
         //                ViewBag.Message = "Ooo, you ain't got no money to spend !";
-        //                return View("Waring");
+        //                return View("Warning");
         //            }
         //            var transactionCardTypeModel = await _context.TransactionTypeModels.FirstOrDefaultAsync(x => x.Name == "Card");
         //            transactionViewModel.Commission = 0;
@@ -1061,7 +1061,7 @@ if (transactionViewModel.Amount < 2)
         //            if (paidByBankAccount.Balance < 0.5 + transactionViewModel.Amount)
         //            {
         //                ViewBag.Message = "Ooo, you ain't got no money to spend !";
-        //                return View("Waring");
+        //                return View("Warning");
         //            }
         //            var transactionCardTypeModel = await _context.TransactionTypeModels.FirstOrDefaultAsync(x => x.Name == "Card");
         //            var transactionBankAccountTypeModel = await _context.TransactionTypeModels.FirstOrDefaultAsync(x => x.Name == "BankAccount");
@@ -1109,7 +1109,7 @@ if (transactionViewModel.Amount < 2)
         //            if (paidByBankAccount.Balance < 0 + transactionViewModel.Amount)
         //            {
         //                ViewBag.Message = "Ooo, you ain't got no money to spend !";
-        //                return View("Waring");
+        //                return View("Warning");
         //            }
         //            var transactionCardTypeModel = await _context.TransactionTypeModels.FirstOrDefaultAsync(x => x.Name == "Card");
         //            var transactionBankAccountTypeModel = await _context.TransactionTypeModels.FirstOrDefaultAsync(x => x.Name == "BankAccount");
@@ -1155,7 +1155,7 @@ if (transactionViewModel.Amount < 2)
         //        if (paidByCashBack.Balance < 5)
         //        {
         //            ViewBag.Message = "You need to have at least 5 dollars to use CashBack Wallet";
-        //            return View("Waring");
+        //            return View("Warning");
         //        }
 
         //        var destinationCard = await _context.BankCards.FirstOrDefaultAsync(x => x.CardNumber == transactionViewModel.DestinationId);
@@ -1171,7 +1171,7 @@ if (transactionViewModel.Amount < 2)
         //            if (paidByCashBack.Balance < transactionViewModel.Commission + transactionViewModel.Amount)
         //            {
         //                ViewBag.Message = "Ooo, you ain't got no money to spend !";
-        //                return View("Waring");
+        //                return View("Warning");
         //            }
         //            var transactionCardTypeModel = await _context.TransactionTypeModels.FirstOrDefaultAsync(x => x.Name == "Card");
         //            var transactionCashBackTypeModel = await _context.TransactionTypeModels.FirstOrDefaultAsync(x => x.Name == "CashBack");
@@ -1218,7 +1218,7 @@ if (transactionViewModel.Amount < 2)
         //            if (paidByCashBack.Balance < 0 + transactionViewModel.Amount)
         //            {
         //                ViewBag.Message = "Ooo, you ain't got no money to spend !";
-        //                return View("Waring");
+        //                return View("Warning");
         //            }
         //            var transactionCardTypeModel = await _context.TransactionTypeModels.FirstOrDefaultAsync(x => x.Name == "Card");
         //            var transactionCashBackTypeModel = await _context.TransactionTypeModels.FirstOrDefaultAsync(x => x.Name == "CashBack");

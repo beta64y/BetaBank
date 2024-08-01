@@ -1,0 +1,80 @@
+﻿@{
+    ViewData["Title"] = "Bank Cards";
+    var data = ViewData["UserBankCardViewModels"] as List<BetaBank.Areas.Admin.ViewModels.BankCardViewModel>;
+}
+
+
+@await Component.InvokeAsync("AdminBox")
+<div class="col-md-9 mt-sm-3 mt-md-0">
+    <!--Panel for website overview-->
+    <div class="card">
+        <div class="card-header main-color-bg">
+            Bank Cards
+        </div>
+        <div class="card-body">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">User</th>
+                        <th scope="col">Card</th>
+                        <th scope="col">Balance</th>
+                        <th scope="col">Status</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var bankCard in data)
+                    {
+                        <tr>
+                            <td>
+                                <a asp-controller="User" asp-action="Detail" asp-route-id="@bankCard.UserId" style="color:#FFFFFF;">
+                                    <img src="~/img/data/@bankCard.UserProfilePhoto" class="img-fluid rounded-circle" style="width: 45px; height: 45px; object-fit: cover;">
+                                    @bankCard.UserFirstName @bankCard.UserLastName
+                                </a>
+                            </td>
+                            <td>
+                                <a style="color:#FFFFFF;">
+                                    <img src="~/areaAssets/images/@bankCard.CardType.Name.ToLower()-Easy.png" class="img-fluid" style="width: 52.5px; height: 30px; object-fit: cover; border-radius:2px;">
+                                    *@bankCard.CardNumber.ToCreditCardFormat()
+
+                                </a>
+                            </td>
+                            <td>
+                                @bankCard.Balance.ToString("C")
+                            </td>
+                            <td>
+                                @if (bankCard.CardStatus.Name == "Active")
+                                {
+                                    <span class="badge bg-success text-dark">Active</span>
+                                }
+                                else if (bankCard.CardStatus.Name == "Blocked")
+                                {
+                                    <span class="badge bg-danger text-dark">Suspended</span>
+
+                                }
+                                else if (bankCard.CardStatus.Name == "Disabled")
+                                {
+                                    <span class="badge bg-warning text-dark">Disabled</span>
+
+                                }
+                            </td>
+                            <td><a asp-controller="BankCard" asp-action="Detail" asp-route-id="@bankCard.CardNumber" class="btn btn-warning">Details</a></td>
+                        </tr>
+                    }
+
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script>
+
+        document.getElementById("@TempData["Tab"]-tab").classList.add("active", "main-color-bg");
+
+    </script>
+}
+
+
+

@@ -44,7 +44,7 @@ namespace BetaBank.Areas.Support.Controllers
                 ModelState.AddModelError("", "");
                 return View();
             }
-            var user = await _userManager.FindByNameAsync(loginViewModel.Email);
+            var user = await _userManager.FindByNameAsync(loginViewModel.UsernameOrEmail);
             if (user == null)
             {
                 ModelState.AddModelError("", "Email or Password is incorrect");

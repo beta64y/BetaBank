@@ -19,7 +19,7 @@
                         Support Requests
                     </div>
                     <div class="card-body">
-                        @await Component.InvokeAsync("SupportSearch")
+                        @await Component.InvokeAsync("BetaBank.Areas.Support.ViewComponents.SupportSearch")
                         <table class="table table-striped table-hover">
                             <thead>
                                 <tr>
@@ -68,3 +68,19 @@
         </div>
     </div>
 </section>
+@section Scripts {
+    <script>
+
+
+        document.querySelector(".list-group-item.list-group-item-action.active.main-color-bg").classList.remove("active", "main-color-bg");
+        document.getElementById("@TempData["Tab"]-tab").classList.add("active", "main-color-bg");
+
+
+        document.querySelector(".nav-item.active").classList.remove("active");
+        document.getElementById("@TempData["Tab"]-nav-item").classList.add("active");
+
+
+
+
+    </script>
+}

@@ -1,10 +1,11 @@
-﻿using BetaBank.Contexts;
+﻿using BetaBank.Areas.Support.ViewModels;
+using BetaBank.Contexts;
 using BetaBank.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace BetaBank.Areas.Moderator.ViewComponents
+namespace BetaBank.Areas.Admin.ViewComponents
 {
     public class AdminBoxViewComponent : ViewComponent
     {
@@ -27,9 +28,12 @@ namespace BetaBank.Areas.Moderator.ViewComponents
             TempData["BankCardsCount"] = await _context.BankCards.CountAsync();
             TempData["BankAccountsCount"] = await _context.BankAccounts.CountAsync();
             TempData["CashBacksCount"] = await _context.CashBacks.CountAsync();
+            TempData["SupportsCount"] = await _context.Supports.CountAsync();
 
 
-           
+
+
+
 
             return View();
         }

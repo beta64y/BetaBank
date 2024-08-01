@@ -47,6 +47,7 @@ namespace BetaBank.Areas.Support.Controllers
             {
                 Supports = supportsViewModel,
             };
+            TempData["Tab"] = "Supports";
             return View(supportComponentsViewModel);
         }
 

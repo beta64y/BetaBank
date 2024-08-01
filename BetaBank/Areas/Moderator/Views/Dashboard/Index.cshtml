@@ -1,20 +1,61 @@
-﻿
-@{
+﻿@{
     ViewData["Title"] = "Dashboard";
+    var data = ViewData["moderatorDashboardViewModel"] as ModeratorDashboardViewModel;
+
 }
 
 
-@model List<News>
 @await Component.InvokeAsync("ModeratorBox")
-
+<div class="col-md-9 mt-sm-3 mt-md-0">
+    <!--Panel for website overview-->
+    <div class="card">
+        <div class="card-header main-color-bg">
+            Statics
+        </div>
+        <div class="card-body">
+            <canvas id="subscribersChart" style="width:100%;max-width:600px;margin-left: 10%; "></canvas>
+        </div>
+    </div>
+</div>
 @section Scripts {
     <script>
+        var xValues = ["Susbcribers", "Unsubscribers"];
+        var yValues = [@data.SubscribersCount, @data.UnsubscribersCount];
+        var barColors = [
+            "#28a745",
+            "#dc3545",
 
+        ];
 
-        document.getElementById("@TempData["Tab"]-tab").classList.add("active", "main-color-bg");
-        
+        new Chart("subscribersChart", {
+            type: "pie",
+            data: {
+                labels: xValues,
+                datasets: [{
+                    backgroundColor: barColors,
+                    data: yValues
+                }]
+            },
+            options: {
+                title: {
+                    display: true,
+                    text: ""
+                }
+            }
+        });
+
+   
 
 
     </script>
+    <script>
+
+            document.getElementById("@TempData["Tab"]-tab").classList.add("active", "main-color-bg");
+            document.getElementById("@TempData["Tab"]-nav-item").classList.add("active");
+
+
+
+        </script>
+    
 }
 

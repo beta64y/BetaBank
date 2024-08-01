@@ -1,0 +1,267 @@
+﻿@{
+    ViewData["Title"] = "Detail";
+    var data = ViewData["TransactionViewModel"] as BetaBank.Areas.Admin.ViewModels.TransactionViewModel;
+    var paidByData = ViewData["PaidBy"] as PaymentDetailsViewModel;
+    var destinationData = ViewData["Destination"] as PaymentDetailsViewModel;
+ 
+}
+<div class="col-md-12">
+    <h2>Transaction</h2>
+    <div class="card mb-4">
+        <div class="card-body">
+            <p class="card-text">
+                <strong>Receipt Number:</strong> @data.ReceiptNumber<br>
+                <strong>Amount:</strong> @data.Amount<br>
+                <strong>Commission:</strong> @data.Commission<br>
+                <strong>Billing Amount:</strong> @data.Amount<br>
+                <strong>Cashback Amount:</strong> @data.CashbackAmount<br>
+                <strong>Transaction Date:</strong> @data.TransactionDate.ToString("yyyy-MM-dd")<br>
+                <strong>Title:</strong> @data.Title<br>
+                <strong>Description:</strong> @data.Description<br>
+                <strong>Status:</strong>
+                @if (data.Status.Name == "Completed")
+                {
+                    <span class="badge bg-success text-dark">Completed</span>
+                }
+                else if (data.Status.Name == "Failed")
+                {
+                    <span class="badge bg-danger">Failed</span>
+                }
+                else if (data.Status.Name == "Cancelled")
+                {
+                    <span class="badge bg-warning">Cancelled</span>
+                }
+            </p>
+        </div>
+    </div>
+</div>
+<div class="col-md-6">
+    <h2>Paid By</h2>
+    <div class="card mb-6">
+        <div class="card-body">
+            @if(data.PaidByType.Name == "Card")
+
+            {
+               
+
+
+
+                            <div class="card-container mb-4"> 
+                                <a asp-controller="BankCard" asp-action="Detail" asp-route-id="@paidByData.Card.CardNumber">
+                        <div class="@paidByData.Card.CardType.Name.ToLower()-card  @paidByData.Card.CardStatus.Name.ToLower()">
+                                    <div class="head">
+                                        <h3>@paidByData.Card.CardType.Name</h3>
+                                        <div class="visa-word">VISA</div>
+                                    </div>
+                                    <div class="card-info">
+                                <p id="cardNumber1">@paidByData.Card.CardNumber.ToCreditCardFormat()</p>
+                                <button class="copy-btn" onclick="onclick="copyCardNumber(event, this)"">
+                                            <i class="fs-15 fas fa-copy"></i>
+                                        </button>
+                                    </div>
+                                    <div class="balance-div">
+                                        <span class="balance-text">Balance:</span>
+                                        <p>@paidByData.Card.Balance <span class="card-currency">$</span></p>
+                                    </div>
+                                    <div class="card-owner">
+                                        <div>
+                                            <p class="card-holder-p">Card Holder</p>
+                                            <p class="owner-name">@paidByData.User.FirstName @paidByData.User.LastName</p>
+                                        </div>
+                                        <div class="expires-div">
+                                            <p class="expires-text">Expires</p>
+                                            <p class="expires-date">@paidByData.Card.ExpiryDate.ToString("MM/yy")</p>
+                                        </div>
+                                    </div>
+                            <div class="block-overlay">
+                                <i class="fas fa-lock"></i>
+                            </div>
+                            <div class="disabled-overlay">
+                                <i class="fas fa-ban"></i>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                
+            }
+            else if (data.PaidByType.Name == "BankAccount")
+            {
+                <div class="account-info">
+                    <div class="account-number-and-info">
+                        <h3>Account Number: <span class="account-number">@paidByData.Account.AccountNumber</span></h3>
+                        @if (paidByData.Account.AccountStatus.Name == "Active")
+                        {
+                            <span class="badge bg-success text-dark">Active</span>
+                        }
+                        else if (paidByData.Account.AccountStatus.Name == "Suspended")
+                        {
+                            <span class="badge bg-danger text-dark">Suspended</span>
+
+                        }
+
+                    </div>
+                    <div class="account-details">
+                        <span class="account-amount">@paidByData.Account.Balance.ToString("C")</span>
+                    </div>
+                    <div class="iban-box d-flex align-items-center border rounded p-2 mb-4">
+                        <button class="btn btn-copy mr-2" onclick="copyIBAN()">
+                            <i class="fas fa-copy"></i>
+                        </button>
+                        <span class="iban">@paidByData.Account.IBAN</span>
+                    </div>
+                    <div class="text-center">
+                        <a asp-controller="BankAccount" asp-action="Detail" asp-route-id="@paidByData.Account.AccountNumber" class="btn btn-primary">Details</a>
+                    </div>
+                </div>
+            }
+            else if (data.PaidByType.Name == "CashBack")
+            {
+   
+                        <div class="account-info">
+                            <div class="account-number-and-info">
+                                <h3>Account Number: <span class="account-number">@paidByData.CashBack.CashBackNumber</span></h3>
+                            </div>
+                            <div class="account-details">
+                                <span class="account-amount">@paidByData.CashBack.Balance.ToString("C")</span>
+                            </div>
+
+                       
+                        </div>
+   
+            }
+            
+            
+            
+        </div>
+    </div>
+</div>
+
+
+<div class="col-md-6">
+    <h2>Destination</h2>
+    <div class="card mb-6">
+        <div class="card-body">
+            @if (data.DestinationType.Name == "Card")
+
+            {
+                    <div class="card-container mb-4"><a asp-controller="BankCard" asp-action="Detail" asp-route-id="@destinationData.Card.CardNumber">
+                        <div class="@destinationData.Card.CardType.Name.ToLower()-card  @destinationData.Card.CardStatus.Name.ToLower()">
+                            <div class="head">
+                                <h3>@destinationData.Card.CardType.Name</h3>
+                                <div class="visa-word">VISA</div>
+                            </div>
+                            <div class="card-info">
+                                <p id="cardNumber1">@destinationData.Card.CardNumber.ToCreditCardFormat()</p>
+                                <button class="copy-btn" onclick="copyCardNumber(event, this)">
+                                    <i class="fs-15 fas fa-copy"></i>
+                                </button>
+                            </div>
+                            <div class="balance-div">
+                                <span class="balance-text">Balance:</span>
+                                <p>@destinationData.Card.Balance <span class="card-currency">$</span></p>
+                            </div>
+                            <div class="card-owner">
+                                <div>
+                                    <p class="card-holder-p">Card Holder</p>
+                                    <p class="owner-name">@destinationData.User.FirstName @destinationData.User.LastName</p>
+                                </div>
+                                <div class="expires-div">
+                                    <p class="expires-text">Expires</p>
+                                    <p class="expires-date">@destinationData.Card.ExpiryDate.ToString("MM/yy")</p>
+                                </div>
+                            </div>
+                            <div class="block-overlay">
+                                <i class="fas fa-lock"></i>
+                            </div>
+                            <div class="disabled-overlay">
+                                <i class="fas fa-ban"></i>
+                            </div>
+                        </div>
+                    </a>
+                    </div>
+              
+            }
+            else if (data.DestinationType.Name == "BankAccount")
+            {
+                <div class="account-info">
+                    <div class="account-number-and-info">
+                        <h3>Account Number: <span class="account-number">@destinationData.Account.AccountNumber</span></h3>
+                        @if (destinationData.Account.AccountStatus.Name == "Active")
+                        {
+                            <span class="badge bg-success text-dark">Active</span>
+                        }
+                        else if (destinationData.Account.AccountStatus.Name == "Suspended")
+                        {
+                            <span class="badge bg-danger text-dark">Suspended</span>
+
+                        }
+
+                    </div>
+                    <div class="account-details">
+                        <span class="account-amount">@destinationData.Account.Balance.ToString("C")</span>
+                    </div>
+                    <div class="iban-box d-flex align-items-center border rounded p-2 mb-4">
+                        <button class="btn btn-copy mr-2" onclick="copyIBAN()">
+                            <i class="fas fa-copy"></i>
+                        </button>
+                        <span class="iban">@destinationData.Account.IBAN</span>
+                    </div>
+                    <div class="text-center">
+                        <a asp-controller="BankAccount" asp-action="Detail" asp-route-id="@destinationData.Account.AccountNumber" class="btn btn-primary">Details</a>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+
+    <script>
+        function copyIBAN() {
+            // Get the IBAN text
+            var ibanText = document.querySelector('.iban').innerText;
+
+            // Create a temporary input element to copy the text
+            var tempInput = document.createElement('input');
+            tempInput.value = ibanText;
+            document.body.appendChild(tempInput);
+
+            // Select the text and copy it
+            tempInput.select();
+            document.execCommand('copy');
+
+            // Remove the temporary input element
+            document.body.removeChild(tempInput);
+
+            // Optionally, you can display a message or toast to indicate the IBAN has been copied
+            alert("IBAN copied to clipboard: " + ibanText);
+        }
+        function copyCardNumber(event, button) {
+            // Varsayılan davranışı engelle
+
+            // Butonun bulunduğu p etiketinin içeriğini al
+            var cardNumber = button.previousElementSibling.innerText;
+
+            // Geçici bir text area oluştur
+            var tempTextarea = document.createElement("textarea");
+            tempTextarea.value = cardNumber;
+            document.body.appendChild(tempTextarea);
+
+            // Text area içindeki metni seç ve kopyala
+            tempTextarea.select();
+
+            // Kopyalama işlemi
+            document.execCommand("copy");
+
+            // Geçici text area'yı kaldır
+            document.body.removeChild(tempTextarea);
+
+            // Bilgilendirme mesajı
+            alert("Kart numarası kopyalandı: " + cardNumber);
+            event.preventDefault();
+
+        }
+    </script>
+}

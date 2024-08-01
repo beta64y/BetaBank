@@ -19,6 +19,11 @@
             Notification Mails
             <span class="badge badge-secondary badge-pill">@TempData["NotificationMailsCount"]</span>
         </a>
+        <a asp-controller="Supports" asp-action="Index"
+           class="list-group-item list-group-item-action" id="Supports-tab">
+            Support Messages
+            <span class="badge badge-secondary badge-pill">@TempData["SupportsCount"]</span>
+        </a>
         <a asp-controller="User" asp-action="Index"
            class="list-group-item list-group-item-action" id="Users-tab">
             Users
@@ -41,11 +46,11 @@
             <span class="badge badge-secondary badge-pill">@TempData["BankAccountsCount"]</span>
         </a>
         <a asp-controller="CashBack" asp-action="Index"
-           class="list-group-item list-group-item-action" id="CashBacks-tab">
+           class="list-group-item list-group-item-action" id="Wallets-tab">
             Wallets
             <span class="badge badge-secondary badge-pill">@TempData["CashBacksCount"]</span>
         </a>
-  
+        
        
        
     </div>

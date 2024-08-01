@@ -1,4 +1,4 @@
-/*cards css*/
+﻿/*cards css*/
 .card-container{
     font-family: Arial, sans-serif;
     display: flex;
@@ -118,8 +118,10 @@
 .betacard-card.blocked .block-overlay{
     visibility: visible;
 }
-
-.suspended-overlay {
+.debit-card.blocked .block-overlay {
+    visibility: visible;
+}
+.disabled-overlay {
     position: absolute;
     top: 0;
     z-index: 99;
@@ -140,11 +142,14 @@
     -o-border-radius: 15px;
     visibility: hidden;
 }
-.suspended-overlayx i{
+.disabled-overlayx i{
     font-size: 1.2em;
     color: red;
 }
-.betacard-card.suspended .suspended-overlay{
+.betacard-card.disabled .disabled-overlay{
+    visibility: visible;
+}
+.debit-card.disabled .disabled-overlay {
     visibility: visible;
 }
 .head{
@@ -234,4 +239,96 @@
 }
 .expires-date{
     margin: 0;
+}
+
+
+.account-number-and-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+    .account-number-and-info .badge {
+        font-size: 0.9em;
+    }
+
+.account-info h3 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: var(--main-text-color);
+}
+
+.account-details {
+    font-size: 2rem;
+    color: var(--main-text-color);
+    margin: 0.5rem 0;
+    margin-top: -10px;
+}
+
+.currency-symbol {
+    font-size: 1.2rem;
+    margin-right: 0;
+}
+
+.account-amount {
+    font-size: 1.2rem;
+}
+
+.iban-box {
+    position: relative;
+    margin: 0.5rem 0;
+}
+
+.btn-copy {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    border: none;
+    background: transparent;
+    color: var(--main-text-color);
+    cursor: pointer;
+    font-size: 1.2rem;
+}
+
+    .btn-copy:hover i {
+        scale: 1.05;
+        color: #2fe404;
+    }
+
+.iban {
+    margin-left: 30px;
+    font-size: 1rem;
+    color: var(--main-text-color);
+}
+
+.btn-primary {
+    width: 100%;
+    font-size: 1rem;
+    padding: 0.5rem 0.2rem;
+    background-color: var(--soft-green);
+    color: var(--main-text-color);
+    border: 1px solid var(--soft-green);
+}
+
+    .btn-primary:hover {
+        background-color: var(--bacground-main);
+        border: 1px solid var(--soft-green);
+    }
+
+
+
+.account-number-and-info h3 {
+    margin-right: 40px !important;
+}
+
+.icon-and-info-div img {
+    width: 60px !important;
+    height: 60px;
+}
+
+.icon-and-info-div {
+    display: flex;
+    justify-content: flex-start;
+    align-items:  center;
 }

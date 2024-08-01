@@ -1,4 +1,5 @@
-﻿using BetaBank.Contexts;
+﻿using BetaBank.Areas.Moderator.ViewModels;
+using BetaBank.Contexts;
 using BetaBank.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -18,9 +19,14 @@ namespace BetaBank.Areas.Moderator.Controllers
         }
         public async Task<IActionResult> Index()
         {
-            List<News> news = await _context.News.AsNoTracking().OrderBy(b => b.CreatedDate).Where(r => !r.IsDeleted).ToListAsync();
             TempData["Tab"] = "Dashboard";
-            return View(news);
+            ModeratorDashboardViewModel moderatorDashboardViewModel = new ModeratorDashboardViewModel()
+            {
+                SubscribersCount = await _context.Subscribers.Where(x => x.IsSubscribe).CountAsync(),
+                UnsubscribersCount = await _context.Subscribers.Where(x => !x.IsSubscribe).CountAsync(),
+              };
+            ViewData["ModeratorDashboardViewModel"] = moderatorDashboardViewModel;
+            return View();
         }
     }
 }

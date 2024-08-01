@@ -168,7 +168,7 @@ string profilePhotoFileName = await ImageSaverService.SaveImage(employeeCreateVi
 
 
 
-            string path = Path.Combine(_webHostEnvironment.WebRootPath, "templates", "NewEmployeeeForAreas.html");
+            string path = Path.Combine(_webHostEnvironment.WebRootPath, "templates", "NewEmployeeForAreas.html");
             using StreamReader streamReader = new(path);
 
             string content = await streamReader.ReadToEndAsync();

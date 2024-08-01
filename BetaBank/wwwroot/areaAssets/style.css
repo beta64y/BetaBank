@@ -1,4 +1,4 @@
-body {
+﻿body {
   background: var(--bacground-main);
 }
 :root{
@@ -14,6 +14,13 @@ body {
   --border-color:#1E1D1B;   
 }
 
+
+a:hover {
+    text-decoration: none;
+}
+td {
+    vertical-align: middle !important;
+}
 /* Custom */
 .navbar-nav > li > a,
 .navbar-brand {
@@ -154,6 +161,7 @@ button.navbar-toggle:focus {
   background-color: var(--hover-green);
 }
 /* Breadcrumb */
+
 .breadcrumb {
   background: var(--background-cards);
   color: var(--soft-text);
@@ -281,6 +289,12 @@ button.navbar-toggle:focus {
   margin-top: 30px;
 }
 /* Media Queries*/
+
+
+
+
+
+
 
 
 
