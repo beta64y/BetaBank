@@ -5,7 +5,7 @@ namespace BetaBank.Areas.Moderator.ViewModels
 {
     public class ModeratorSubscribersViewModel
     {
-        public SupportSearchViewModel Search { get; set; }
+        public SupportSearchViewModel? Search { get; set; }
         public List<Subscriber> Subscribers { get; set; }
     }
 }

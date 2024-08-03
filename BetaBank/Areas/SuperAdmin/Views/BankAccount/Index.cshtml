@@ -1,0 +1,79 @@
+﻿@{
+    ViewData["Title"] = "BankAccounts";
+    var data = ViewData["BankAccounts"] as List<BetaBank.Areas.SuperAdmin.ViewModels.BankAccountViewModel>;
+}
+
+
+
+@await Component.InvokeAsync("SuperAdminBox")
+<div class="col-md-9 mt-sm-3 mt-md-0">
+    <!--Panel for website overview-->
+    <div class="card">
+        <div class="card-header main-color-bg">
+            Bank Accounts
+        </div>
+        <div class="card-body">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">User</th>
+                        <th scope="col">Account Number</th>
+                        <th scope="col">Iban</th>
+                        <th scope="col">Balance</th>
+                        <th scope="col">Status</th>
+                        
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var bankAccount in data)
+                    {
+                        <tr>
+                            <td>
+                                <a asp-controller="User" asp-action="Detail" asp-route-id="@bankAccount.UserId" style="color:#FFFFFF;">
+                                    <img src="~/img/data/@bankAccount.UserProfilePhoto" class="img-fluid rounded-circle" style="width: 45px; height: 45px; object-fit: cover;">
+                                    @bankAccount.UserFirstName @bankAccount.UserLastName
+                                </a>
+                            </td>
+                            <td>
+                                @bankAccount.AccountNumber
+                            </td>
+                            <td>
+                                *@bankAccount.IBAN[^6..]
+                            </td>
+                            <td>@bankAccount.Balance.ToString("C")</td>
+                            <td>
+                                @if (bankAccount.AccountStatus.Name == "Active")
+                                {
+                                    <div class="badge bg-success text-dark">Active</div>
+                                    
+                                }
+                                else if (bankAccount.AccountStatus.Name == "Suspended")
+                                {
+                                    <div class="badge bg-danger">Suspended</div>
+                                }
+                            </td>
+                            <td><a asp-controller="BankAccount" asp-action="Detail" asp-route-id="@bankAccount.AccountNumber" class="btn btn-warning">Details</a></td>
+
+                        </tr>
+                    }
+
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script>
+
+        document.getElementById("@TempData["Tab"]-tab").classList.add("active", "main-color-bg");
+
+    </script>
+}
+
+
+
+
+
+

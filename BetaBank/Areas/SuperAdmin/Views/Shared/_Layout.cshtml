@@ -6,7 +6,11 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous" />
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous" />
-    <link href="~/areaAssets/style.css" rel="stylesheet" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <link href="~/areaAssets/style.css" rel="stylesheet" asp-append-version="true" />
+
+    <link href="~/areaAssets/card.css" rel="stylesheet" asp-append-version="true" />
     <script src="https://cdn.ckeditor.com/ckeditor5/42.0.0/ckeditor5.js"></script>
 
     <link rel="icon" href="~/areaAssets/images/betabank-favicon.png" type="image/x-icon">
@@ -27,23 +31,45 @@
             </button>
 
             <div class="collapse navbar-collapse" id="navbarsExampleDefault">
-                <ul class="navbar-nav mr-auto">
-                    <li class="nav-item" id="Dashboard-nav-item">
-                        <a class="nav-link" asp-controller="Dashboard" asp-action="Index">Dashboard</a>
-                    </li>
-                    <li class="nav-item" id="News-nav-item">
-                        <a class="nav-link" asp-controller="News" asp-action="Index">News</a>
-                    </li>
-                    <li class="nav-item" id="Subscribers-nav-item">
-                        <a class="nav-link" asp-controller="Subscribers" asp-action="Index">Subscribers</a>
-                    </li>
-                    <li class="nav-item" id="NotificationMails-nav-item">
-                        <a class="nav-link" asp-controller="NotificationMails" asp-action="Index">Notification Mails</a>
-                    </li>
-                    <li class="nav-item" id="User-nav-item">
-                        <a class="nav-link" asp-controller="User" asp-action="Index">Users</a>
-                    </li>
-                </ul>
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item" id="Dashboard-nav-item">
+                    <a class="nav-link" asp-controller="Dashboard" asp-action="Index">Dashboard</a>
+                </li>
+
+                <li class="nav-item dropdown" id="Moderator-nav-item">
+                    <a class="nav-link dropdown-toggle-2" href="#" id="moderatorDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Moderator <i class="fas fa-caret-down"></i>
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="moderatorDropdown">
+                        <a class="dropdown-item" asp-controller="News" asp-action="Index">News</a>
+                        <a class="dropdown-item" asp-controller="Subscribers" asp-action="Index">Subscribers</a>
+                        <a class="dropdown-item" asp-controller="NotificationMails" asp-action="Index">Notification Mails</a>
+                    </div>
+                </li>
+
+                <li class="nav-item dropdown" id="Admin-nav-item">
+                    <a class="nav-link dropdown-toggle-2" href="#" id="adminDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Admin <i class="fas fa-caret-down"></i>
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="adminDropdown">
+                        <a class="dropdown-item" asp-controller="User" asp-action="Index">Users</a>
+                        <a class="dropdown-item" asp-controller="Payment" asp-action="Index">Payments</a>
+                        <a class="dropdown-item" asp-controller="BankCard" asp-action="Index">Cards</a>
+                        <a class="dropdown-item" asp-controller="BankAccount" asp-action="Index">Accounts</a>
+                        <a class="dropdown-item" asp-controller="CashBack" asp-action="Index">Wallets</a>
+                    </div>
+                </li>
+                    
+                <li class="nav-item" id="User-nav-item">
+                    <a class="nav-link" asp-controller="Supports" asp-action="Index">Supports</a>
+                </li>
+                <li class="nav-item" id="User-nav-item">
+                    <a class="nav-link" asp-controller="Employees" asp-action="Index">Employees</a>
+                </li>
+                <li class="nav-item" id="User-nav-item">
+                    <a class="nav-link" asp-controller="Event" asp-action="Index">Events</a>
+                </li>
+            </ul>
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item">
                         <a class="nav-link text-white">Welcome, @User.Identity.Name</a>
@@ -62,7 +88,7 @@
                 <div class="row">
                     <div class="col-md-10">
                         <h3 class="font-weight-light">
-                            <i class="fas fa-cog"></i> Moderator
+                            <i class="fas fa-cog"></i> Super Admin
                         </h3>
                     </div>
                     <div class="col-md-2">

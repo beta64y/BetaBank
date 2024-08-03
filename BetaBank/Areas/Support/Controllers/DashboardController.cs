@@ -2,7 +2,10 @@
 using BetaBank.Contexts;
 using BetaBank.Models;
 using BetaBank.Services.Implementations;
+using BetaBank.Utils.Enums;
+using BetaBank.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NuGet.Versioning;
@@ -10,18 +13,21 @@ using NuGet.Versioning;
 namespace BetaBank.Areas.Support.Controllers
 {
     [Area("Support")]
-    //[Authorize(Roles = "Support")]
+    [Authorize(Roles = "Support")]
     public class DashboardController : Controller
     {
         private readonly BetaBankDbContext _context;
         private readonly IConfiguration _configuration;
         private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly UserManager<AppUser> _userManager;
 
-        public DashboardController(BetaBankDbContext context, IConfiguration configuration, IWebHostEnvironment webHostEnvironment)
+
+        public DashboardController(BetaBankDbContext context, IConfiguration configuration, IWebHostEnvironment webHostEnvironment, UserManager<AppUser> userManager)
         {
             _context = context;
             _configuration = configuration;
             _webHostEnvironment = webHostEnvironment;
+            _userManager = userManager;
         }
 
 
@@ -48,6 +54,27 @@ namespace BetaBank.Areas.Support.Controllers
                 UnderReviewId = UnderReviewStatus.Id
             };
             ViewData["SupportBoxViewModel"] = supportBoxViewModel;
+
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            UserEvent userEvent = new()
+            {
+                Id = $"{Guid.NewGuid()}",
+                UserId = user.Id,
+                Action = UserActionType.Get.ToString(),
+                Date = DateTime.UtcNow,
+                Section = SectionType.Dashboard.ToString(),
+                EntityType = EntityType.Page.ToString(),
+                EntityId = "Index"
+            };
+            await _context.UserEvents.AddAsync(userEvent);
+            await _context.SaveChangesAsync();
+
+
             return View();
         }  
 

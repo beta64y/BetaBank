@@ -3,7 +3,9 @@ using BetaBank.Contexts;
 using BetaBank.Models;
 using BetaBank.Services.Implementations;
 using BetaBank.Services.Validators;
+using BetaBank.Utils.Enums;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
@@ -15,12 +17,14 @@ namespace BetaBank.Areas.Admin.Controllers
     public class NewsController : Controller
     {
         private readonly BetaBankDbContext _context;
+        private readonly UserManager<AppUser> _userManager;
         private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public NewsController(BetaBankDbContext context, IWebHostEnvironment webHostEnvironment)
+        public NewsController(BetaBankDbContext context, IWebHostEnvironment webHostEnvironment, UserManager<AppUser> userManager)
         {
             _context = context;
             _webHostEnvironment = webHostEnvironment;
+            _userManager = userManager;
         }
 
         public async Task<IActionResult> Index()
@@ -31,16 +35,56 @@ namespace BetaBank.Areas.Admin.Controllers
                 News = news,
             };
             TempData["Tab"] = "News";
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            UserEvent userEvent = new()
+            {
+                Id = $"{Guid.NewGuid()}",
+                UserId = user.Id,
+                Action = UserActionType.Get.ToString(),
+                Date = DateTime.UtcNow,
+                Section = SectionType.News.ToString(),
+                EntityType = EntityType.Page.ToString(),
+                EntityId = "Index"
+
+            };
+            await _context.UserEvents.AddAsync(userEvent);
+            await _context.SaveChangesAsync();
             return View(ViewModel);
         }
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
             TempData["Tab"] = "News";
+
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            UserEvent userEvent = new()
+            {
+                Id = $"{Guid.NewGuid()}",
+                UserId = user.Id,
+                Action = UserActionType.Get.ToString(),
+                Date = DateTime.UtcNow,
+                Section = SectionType.News.ToString(),
+                EntityType = EntityType.Page.ToString(),
+                EntityId = "Create"
+
+            };
+            await _context.UserEvents.AddAsync(userEvent);
+            await _context.SaveChangesAsync();
+
             return View();
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(NewsCreateViewModel newsCreateViewModel)
+        public async Task<IActionResult> Create(ViewModels.NewsCreateViewModel newsCreateViewModel)
         {
 
             if (!ModelState.IsValid)
@@ -49,22 +93,22 @@ namespace BetaBank.Areas.Admin.Controllers
             }
             if (!newsCreateViewModel.FirstImage.CheckFileSize(3000))
             {
-                ModelState.AddModelError("Image", "Sekl boyukdu balacasini yukle");
+                ModelState.AddModelError("Image", "The image is too large, please upload a smaller one.");
                 return View();
             }
             if (!newsCreateViewModel.FirstImage.CheckFileType("image/"))
             {
-                ModelState.AddModelError("Image", "sekil gonderde ne pdfni yapisdirmisan");
+                ModelState.AddModelError("Image", "Please upload an image file.");
                 return View();
             }
             if (!newsCreateViewModel.SecondImage.CheckFileSize(3000))
             {
-                ModelState.AddModelError("Image", "Sekl boyukdu balacasini yukle");
+                ModelState.AddModelError("Image", "The image is too large, please upload a smaller one.");
                 return View();
             }
             if (!newsCreateViewModel.SecondImage.CheckFileType("image/"))
             {
-                ModelState.AddModelError("Image", "sekil gonderde ne pdfni yapisdirmisan");
+                ModelState.AddModelError("Image", "Please upload an image file.");
                 return View();
             }
             string firstImageFileName = await ImageSaverService.SaveImage(newsCreateViewModel.FirstImage, _webHostEnvironment.WebRootPath);
@@ -89,6 +133,24 @@ namespace BetaBank.Areas.Admin.Controllers
 
 
             };
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            UserEvent userEvent = new()
+            {
+                Id = $"{Guid.NewGuid()}",
+                UserId = user.Id,
+                Action = UserActionType.Created.ToString(),
+                Date = DateTime.UtcNow,
+                Section = SectionType.News.ToString(),
+                EntityType = EntityType.News.ToString(),
+                EntityId = newNews.Id,
+
+            };
+            await _context.UserEvents.AddAsync(userEvent);
             await _context.News.AddAsync(newNews);
             await _context.SaveChangesAsync();
 
@@ -104,6 +166,24 @@ namespace BetaBank.Areas.Admin.Controllers
                 return NotFound();
             }
             news.IsDeleted = true;
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            UserEvent userEvent = new()
+            {
+                Id = $"{Guid.NewGuid()}",
+                UserId = user.Id,
+                Action = UserActionType.Deleted.ToString(),
+                Date = DateTime.UtcNow,
+                Section = SectionType.News.ToString(),
+                EntityType = EntityType.News.ToString(),
+                EntityId = news.Id,
+
+            };
+            await _context.UserEvents.AddAsync(userEvent);
             await _context.SaveChangesAsync();
 
             return Json(new { message = "Your news has been deleted." });
@@ -112,6 +192,25 @@ namespace BetaBank.Areas.Admin.Controllers
         {
             TempData["Tab"] = "News";
             var news = await _context.News.FirstOrDefaultAsync(p => p.Id == id && !p.IsDeleted);
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            UserEvent userEvent = new()
+            {
+                Id = $"{Guid.NewGuid()}",
+                UserId = user.Id,
+                Action = UserActionType.Viewed.ToString(),
+                Date = DateTime.UtcNow,
+                Section = SectionType.News.ToString(),
+                EntityType = EntityType.News.ToString(),
+                EntityId = news.Id
+
+            };
+            await _context.UserEvents.AddAsync(userEvent);
+            await _context.SaveChangesAsync();
             return View(news);
         }
 
@@ -130,6 +229,26 @@ namespace BetaBank.Areas.Admin.Controllers
                 Title = news.Title,
                 Description = news.Description,
             };
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            UserEvent userEvent = new()
+            {
+                Id = $"{Guid.NewGuid()}",
+                UserId = user.Id,
+                Action = UserActionType.AttemptedEdit.ToString(),
+                Date = DateTime.UtcNow,
+                Section = SectionType.News.ToString(),
+                EntityType = EntityType.News.ToString(),
+                EntityId = news.Id,
+
+            };
+
+            await _context.UserEvents.AddAsync(userEvent);
+            await _context.SaveChangesAsync();
             return View(newsUpdateViewModel);
         }
         [HttpPost]
@@ -148,13 +267,13 @@ namespace BetaBank.Areas.Admin.Controllers
 
                 if (!newsUpdateViewModel.FirstImage.CheckFileSize(3000))
                 {
-                    ModelState.AddModelError("Image", "get ariqla");
+                    ModelState.AddModelError("Image", "The image is too large, please upload a smaller one.");
                     return View();
                 }
 
                 if (!newsUpdateViewModel.FirstImage.CheckFileType("image/"))
                 {
-                    ModelState.AddModelError("Image", "get ariqla");
+                    ModelState.AddModelError("Image", "The image is too large, please upload a smaller one.");
                     return View();
                 }
                 string basePath = Path.Combine(_webHostEnvironment.WebRootPath, "img", "website-images");
@@ -170,13 +289,13 @@ namespace BetaBank.Areas.Admin.Controllers
             {
                 if (!newsUpdateViewModel.SecondImage.CheckFileSize(3000))
                 {
-                    ModelState.AddModelError("Image", "get ariqla");
+                    ModelState.AddModelError("Image", "The image is too large, please upload a smaller one.");
                     return View();
                 }
 
                 if (!newsUpdateViewModel.SecondImage.CheckFileType("image/"))
                 {
-                    ModelState.AddModelError("Image", "get ariqla");
+                    ModelState.AddModelError("Image", "The image is too large, please upload a smaller one.");
                     return View();
                 }
                 string basePath = Path.Combine(_webHostEnvironment.WebRootPath, "img", "website-images");
@@ -193,12 +312,56 @@ namespace BetaBank.Areas.Admin.Controllers
             news.Description = newsUpdateViewModel.Description;
             news.UpdatedDate = DateTime.UtcNow;
 
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            UserEvent userEvent = new()
+            {
+                Id = $"{Guid.NewGuid()}",
+                UserId = user.Id,
+                Action = UserActionType.Edited.ToString(),
+                Date = DateTime.UtcNow,
+                Section = SectionType.News.ToString(),
+                EntityType = EntityType.News.ToString(),
+                EntityId = news.Id,
+
+            };
+            await _context.UserEvents.AddAsync(userEvent);
+
+
+
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
         [HttpPost]
         public async Task<IActionResult> Search(AdminNewsViewModel adminNewsViewModel)
         {
+            TempData["Tab"] = "News";
+
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            UserEvent userEvent = new()
+            {
+                Id = $"{Guid.NewGuid()}",
+                UserId = user.Id,
+                Action = UserActionType.Searched.ToString(),
+                Date = DateTime.UtcNow,
+                Section = SectionType.News.ToString(),
+                EntityType = EntityType.Page.ToString(),
+                EntityId = adminNewsViewModel.Search.SearchTerm,
+
+            };
+
+            await _context.UserEvents.AddAsync(userEvent);
+            await _context.SaveChangesAsync();
             if (adminNewsViewModel.Search.SearchTerm != null)
             {
                 var searchTerm = adminNewsViewModel.Search.SearchTerm.ToLower();
@@ -208,14 +371,12 @@ namespace BetaBank.Areas.Admin.Controllers
                     News = filteredNews,
                     Search = adminNewsViewModel.Search
                 };
-                TempData["Tab"] = "News";
+                
 
                 return View("Index", ViewModel);
             }
             else
             {
-                TempData["Tab"] = "News";
-
                 return View(null);
             }
         }

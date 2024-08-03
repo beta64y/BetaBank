@@ -1,0 +1,68 @@
+﻿<div class="col-md-3">
+    <div class="list-group">
+        <a asp-controller="Dashboard" asp-action="Index"
+           class="list-group-item list-group-item-action" id="Dashboard-tab">
+            Dashboard
+        </a>
+        <a asp-controller="News" asp-action="Index"
+           class="list-group-item list-group-item-action" id="News-tab">
+           News
+            <span class="badge badge-secondary badge-pill">@TempData["NewsCount"]</span>
+        </a>
+        <a asp-controller="Subscribers" asp-action="Index"
+           class="list-group-item list-group-item-action" id="Subscribers-tab">
+            Subscribers
+            <span class="badge badge-secondary badge-pill">@TempData["SubscribersCount"]</span>
+        </a>
+        <a asp-controller="NotificationMails" asp-action="Index"
+           class="list-group-item list-group-item-action" id="NotificationMails-tab">
+            Notification Mails
+            <span class="badge badge-secondary badge-pill">@TempData["NotificationMailsCount"]</span>
+        </a>
+        <a asp-controller="Supports" asp-action="Index"
+           class="list-group-item list-group-item-action" id="Supports-tab">
+            Support Messages
+            <span class="badge badge-secondary badge-pill">@TempData["SupportsCount"]</span>
+        </a>
+        <a asp-controller="User" asp-action="Index"
+           class="list-group-item list-group-item-action" id="Users-tab">
+            Users
+            <span class="badge badge-secondary badge-pill">@TempData["UsersCount"]</span>
+        </a>
+
+        <a asp-controller="Payment" asp-action="Index"
+           class="list-group-item list-group-item-action" id="Payments-tab">
+            Payments
+            <span class="badge badge-secondary badge-pill">@TempData["PaymentsCount"]</span>
+        </a>
+        <a asp-controller="BankCard" asp-action="Index"
+           class="list-group-item list-group-item-action" id="BankCards-tab">
+            BankCards
+            <span class="badge badge-secondary badge-pill">@TempData["BankCardsCount"]</span>
+        </a>
+        <a asp-controller="BankAccount" asp-action="Index"
+           class="list-group-item list-group-item-action" id="BankAccounts-tab">
+            Accounts
+            <span class="badge badge-secondary badge-pill">@TempData["BankAccountsCount"]</span>
+        </a>
+        <a asp-controller="CashBack" asp-action="Index"
+           class="list-group-item list-group-item-action" id="Wallets-tab">
+            Wallets
+            <span class="badge badge-secondary badge-pill">@TempData["CashBacksCount"]</span>
+        </a>
+        <a asp-controller="Employees" asp-action="Index"
+           class="list-group-item list-group-item-action" id="Employees-tab">
+            Employees
+            <span class="badge badge-secondary badge-pill">@TempData["EmployeesCount"]</span>
+        </a>
+        <a asp-controller="Event" asp-action="Index"
+           class="list-group-item list-group-item-action" id="Events-tab">
+            Events
+            <span class="badge badge-secondary badge-pill">@TempData["EventsCount"]</span>
+        </a>
+        
+       
+       
+    </div>
+    
+</div>

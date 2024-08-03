@@ -19,7 +19,7 @@ namespace BetaBank.Contexts
         public DbSet<SendedNotificationMail> SendedNotificationMails { get; set; } = null!;
         public DbSet<CashBack> CashBacks { get; set; } = null!;
         public DbSet<BankCardUsage> CardUsages { get; set; } =null!;
-
+        public DbSet<UserEvent> UserEvents { get; set; } = null!;
 
 
 

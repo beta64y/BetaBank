@@ -17,10 +17,9 @@
                 <thead>
                     <tr>
                         <th scope="col">Mail</th>
-                        <th scope="col">IsSubcribe</th>
+                        <th scope="col">IsSubscribe</th>
 
 
-                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -28,27 +27,17 @@
                     {
                         <tr>
                             <td>@subscriber.Mail</td>
-                            <td>
-                                @if (subscriber.IsSubscribe)
-                                {
-                                    <div class="badge bg-success text-dark">Subscribed</div>
-                                }
-                                else
-                                {
-                                    <div class="badge bg-danger text-dark">Unsubscribed</div>
-                                }
-
-                            </td>
+  
                             @if (subscriber.IsSubscribe)
                             {
                                  <td>
-                                    <a asp-controller="Subscribers" asp-action="Unsubscribe" asp-route-id="@subscriber.Id" class="btn bg-danger text-dark">Unsubscribe</a>
+                                    <a asp-controller="Subscribers" asp-action="Unsubscribe" asp-route-id="@subscriber.Id" class="btn bg-success text-dark">Subscribed</a>
                                 </td>
                             }
                             else
                             {
                                 <td>
-                                    <a asp-controller="Subscribers" asp-action="Subscribe" asp-route-id="@subscriber.Id" class="btn bg-success text-dark">Subscribe</a>
+                                    <a asp-controller="Subscribers" asp-action="Subscribe" asp-route-id="@subscriber.Id" class="btn bg-danger text-dark">Unsubscribed</a>
                                 </td>
                             }
 

@@ -1,4 +1,4 @@
-﻿using BetaBank.Areas.Admin.ViewModels;
+﻿using BetaBank.Areas.SuperAdmin.ViewModels;
 using BetaBank.Contexts;
 using BetaBank.Models;
 using BetaBank.Services.Implementations;
@@ -24,7 +24,7 @@ namespace BetaBank.Areas.SuperAdmin.Controllers
         public async Task<IActionResult> Index()
         {
             List<SendedNotificationMail> notificationMails = await _context.SendedNotificationMails.AsNoTracking().OrderBy(b => b.CreatedDate).ToListAsync();
-            AdminNotificationMailViewModel ViewModel = new AdminNotificationMailViewModel()
+            SuperAdminNotificationMailViewModel ViewModel = new SuperAdminNotificationMailViewModel()
             {
                 NotificationMails = notificationMails,
             };
@@ -40,7 +40,7 @@ namespace BetaBank.Areas.SuperAdmin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> SendMail(AdminCreateNotificationMailViewModel adminCreateNotificationMailView)
+        public async Task<IActionResult> SendMail(SuperAdminCreateNotificationMailViewModel adminCreateNotificationMailView)
         {
 
             MailService mailService = new(_configuration);
@@ -72,13 +72,13 @@ namespace BetaBank.Areas.SuperAdmin.Controllers
             var sendedNotificationMail = await _context.SendedNotificationMails.FirstOrDefaultAsync(p => p.Id == id);
             return View(sendedNotificationMail);
         }
-        public async Task<IActionResult> Search(AdminNotificationMailViewModel adminNotificationMailViewModel)
+        public async Task<IActionResult> Search(SuperAdminNotificationMailViewModel adminNotificationMailViewModel)
         {
             if (adminNotificationMailViewModel.Search.SearchTerm != null)
             {
                 var searchTerm = adminNotificationMailViewModel.Search.SearchTerm.ToLower();
                 var filteredMails = await _context.SendedNotificationMails.Where(p => (p.Title.ToLower().Contains(searchTerm))).ToListAsync();
-                AdminNotificationMailViewModel ViewModel = new AdminNotificationMailViewModel()
+                SuperAdminNotificationMailViewModel ViewModel = new SuperAdminNotificationMailViewModel()
                 {
                     NotificationMails = filteredMails,
                     Search = adminNotificationMailViewModel.Search

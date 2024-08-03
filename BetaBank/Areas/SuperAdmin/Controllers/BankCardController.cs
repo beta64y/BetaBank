@@ -1,7 +1,8 @@
-﻿using BetaBank.Areas.Admin.ViewModels;
+﻿using BetaBank.Areas.SuperAdmin.ViewModels;
 using BetaBank.Contexts;
 using BetaBank.Models;
 using BetaBank.Services.Implementations;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 namespace BetaBank.Areas.SuperAdmin.Controllers
 {
     [Area("SuperAdmin")]
+    [Authorize(Roles = "SuperAdmin")]
     public class BankCardController : Controller
     {
         private readonly BetaBankDbContext _context;
@@ -112,7 +114,7 @@ namespace BetaBank.Areas.SuperAdmin.Controllers
             List<Transaction> filteredTransactions = allTransactions
                 .Where(x => x.PaidById == bankCard.CardNumber ||x.DestinationId == bankCard.CardNumber )
                 .ToList();
-            List<Admin.ViewModels.TransactionViewModel> transactionViewModels = new();
+            List<SuperAdmin.ViewModels.TransactionViewModel> transactionViewModels = new();
             foreach (Transaction transaction in filteredTransactions)
             {
                 TransactionTypeModel paidByType = await _context.TransactionTypeModels.FirstOrDefaultAsync(x => x.Id == transaction.PaidByTypeId);

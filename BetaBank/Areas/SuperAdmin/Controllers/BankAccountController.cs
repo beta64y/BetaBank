@@ -1,7 +1,8 @@
-﻿using BetaBank.Areas.Admin.ViewModels;
+﻿using BetaBank.Areas.SuperAdmin.ViewModels;
 using BetaBank.Contexts;
 using BetaBank.Models;
 using BetaBank.Services.Implementations;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 namespace BetaBank.Areas.SuperAdmin.Controllers
 {
     [Area("SuperAdmin")]
+    [Authorize(Roles = "SuperAdmin")]
     public class BankAccountController : Controller
     {
         private readonly BetaBankDbContext _context;
@@ -23,13 +25,13 @@ namespace BetaBank.Areas.SuperAdmin.Controllers
         public async Task<IActionResult> Index()
         {
             List<BankAccount> bankAccounts = await _context.BankAccounts.AsNoTracking().ToListAsync();
-            List<Admin.ViewModels.BankAccountViewModel> bankAccountViewModels = new();
+            List<SuperAdmin.ViewModels.BankAccountViewModel> bankAccountViewModels = new();
             foreach (BankAccount bankAccount in bankAccounts)
             {
                 AppUser user = await _context.Users.FirstOrDefaultAsync(x => x.Id == bankAccount.UserId);
                 BankAccountStatus accountStatus = await _context.BankAccountStatuses.FirstOrDefaultAsync(x => x.AccountId == bankAccount.Id);
 
-                bankAccountViewModels.Add(new Admin.ViewModels.BankAccountViewModel()
+                bankAccountViewModels.Add(new SuperAdmin.ViewModels.BankAccountViewModel()
                 {
                     Id = bankAccount.Id,
                     AccountStatus = await _context.BankAccountStatusModels.FirstOrDefaultAsync(x => x.Id == accountStatus.StatusId),
@@ -107,7 +109,7 @@ namespace BetaBank.Areas.SuperAdmin.Controllers
             List<Transaction> filteredTransactions = allTransactions
                 .Where(x => x.PaidById == bankAccount.AccountNumber || x.DestinationId == bankAccount.AccountNumber)
                 .ToList();
-            List<Admin.ViewModels.TransactionViewModel> transactionViewModels = new();
+            List<SuperAdmin.ViewModels.TransactionViewModel> transactionViewModels = new();
             foreach (Transaction transaction in filteredTransactions)
             {
                 TransactionTypeModel paidByType = await _context.TransactionTypeModels.FirstOrDefaultAsync(x => x.Id == transaction.PaidByTypeId);

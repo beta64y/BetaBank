@@ -1,4 +1,4 @@
-﻿using BetaBank.Areas.Admin.ViewModels;
+﻿using BetaBank.Areas.SuperAdmin.ViewModels;
 using BetaBank.Contexts;
 using BetaBank.Models;
 using BetaBank.ViewModels;
@@ -21,7 +21,7 @@ namespace BetaBank.Areas.SuperAdmin.Controllers
         public async Task<IActionResult> Index()
         {
             List<Subscriber> subscribers = await _context.Subscribers.AsNoTracking().ToListAsync();
-            AdminSubscribersViewModel ViewModel = new AdminSubscribersViewModel()
+            SuperAdminSubscribersViewModel ViewModel = new SuperAdminSubscribersViewModel()
             {
                 Subscribers = subscribers,
             };
@@ -95,13 +95,13 @@ namespace BetaBank.Areas.SuperAdmin.Controllers
             return RedirectToAction("Index", "Subscribers");
         }
 
-        public async Task<IActionResult> Search(AdminSubscribersViewModel adminSubscribersViewModel)
+        public async Task<IActionResult> Search(SuperAdminSubscribersViewModel adminSubscribersViewModel)
         {
             if (adminSubscribersViewModel.Search.SearchTerm != null)
             {
                 var searchTerm = adminSubscribersViewModel.Search.SearchTerm.ToLower();
                 var filteredSubscribers = await _context.Subscribers.Where(p => (p.Mail.ToLower().Contains(searchTerm))).ToListAsync();
-                AdminSubscribersViewModel ViewModel = new AdminSubscribersViewModel()
+                SuperAdminSubscribersViewModel ViewModel = new SuperAdminSubscribersViewModel()
                 {
                     Subscribers = filteredSubscribers,
                     Search = adminSubscribersViewModel.Search

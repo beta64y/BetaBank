@@ -1,0 +1,89 @@
+﻿@{
+    ViewData["Title"] = "Detail";
+    var data = ViewData["EmployeeViewModels"] as EmployeeViewModel;
+}
+@model UserDetailViewModel
+
+<div class="col-md-6">
+    <h2>User Details</h2>
+    <div class="card mb-4">
+        <div class="card-body">
+            <img id="profilePhoto" src="~/img/data/@data.ProfilePhoto" alt="Profile Photo" class="img-fluid  mb-3" style="width: 150px; height: 150px; object-fit: cover;">
+            <h5 class="card-title">@data.FirstName @data.LastName</h5>
+            <p class="card-text">
+                <strong>Email:</strong> @data.Email<br>
+                <strong>Email Confirmed:</strong> @data.EmailConfirmed<br>
+                <strong>Age:</strong> @data.Age<br>
+                <strong>Date of Birth:</strong> @data.DateOfBirth.ToString("yyyy-MM-dd")<br>
+                <strong>Phone Number:</strong> @data.PhoneNumber<br>
+                <strong>Created Date:</strong> @data.CreatedDate.ToString("yyyy-MM-dd")<br>
+                <strong>Update Date:</strong> @data.UpdateDate.ToString("yyyy-MM-dd")<br>
+                <strong>Status:</strong> @if (data.Banned)
+                {
+                    <span class="badge bg-danger">Banned</span>
+                }
+                else
+                {
+                    <span class="badge bg-success text-dark">Not Banned</span>
+                }
+                <strong>Status:</strong><span class="badge  bg-info text-dark">@data.Role</span>
+
+            </p>
+        </div>
+    </div>
+
+        <div class="card mb-4">
+            <div class="card-body">
+            @if (data.Banned)
+            {
+                <a  asp-action="UnBanUser" asp-route-id="@data.Id" class="btn btn-warning unBanBtn">UnBan User</a>
+            }
+            else
+            {
+                <a asp-action="BanUser" asp-route-id="@data.Id" class="btn btn-warning banBtn">Ban User</a>
+            }
+            </div>
+        </div>
+</div>
+<div class="col-md-6">
+    <h2>Actions</h2>
+    <div class="card mb-4">
+        <div class="card-body">
+
+
+
+        </div>
+    </div>
+</div>
+<!-- Profile Photo Modal -->
+<div class="modal fade" id="profilePhotoModal" tabindex="-1" role="dialog" aria-labelledby="profilePhotoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="profilePhotoModalLabel">Profile Photo</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body text-center">
+                <img id="modalProfilePhoto" src="" alt="Profile Photo" class="img-fluid">
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+@section Scripts{
+
+    <script>
+        $(document).ready(function () {
+            $('#profilePhoto').on('click', function () {
+                var imgSrc = $(this).attr('src');
+                $('#modalProfilePhoto').attr('src', imgSrc);
+                $('#profilePhotoModal').modal('show');
+            });
+        });
+    </script>
+}

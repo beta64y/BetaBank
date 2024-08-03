@@ -28,7 +28,12 @@ namespace BetaBank.Areas.SuperAdmin.ViewComponents
             TempData["BankAccountsCount"] = await _context.BankAccounts.CountAsync();
             TempData["CashBacksCount"] = await _context.CashBacks.CountAsync();
             TempData["SupportsCount"] = await _context.Supports.CountAsync();
+            TempData["EventsCount"] = await _context.UserEvents.CountAsync();
 
+            var adminCount = (await _userManager.GetUsersInRoleAsync("Admin")).Count;
+            var moderatorCount = (await _userManager.GetUsersInRoleAsync("Moderator")).Count;
+            var supportCount = (await _userManager.GetUsersInRoleAsync("Support")).Count;
+            TempData["EmployeesCount"] = adminCount + moderatorCount + supportCount;
 
 
 

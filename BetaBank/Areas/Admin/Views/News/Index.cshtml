@@ -34,9 +34,9 @@
                             <td>@news.CreatedDate</td>
 
                             <td>
-                                <a asp-controller="News"  asp-action="Edit" asp-route-id="@news.Id" class="btn btn-light">Edit</a>
+                                <a asp-controller="News" asp-action="Edit" asp-route-id="@news.Id" class="btn btn-warning">Edit</a>
                             </td>
-                            <td><a  asp-controller="News" asp-action="Detail" asp-route-id="@news.Id" class="btn btn-warning">View</a></td>
+                            <td><a asp-controller="News" asp-action="Detail" asp-route-id="@news.Id" class="btn btn-light">View</a></td>
                             <td>
                                 <a asp-controller="News" asp-action="Delete" asp-route-id="@news.Id" class="btn btn-danger newsDeleteBtn" >Delete</a>
                             </td>

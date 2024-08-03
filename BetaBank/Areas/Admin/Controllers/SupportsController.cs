@@ -2,25 +2,31 @@
 using BetaBank.Contexts;
 using BetaBank.Models;
 using BetaBank.Services.Implementations;
+using BetaBank.Utils.Enums;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace BetaBank.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    //[Authorize(Roles = "Support")]
+    [Authorize(Roles = "Admin")]
     public class SupportsController : Controller
     {
         
         private readonly BetaBankDbContext _context;
         private readonly IConfiguration _configuration;
         private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly UserManager<AppUser> _userManager;
 
-        public SupportsController(BetaBankDbContext context, IConfiguration configuration, IWebHostEnvironment webHostEnvironment)
+
+        public SupportsController(BetaBankDbContext context, IConfiguration configuration, IWebHostEnvironment webHostEnvironment, UserManager<AppUser> userManager)
         {
             _context = context;
             _configuration = configuration;
             _webHostEnvironment = webHostEnvironment;
+            _userManager = userManager;
         }
         public async Task<IActionResult> Index()
         {
@@ -28,7 +34,7 @@ namespace BetaBank.Areas.Admin.Controllers
             List<SupportViewModel> supportsViewModel = new List<SupportViewModel>();
             foreach (var support in supports)
             {
-                SupportStatus supportStatus = await _context.SupportStatuses.FirstOrDefaultAsync(x => x.SupportId == support.Id);
+                Models.SupportStatus supportStatus = await _context.SupportStatuses.FirstOrDefaultAsync(x => x.SupportId == support.Id);
                 supportsViewModel.Add(new SupportViewModel()
                 {
                     Id = support.Id,
@@ -46,6 +52,25 @@ namespace BetaBank.Areas.Admin.Controllers
                 Supports = supportsViewModel,
             };
             TempData["Tab"] = "Supports";
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            UserEvent userEvent = new()
+            {
+                Id = $"{Guid.NewGuid()}",
+                UserId = user.Id,
+                Action = UserActionType.Get.ToString(),
+                Date = DateTime.UtcNow,
+                Section = SectionType.Supports.ToString(),
+                EntityType = EntityType.Page.ToString(),
+                EntityId = "Index"
+
+            };
+            await _context.UserEvents.AddAsync(userEvent);
+            await _context.SaveChangesAsync();
             return View(supportComponentsViewModel);
         }
 
@@ -81,7 +106,7 @@ namespace BetaBank.Areas.Admin.Controllers
         public async Task<IActionResult> ManageSupport(string id)
         {
             Models.Support support = await _context.Supports.FirstOrDefaultAsync(x => x.Id == id);
-            SupportStatus supportStatus = await _context.SupportStatuses.FirstOrDefaultAsync(x => x.SupportId == support.Id);
+            Models.SupportStatus supportStatus = await _context.SupportStatuses.FirstOrDefaultAsync(x => x.SupportId == support.Id);
             SupportStatusModel supportStatusModel = await _context.SupportStatusModels.FirstOrDefaultAsync(x => x.Id == supportStatus.StatusId);
 
 
@@ -93,6 +118,25 @@ namespace BetaBank.Areas.Admin.Controllers
             TempData["CreatedDate"] = support.CreatedDate.ToString("yyyy-MM-dd HH:mm:ss");
             TempData["StatusName"] = supportStatusModel.Name;
             TempData["Tab"] = "Supports";
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            UserEvent userEvent = new()
+            {
+                Id = $"{Guid.NewGuid()}",
+                UserId = user.Id,
+                Action = UserActionType.Viewed.ToString(),
+                Date = DateTime.UtcNow,
+                Section = SectionType.Supports.ToString(),
+                EntityType = EntityType.Support.ToString(),
+                EntityId = support.Id
+
+            };
+            await _context.UserEvents.AddAsync(userEvent);
+            await _context.SaveChangesAsync();
             return View();
         }
 
@@ -101,9 +145,28 @@ namespace BetaBank.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> PassSupport(AnswerSupportViewModel answerSupportViewModel, string id)
         {
-            SupportStatus supportStatus = await _context.SupportStatuses.FirstOrDefaultAsync(x => x.SupportId == id);
+            Models.SupportStatus supportStatus = await _context.SupportStatuses.FirstOrDefaultAsync(x => x.SupportId == id);
             SupportStatusModel supportStatusModel = await _context.SupportStatusModels.FirstOrDefaultAsync(x => x.Name == "Passed");
             supportStatus.StatusId = supportStatusModel.Id;
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            UserEvent userEvent = new()
+            {
+                Id = $"{Guid.NewGuid()}",
+                UserId = user.Id,
+                Action = UserActionType.Passed.ToString(),
+                Date = DateTime.UtcNow,
+                Section = SectionType.Supports.ToString(),
+                EntityType = EntityType.Support.ToString(),
+                EntityId = id
+
+            };
+            await _context.UserEvents.AddAsync(userEvent);
+
             await _context.SaveChangesAsync();
             TempData["Tab"] = "Supports";
             return RedirectToAction(nameof(Index));
@@ -129,10 +192,29 @@ namespace BetaBank.Areas.Admin.Controllers
 
             MailService mailService = new(_configuration);
             await mailService.SendEmailAsync(new BetaBank.ViewModels.MailRequest { ToEmail = answerSupportViewModel.Mail, Subject = answerSupportViewModel.Title, Body = answerSupportViewModel.Body });
-            SupportStatus supportStatus = await _context.SupportStatuses.FirstOrDefaultAsync(x => x.SupportId == id);
+            Models.SupportStatus supportStatus = await _context.SupportStatuses.FirstOrDefaultAsync(x => x.SupportId == id);
             SupportStatusModel supportStatusModel = await _context.SupportStatusModels.FirstOrDefaultAsync(x => x.Name == "Answered");
 
             supportStatus.StatusId = supportStatusModel.Id;
+
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            UserEvent userEvent = new()
+            {
+                Id = $"{Guid.NewGuid()}",
+                UserId = user.Id,
+                Action = UserActionType.Answered.ToString(),
+                Date = DateTime.UtcNow,
+                Section = SectionType.Supports.ToString(),
+                EntityType = EntityType.Support.ToString(),
+                EntityId = id
+
+            };
+            await _context.UserEvents.AddAsync(userEvent);
 
             await _context.SaveChangesAsync();
             TempData["Tab"] = "Supports";
@@ -153,15 +235,36 @@ namespace BetaBank.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> Search(SupportComponentsViewModel supportComponentViewModel)
         {
+            TempData["Tab"] = "Supports";
+
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            UserEvent userEvent = new()
+            {
+                Id = $"{Guid.NewGuid()}",
+                UserId = user.Id,
+                Action = UserActionType.Searched.ToString(),
+                Date = DateTime.UtcNow,
+                Section = SectionType.Supports.ToString(),
+                EntityType = EntityType.Page.ToString(),
+                EntityId = supportComponentViewModel.SupportSearch.SearchTerm,
+
+            };
+            await _context.UserEvents.AddAsync(userEvent);
+            await _context.SaveChangesAsync();
             if (supportComponentViewModel.SupportSearch.SearchTerm != null)
             {
-                TempData["Tab"] = "Supports";
+
                 var searchTerm = supportComponentViewModel.SupportSearch.SearchTerm.ToLower();
                 var filteredSupports = await _context.Supports.Where(p => (p.Email.ToLower().Contains(searchTerm) || p.FirstName.ToLower().Contains(searchTerm) || p.LastName.ToLower().Contains(searchTerm))).ToListAsync();
                 List<SupportViewModel> supportViewModels = new();
                 foreach (var support in filteredSupports)
                 {
-                    SupportStatus supportStatus = await _context.SupportStatuses.FirstOrDefaultAsync(x => x.SupportId == support.Id);
+                    Models.SupportStatus supportStatus = await _context.SupportStatuses.FirstOrDefaultAsync(x => x.SupportId == support.Id);
                     supportViewModels.Add(new SupportViewModel()
                     {
                         Email = support.Email,

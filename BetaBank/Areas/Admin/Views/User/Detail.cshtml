@@ -107,14 +107,22 @@
     }
     else
     {
+     
+
         <div class="card mb-4">
             <div class="card-body">
+
                 <div class="account-info">
-                    <div class="account-number-and-info">
-                        <h3>Account Number: <span class="account-number">@Model.CashBack.CashBackNumber</span></h3>
-                    </div>
-                    <div class="account-details">
-                        <span class="account-amount">@Model.CashBack.Balance.ToString("C")</span>
+                    <div class="icon-and-info-div">
+                        <img src="~/areaAssets/images/Cashback-Icon.png" alt="">
+                        <div class="details-div">
+                            <div class="account-number-and-info">
+                                <h3>Account Number: <span class="account-number">@Model.CashBack.CashBackNumber</span></h3>
+                            </div>
+                            <div class="account-details">
+                                <span class="account-amount">@Model.CashBack.Balance.ToString("C")</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -210,14 +218,14 @@
                             <td>
                                 @if (transaction.PaidByType.Name == "Card")
                                 {
-                                    <a href="#" style="color:#FFFFFF;">
+                                    <a asp-controller="BankCard" asp-action="Detail" asp-route-id="@transaction.PaidById" style="color:#FFFFFF;">
                                         <img src="~/areaAssets/images/@transaction.PaidByCardType.Name.ToLower()-Easy.png" class="img-fluid " style="width: 52.5px; height: 30px; object-fit: cover; border-radius:2px;">
                                         *@transaction.PaidById[^4..]
                                     </a>
                                 }
                                 else if (transaction.PaidByType.Name == "BankAccount")
                                 {
-                                    <a href="#" style="color:#FFFFFF;">
+                                    <a asp-controller="BankAccount" asp-action="Detail" asp-route-id="@transaction.PaidById" style="color:#FFFFFF;">
                                         <img src="~/areaAssets/images/Bank-Account.png" class="img-fluid " style="width: 45px; height: 45px; object-fit: cover;">
                                         Bank Account
                                     </a>
@@ -235,14 +243,14 @@
                             <td>
                                 @if (transaction.DestinationType.Name == "Card")
                                 {
-                                    <a href="#" style="color:#FFFFFF;">
+                                    <a asp-controller="BankCard" asp-action="Detail" asp-route-id="@transaction.DestinationId" style="color:#FFFFFF;">
                                         <img src="~/areaAssets/images/@transaction.DestinationCardType.Name.ToLower()-Easy.png" class="img-fluid " style="width: 52.5px; height: 30px; object-fit: cover; border-radius:2px;">
                                         *@transaction.DestinationId[^4..]
                                     </a>
                                 }
                                 else if (transaction.DestinationType.Name == "BankAccount")
                                 {
-                                    <a href="#" style="color:#FFFFFF;">
+                                    <a asp-controller="BankAccount" asp-action="Detail" asp-route-id="@transaction.DestinationId" style="color:#FFFFFF;">
                                         <img src="~/areaAssets/images/Bank-Account.png" class="img-fluid " style="width: 45px; height: 45px; object-fit: cover;">
                                         Bank Account
                                     </a>

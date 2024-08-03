@@ -3,20 +3,18 @@ using BetaBank.Contexts;
 using BetaBank.Models;
 using BetaBank.Services.Implementations;
 using BetaBank.Services.Validators;
-using BetaBank.Utils.Enums;
 using BetaBank.ViewModels;
-using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using System.Data;
-using System.Xml.Linq;
+
 
 namespace BetaBank.Areas.SuperAdmin.Controllers
 {
 
     [Area("SuperAdmin")]
+    [Authorize(Roles = "SuperAdmin")]
     public class EmployeesController : Controller
     {
         private readonly UserManager<AppUser> _userManager;
@@ -35,10 +33,52 @@ namespace BetaBank.Areas.SuperAdmin.Controllers
             _context = context;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
+            var roles = new List<string> { "Admin", "Support", "Moderator" };
+            var usersInRoles = new List<AppUser>();
+
+            foreach (var role in roles)
+            {
+                var usersInRole = await _userManager.GetUsersInRoleAsync(role);
+                usersInRoles.AddRange(usersInRole);
+            }
+
+            usersInRoles = usersInRoles.Distinct().ToList();
+
+            var users = usersInRoles
+                .AsQueryable()
+                .AsNoTracking()
+                .OrderBy(b => b.FirstName)
+                .ToList();
+
+
+            List<EmployeeViewModel> usersViewModel = new List<EmployeeViewModel>();
+            foreach (var user in users)
+            {
+                usersViewModel.Add(new EmployeeViewModel
+                {
+                    Id = user.Id,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    DateOfBirth = user.DateOfBirth,
+                    PhoneNumber = user.PhoneNumber,
+                    CreatedDate = user.CreatedDate,
+                    UpdateDate = user.UpdateDate,
+                    Banned = user.Banned,
+                    ProfilePhoto = user.ProfilePhoto,
+                    Email = user.Email,
+                    Age = user.DateOfBirth.CalculateAge(),
+                    EmailConfirmed = user.EmailConfirmed,
+                    Role = (await _userManager.GetRolesAsync(user)).First(),
+            });
+            }
+
+            ViewData["EmployeeViewModels"] = usersViewModel;
+            TempData["Tab"] = "Employees";
             return View();
         }
+
         public async Task<IActionResult> Create()
         {
             List<IdentityRole> roles = await _context.Roles.ToListAsync();
@@ -119,13 +159,13 @@ namespace BetaBank.Areas.SuperAdmin.Controllers
             }
             if (!employeeCreateViewModel.ProfilePhoto.CheckFileSize(3000))
                 {
-                    ModelState.AddModelError("Image", "get ariqla");
+                    ModelState.AddModelError("Image", "The image is too large, please upload a smaller one.");
                     return View(nameof(Create));
                 }
 
                 if (!employeeCreateViewModel.ProfilePhoto.CheckFileType("image/"))
                 {
-                    ModelState.AddModelError("Image", "get ariqla");
+                    ModelState.AddModelError("Image", "The image is too large, please upload a smaller one.");
                     return View(nameof(Create));
                 }          
             AppUser appUser = new AppUser()
@@ -195,6 +235,86 @@ string profilePhotoFileName = await ImageSaverService.SaveImage(employeeCreateVi
 
             return RedirectToAction("Index", "Dashboard");
         }
+
+        public async Task<IActionResult> BanUser(string id)
+        {
+            var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            user.Banned = true;
+            await _context.SaveChangesAsync();
+
+            return Json(new { message = "User has been Banned." });
+        }
+        public async Task<IActionResult> UnBanUser(string id)
+        {
+            var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            user.Banned = false;
+            await _context.SaveChangesAsync();
+
+            return Json(new { message = "User has been UnBanned." });
+        }
+        public async Task<IActionResult> Detail(string id)
+        {
+            var user = await _userManager.Users.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            EmployeeViewModel userViewModel = new EmployeeViewModel
+            {
+                Id = user.Id,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                DateOfBirth = user.DateOfBirth,
+                PhoneNumber = user.PhoneNumber,
+                CreatedDate = user.CreatedDate,
+                UpdateDate = user.UpdateDate,
+                Banned = user.Banned,
+                ProfilePhoto = user.ProfilePhoto,
+                Email = user.Email,
+                Age = user.DateOfBirth.CalculateAge(),
+                EmailConfirmed = user.EmailConfirmed,
+                Role = (await _userManager.GetRolesAsync(user)).First(),
+            };
+            ViewData["EmployeeViewModels"] = userViewModel;
+
+
+
+            return View();
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         //sekli crop ettikde goturme kodu 
         //[HttpPost]
         //[ValidateAntiForgeryToken]
@@ -211,5 +331,8 @@ string profilePhotoFileName = await ImageSaverService.SaveImage(employeeCreateVi
 
 
         //}
+
+
+
     }
 }

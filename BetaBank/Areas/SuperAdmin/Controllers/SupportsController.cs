@@ -1,4 +1,4 @@
-﻿using BetaBank.Areas.Admin.ViewModels;
+﻿using BetaBank.Areas.SuperAdmin.ViewModels;
 using BetaBank.Contexts;
 using BetaBank.Models;
 using BetaBank.Services.Implementations;

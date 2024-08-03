@@ -14,13 +14,13 @@
             <form asp-action="CreateSubscriber" method="post" enctype="multipart/form-data">
                 <div class="form-group">
                     <label for="title">Email</label>
-                    <input asp-for="Email" class="form-control" id="title" placeholder="Enter title" required />
+                    <input asp-for="Email" class="form-control" id="title" placeholder="Enter Mail" required />
                     <span asp-validation-for="Email" class="text-danger"></span>
                 </div>
                 
                 <div class="form-group">
                     <input type="submit" class="btn main-color-bg" value="Create" />
-                    <a href="javascript:history.back()" class="btn btn-secondary">Cancel</a>
+                    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
                 </div>
             </form>
         </div>

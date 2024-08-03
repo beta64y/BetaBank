@@ -573,36 +573,9 @@ namespace BetaBank.Migrations
                     b.Property<DateTime>("TransactionDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("TransactionStatusModelId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("TransactionStatusModelId");
 
                     b.ToTable("Transactions");
-                });
-
-            modelBuilder.Entity("BetaBank.Models.TransactionStatus", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("SupportId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("TransactionId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SupportId");
-
-                    b.HasIndex("TransactionId");
-
-                    b.ToTable("TransactionStatuses");
                 });
 
             modelBuilder.Entity("BetaBank.Models.TransactionStatusModel", b =>
@@ -631,6 +604,43 @@ namespace BetaBank.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("TransactionTypeModels");
+                });
+
+            modelBuilder.Entity("BetaBank.Models.UserEvent", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Action")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("EntityId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EntityType")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Section")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserEvents");
                 });
 
             modelBuilder.Entity("BetaBank.Models.UtilityModel", b =>
@@ -892,30 +902,15 @@ namespace BetaBank.Migrations
                     b.Navigation("Support");
                 });
 
-            modelBuilder.Entity("BetaBank.Models.Transaction", b =>
+            modelBuilder.Entity("BetaBank.Models.UserEvent", b =>
                 {
-                    b.HasOne("BetaBank.Models.TransactionStatusModel", null)
-                        .WithMany("Transactions")
-                        .HasForeignKey("TransactionStatusModelId");
-                });
-
-            modelBuilder.Entity("BetaBank.Models.TransactionStatus", b =>
-                {
-                    b.HasOne("BetaBank.Models.Transaction", "Support")
+                    b.HasOne("BetaBank.Models.AppUser", "User")
                         .WithMany()
-                        .HasForeignKey("SupportId")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BetaBank.Models.TransactionStatusModel", "Transaction")
-                        .WithMany()
-                        .HasForeignKey("TransactionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Support");
-
-                    b.Navigation("Transaction");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -967,11 +962,6 @@ namespace BetaBank.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("BetaBank.Models.TransactionStatusModel", b =>
-                {
-                    b.Navigation("Transactions");
                 });
 #pragma warning restore 612, 618
         }

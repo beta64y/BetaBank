@@ -1,15 +1,14 @@
-﻿using BetaBank.Areas.Admin.ViewModels;
+﻿using BetaBank.Areas.SuperAdmin.ViewModels;
 using BetaBank.Contexts;
 using BetaBank.Models;
-using BetaBank.Services.Implementations;
-using BetaBank.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.VisualBasic;
 
 namespace BetaBank.Areas.SuperAdmin.Controllers
 {
     [Area("SuperAdmin")]
+    [Authorize(Roles = "SuperAdmin")]
     public class PaymentController : Controller
     {
         private readonly BetaBankDbContext _context;
@@ -22,7 +21,7 @@ namespace BetaBank.Areas.SuperAdmin.Controllers
         public async Task<IActionResult> Index()
         {
             List<Transaction> transactions = await _context.Transactions.AsNoTracking().ToListAsync();
-            List<Admin.ViewModels.TransactionViewModel> transactionViewModels = new();
+            List<SuperAdmin.ViewModels.TransactionViewModel> transactionViewModels = new();
             foreach (Transaction transaction in transactions)
             {
                 TransactionTypeModel paidByType = await _context.TransactionTypeModels.FirstOrDefaultAsync(x => x.Id == transaction.PaidByTypeId);
@@ -86,7 +85,7 @@ namespace BetaBank.Areas.SuperAdmin.Controllers
             {
                 return BadRequest();
             }
-            Admin.ViewModels.TransactionViewModel transactionViewModel = new()
+            SuperAdmin.ViewModels.TransactionViewModel transactionViewModel = new()
             {
                 Id = transaction.Id,
                 ReceiptNumber = transaction.ReceiptNumber,

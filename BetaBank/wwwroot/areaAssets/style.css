@@ -14,7 +14,16 @@
   --border-color:#1E1D1B;   
 }
 
-
+h2 {
+    color: var(--soft-text);
+}
+.modal-content {
+    background-color: var(--background-cards);
+    color: var(--main-text-color);
+}
+.modal-header button {
+    color: var(--just-green);
+}
 a:hover {
     text-decoration: none;
 }

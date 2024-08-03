@@ -3,7 +3,7 @@ using BetaBank.Contexts;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using BetaBank.Areas.Admin.ViewModels;
+using BetaBank.Areas.SuperAdmin.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using BetaBank.Services.Implementations;
 
@@ -54,7 +54,7 @@ namespace BetaBank.Areas.SuperAdmin.Controllers
                 });
             }
 
-            AdminUserViewModel ViewModel = new()
+            SuperAdminUserViewModel ViewModel = new()
             {
                 Users = usersViewModel,
             };
@@ -185,7 +185,7 @@ namespace BetaBank.Areas.SuperAdmin.Controllers
                     x.DestinationId == bankAccountViewModel.AccountNumber 
                 )
                 .ToList();
-            List<Admin.ViewModels.TransactionViewModel> transactionViewModels = new();
+            List<SuperAdmin.ViewModels.TransactionViewModel> transactionViewModels = new();
             foreach (Transaction transaction in filteredTransactions)
             {
                 TransactionTypeModel paidByType = await _context.TransactionTypeModels.FirstOrDefaultAsync(x => x.Id == transaction.PaidByTypeId);
@@ -299,7 +299,7 @@ namespace BetaBank.Areas.SuperAdmin.Controllers
 
             return View(userDetailViewModel);
         }
-        public async Task<IActionResult> Search(AdminUserViewModel adminUsersViewModel)
+        public async Task<IActionResult> Search(SuperAdminUserViewModel adminUsersViewModel)
         {
             if (adminUsersViewModel.Search.SearchTerm != null)
             {
@@ -333,7 +333,7 @@ namespace BetaBank.Areas.SuperAdmin.Controllers
                         EmailConfirmed = user.EmailConfirmed,
                     });
                 }
-                AdminUserViewModel ViewModel = new AdminUserViewModel()
+                SuperAdminUserViewModel ViewModel = new SuperAdminUserViewModel()
                 {
                     Users = filteredUsersModel,
                     Search = adminUsersViewModel.Search

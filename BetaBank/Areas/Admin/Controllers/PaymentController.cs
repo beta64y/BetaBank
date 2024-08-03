@@ -3,6 +3,7 @@ using BetaBank.Contexts;
 using BetaBank.Models;
 using BetaBank.Services.Implementations;
 using BetaBank.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualBasic;
@@ -10,6 +11,7 @@ using Microsoft.VisualBasic;
 namespace BetaBank.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = "Admin")]
     public class PaymentController : Controller
     {
         private readonly BetaBankDbContext _context;

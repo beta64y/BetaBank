@@ -1,0 +1,78 @@
+﻿<div class="col-md-12 mt-sm-3 mt-md-0">
+    <!--Panel for website overview-->
+    <div class="card">
+        <div class="card-header main-color-bg">
+            Events
+        </div>
+        <div class="card-body">
+            <form>
+                <div class="form-row">
+                    <div class="form-group col-md-4">
+                        <label for="actionSelectDropdown">Action</label>
+                        <div class="dropdown">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" id="actionSelectDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Select Actions
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="actionSelectDropdown">
+                                <div class="form-check dropdown-item">
+                                    <input class="form-check-input" type="checkbox" value="1" id="action1">
+                                    <label class="form-check-label" for="action1">Get</label>
+                                </div>
+                                <div class="form-check dropdown-item">
+                                    <input class="form-check-input" type="checkbox" value="2" id="action2">
+                                    <label class="form-check-label" for="action2">Viewed</label>
+                                </div>
+                                <!-- Add more actions similarly -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="sectionSelectDropdown">Section</label>
+                        <div class="dropdown">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" id="sectionSelectDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Select Sections
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="sectionSelectDropdown">
+                                <div class="form-check dropdown-item">
+                                    <input class="form-check-input" type="checkbox" value="1" id="section1">
+                                    <label class="form-check-label" for="section1">Dashboard</label>
+                                </div>
+                                <div class="form-check dropdown-item">
+                                    <input class="form-check-input" type="checkbox" value="2" id="section2">
+                                    <label class="form-check-label" for="section2">News</label>
+                                </div>
+                                <!-- Add more sections similarly -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="entitySelectDropdown">Entity</label>
+                        <div class="dropdown">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" id="entitySelectDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Select Entities
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="entitySelectDropdown">
+                                <div class="form-check dropdown-item">
+                                    <input class="form-check-input" type="checkbox" value="1" id="entity1">
+                                    <label class="form-check-label" for="entity1">Page</label>
+                                </div>
+                                <div class="form-check dropdown-item">
+                                    <input class="form-check-input" type="checkbox" value="2" id="entity2">
+                                    <label class="form-check-label" for="entity2">News</label>
+                                </div>
+                                <!-- Add more entities similarly -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea id="description" class="form-control"></textarea>
+                </div>
+
+                <button type="button" class="btn btn-primary" id="submitEvent">Submit</button>
+            </form>
+        </div>
+    </div>
+</div>

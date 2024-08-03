@@ -1,4 +1,4 @@
-﻿using BetaBank.Areas.Admin.ViewModels;
+﻿using BetaBank.Areas.SuperAdmin.ViewModels;
 using BetaBank.Contexts;
 using BetaBank.Models;
 using BetaBank.Services.Implementations;
@@ -26,7 +26,7 @@ namespace BetaBank.Areas.SuperAdmin.Controllers
         public async Task<IActionResult> Index()
         {
             List<News> news = await _context.News.AsNoTracking().OrderBy(b => b.CreatedDate).Where(r => !r.IsDeleted).ToListAsync();
-            AdminNewsViewModel ViewModel = new AdminNewsViewModel()
+            SuperAdminNewsViewModel ViewModel = new SuperAdminNewsViewModel()
             {
                 News = news,
             };
@@ -49,22 +49,22 @@ namespace BetaBank.Areas.SuperAdmin.Controllers
             }
             if (!newsCreateViewModel.FirstImage.CheckFileSize(3000))
             {
-                ModelState.AddModelError("Image", "Sekl boyukdu balacasini yukle");
+                ModelState.AddModelError("Image", "The image is too large, please upload a smaller one.");
                 return View();
             }
             if (!newsCreateViewModel.FirstImage.CheckFileType("image/"))
             {
-                ModelState.AddModelError("Image", "sekil gonderde ne pdfni yapisdirmisan");
+                ModelState.AddModelError("Image", "Please upload an image file.");
                 return View();
             }
             if (!newsCreateViewModel.SecondImage.CheckFileSize(3000))
             {
-                ModelState.AddModelError("Image", "Sekl boyukdu balacasini yukle");
+                ModelState.AddModelError("Image", "The image is too large, please upload a smaller one.");
                 return View();
             }
             if (!newsCreateViewModel.SecondImage.CheckFileType("image/"))
             {
-                ModelState.AddModelError("Image", "sekil gonderde ne pdfni yapisdirmisan");
+                ModelState.AddModelError("Image", "Please upload an image file.");
                 return View();
             }
             string firstImageFileName = await ImageSaverService.SaveImage(newsCreateViewModel.FirstImage, _webHostEnvironment.WebRootPath);
@@ -148,13 +148,13 @@ namespace BetaBank.Areas.SuperAdmin.Controllers
 
                 if (!newsUpdateViewModel.FirstImage.CheckFileSize(3000))
                 {
-                    ModelState.AddModelError("Image", "get ariqla");
+                    ModelState.AddModelError("Image", "The image is too large, please upload a smaller one.");
                     return View();
                 }
 
                 if (!newsUpdateViewModel.FirstImage.CheckFileType("image/"))
                 {
-                    ModelState.AddModelError("Image", "get ariqla");
+                    ModelState.AddModelError("Image", "The image is too large, please upload a smaller one.");
                     return View();
                 }
                 string basePath = Path.Combine(_webHostEnvironment.WebRootPath, "img", "website-images");
@@ -170,13 +170,13 @@ namespace BetaBank.Areas.SuperAdmin.Controllers
             {
                 if (!newsUpdateViewModel.SecondImage.CheckFileSize(3000))
                 {
-                    ModelState.AddModelError("Image", "get ariqla");
+                    ModelState.AddModelError("Image", "The image is too large, please upload a smaller one.");
                     return View();
                 }
 
                 if (!newsUpdateViewModel.SecondImage.CheckFileType("image/"))
                 {
-                    ModelState.AddModelError("Image", "get ariqla");
+                    ModelState.AddModelError("Image", "The image is too large, please upload a smaller one.");
                     return View();
                 }
                 string basePath = Path.Combine(_webHostEnvironment.WebRootPath, "img", "website-images");
@@ -197,13 +197,13 @@ namespace BetaBank.Areas.SuperAdmin.Controllers
             return RedirectToAction(nameof(Index));
         }
         [HttpPost]
-        public async Task<IActionResult> Search(AdminNewsViewModel adminNewsViewModel)
+        public async Task<IActionResult> Search(SuperAdminNewsViewModel adminNewsViewModel)
         {
             if (adminNewsViewModel.Search.SearchTerm != null)
             {
                 var searchTerm = adminNewsViewModel.Search.SearchTerm.ToLower();
                 var filteredNews = await _context.News.Where(p => (p.Title.ToLower().Contains(searchTerm) && !p.IsDeleted)).ToListAsync();
-                AdminNewsViewModel ViewModel = new AdminNewsViewModel()
+                SuperAdminNewsViewModel ViewModel = new SuperAdminNewsViewModel()
                 {
                     News = filteredNews,
                     Search = adminNewsViewModel.Search

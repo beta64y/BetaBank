@@ -1,6 +1,7 @@
 ﻿using BetaBank.Areas.Admin.ViewModels;
 using BetaBank.Contexts;
 using BetaBank.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Transactions;
@@ -8,6 +9,7 @@ using System.Transactions;
 namespace BetaBank.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = "Admin")]
     public class CashBackController : Controller
     {
         private readonly BetaBankDbContext _context;

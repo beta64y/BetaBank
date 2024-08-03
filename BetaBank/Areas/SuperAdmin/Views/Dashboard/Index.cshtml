@@ -1,5 +1,27 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿
 @{
+    ViewData["Title"] = "Dashboard";
+}
+@await Component.InvokeAsync("SuperAdminBox")
+<div class="col-md-9 mt-sm-3 mt-md-0">
+    <!--Panel for website overview-->
+    @await Component.InvokeAsync("BetaBank.Areas.SuperAdmin.ViewComponents.Card")
+    <!-- latest users -->
+    <div class="card mt-sm-3 mt-md-2">
+        <div class="card-header">
+            Featured
+        </div>
+        <div class="card-body">
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script>
+
+
+        document.getElementById("@TempData["Tab"]-tab").classList.add("active", "main-color-bg");
+        
+
+
+    </script>
 }

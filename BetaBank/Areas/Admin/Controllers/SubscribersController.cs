@@ -1,8 +1,11 @@
 ﻿using BetaBank.Areas.Admin.ViewModels;
+using BetaBank.Areas.Moderator.ViewModels;
 using BetaBank.Contexts;
 using BetaBank.Models;
+using BetaBank.Utils.Enums;
 using BetaBank.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,10 +16,13 @@ namespace BetaBank.Areas.Admin.Controllers
     public class SubscribersController : Controller
     {
         private readonly BetaBankDbContext _context;
+        private readonly UserManager<AppUser> _userManager;
 
-        public SubscribersController(BetaBankDbContext context)
+
+        public SubscribersController(BetaBankDbContext context, UserManager<AppUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
         public async Task<IActionResult> Index()
         {
@@ -26,11 +32,55 @@ namespace BetaBank.Areas.Admin.Controllers
                 Subscribers = subscribers,
             };
             TempData["Tab"] = "Subscribers";
+
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            UserEvent userEvent = new()
+            {
+                Id = $"{Guid.NewGuid()}",
+                UserId = user.Id,
+                Action = UserActionType.Get.ToString(),
+                Date = DateTime.UtcNow,
+                Section = SectionType.Subscribers.ToString(),
+                EntityType = EntityType.Page.ToString(),
+                EntityId = "Index"
+
+            };
+            await _context.UserEvents.AddAsync(userEvent);
+            await _context.SaveChangesAsync();
+
+
             return View(ViewModel);
         }
         public async Task<IActionResult> CreateSubscriber()
         {
             TempData["Tab"] = "Subscribers";
+
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            UserEvent userEvent = new()
+            {
+                Id = $"{Guid.NewGuid()}",
+                UserId = user.Id,
+                Action = UserActionType.Get.ToString(),
+                Date = DateTime.UtcNow,
+                Section = SectionType.Subscribers.ToString(),
+                EntityType = EntityType.Page.ToString(),
+                EntityId = "CreateSubscriber"
+
+            };
+            await _context.UserEvents.AddAsync(userEvent);
+            await _context.SaveChangesAsync();
+
+
             return View();
         }
         [HttpPost]
@@ -52,9 +102,39 @@ namespace BetaBank.Areas.Admin.Controllers
                 else
                 {
                     subscriber.IsSubscribe = true;
-                    @TempData["SuccessMessage"] = "User is subscribed!";
+                    TempData["SuccessMessage"] = "User is subscribed!";
                     await _context.SaveChangesAsync();
                 }
+
+
+
+                var user = await _userManager.FindByNameAsync(User.Identity.Name);
+                if (user == null)
+                {
+                    return NotFound();
+                }
+
+                UserEvent userEvent = new()
+                {
+                    Id = $"{Guid.NewGuid()}",
+                    UserId = user.Id,
+                    Action = UserActionType.MakeSubscribed.ToString(),
+                    Date = DateTime.UtcNow,
+                    Section = SectionType.Subscribers.ToString(),
+                    EntityType = EntityType.Subscriber.ToString(),
+                    EntityId = subscriber.Id
+
+                };
+                await _context.UserEvents.AddAsync(userEvent);
+                await _context.SaveChangesAsync();
+
+
+
+
+
+
+
+
                 return RedirectToAction("Index");
 
             }
@@ -67,12 +147,39 @@ namespace BetaBank.Areas.Admin.Controllers
                     Mail = subscribeViewModel.Email,
                     IsSubscribe = true
                 };
+
+
+                var user = await _userManager.FindByNameAsync(User.Identity.Name);
+                if (user == null)
+                {
+                    return NotFound();
+                }
+
+                UserEvent userEvent = new()
+                {
+                    Id = $"{Guid.NewGuid()}",
+                    UserId = user.Id,
+                    Action = UserActionType.Created.ToString(),
+                    Date = DateTime.UtcNow,
+                    Section = SectionType.Subscribers.ToString(),
+                    EntityType = EntityType.Subscriber.ToString(),
+                    EntityId = newSubscriber.Id
+
+                };
+                await _context.UserEvents.AddAsync(userEvent);
+
+
                 await _context.Subscribers.AddAsync(newSubscriber);
                 await _context.SaveChangesAsync();
-                @TempData["SuccessMessage"] = "User is subscribed!";
+                TempData["SuccessMessage"] = "User is subscribed!";
             }
             //string refererUrl = Request.Headers["Referer"].ToString();
             // Burani Duzeldecekdin ama sonra erindin 
+
+           
+
+
+
 
             return RedirectToAction("Index");
         }
@@ -81,6 +188,24 @@ namespace BetaBank.Areas.Admin.Controllers
            
             Subscriber subscriber = await _context.Subscribers.FirstOrDefaultAsync(x => x.Id == id);
             subscriber.IsSubscribe = true;
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            UserEvent userEvent = new()
+            {
+                Id = $"{Guid.NewGuid()}",
+                UserId = user.Id,
+                Action = UserActionType.MakeSubscribed.ToString(),
+                Date = DateTime.UtcNow,
+                Section = SectionType.Subscribers.ToString(),
+                EntityType = EntityType.Subscriber.ToString(),
+                EntityId = subscriber.Id
+
+            };
+            await _context.UserEvents.AddAsync(userEvent);
             await _context.SaveChangesAsync();
 
             return RedirectToAction("Index", "Subscribers");
@@ -91,12 +216,50 @@ namespace BetaBank.Areas.Admin.Controllers
 
             Subscriber subscriber = await _context.Subscribers.FirstOrDefaultAsync(x => x.Id == id);
             subscriber.IsSubscribe = false;
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            UserEvent userEvent = new()
+            {
+                Id = $"{Guid.NewGuid()}",
+                UserId = user.Id,
+                Action = UserActionType.MakeUnsubscribed.ToString(),
+                Date = DateTime.UtcNow,
+                Section = SectionType.Subscribers.ToString(),
+                EntityType = EntityType.Subscriber.ToString(),
+                EntityId = subscriber.Id
+
+            };
+            await _context.UserEvents.AddAsync(userEvent);
             await _context.SaveChangesAsync();
             return RedirectToAction("Index", "Subscribers");
         }
 
         public async Task<IActionResult> Search(AdminSubscribersViewModel adminSubscribersViewModel)
         {
+            TempData["Tab"] = "Subscribers";
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            UserEvent userEvent = new()
+            {
+                Id = $"{Guid.NewGuid()}",
+                UserId = user.Id,
+                Action = UserActionType.Searched.ToString(),
+                Date = DateTime.UtcNow,
+                Section = SectionType.Subscribers.ToString(),
+                EntityType = EntityType.Page.ToString(),
+                EntityId = adminSubscribersViewModel.Search.SearchTerm
+
+            };
+            await _context.UserEvents.AddAsync(userEvent);
+            await _context.SaveChangesAsync();
             if (adminSubscribersViewModel.Search.SearchTerm != null)
             {
                 var searchTerm = adminSubscribersViewModel.Search.SearchTerm.ToLower();
@@ -106,12 +269,12 @@ namespace BetaBank.Areas.Admin.Controllers
                     Subscribers = filteredSubscribers,
                     Search = adminSubscribersViewModel.Search
                 };
-                TempData["Tab"] = "Subscribers";
+                
                 return View("Index", ViewModel);
             }
             else
             {
-                TempData["Tab"] = "Subscribers";
+
                 return View(null);
             }
         }

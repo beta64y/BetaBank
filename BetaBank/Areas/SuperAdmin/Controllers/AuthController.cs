@@ -46,35 +46,35 @@ namespace BetaBank.Areas.SuperAdmin.Controllers
             var user = await _userManager.FindByNameAsync(loginViewModel.UsernameOrEmail);
             if (user == null )
             {
-                ModelState.AddModelError("", "Email or Password is incorrect");
+                ModelState.AddModelError("", "Email or Password is incorrect!");
                 return View();
             }
 
             var userRoles = await _userManager.GetRolesAsync(user);
             if (!userRoles.Contains("SuperAdmin"))
             {
-                ModelState.AddModelError("", "Email or Password is incorrect");
+                ModelState.AddModelError("", "Email or Password is incorrect!");
                 return View();
             }
             if (!await _userManager.IsEmailConfirmedAsync(user))
             {
-                ModelState.AddModelError("", "please confirm mail");
+                ModelState.AddModelError("", "Please confirm Email!");
                 return View();
             }
             if (user.Banned)
             {
-                ModelState.AddModelError("", "Banlandiniz");
+                ModelState.AddModelError("", "Email or Password is incorrect!");
                 return View();
             }
             var signInResult = await _signInManager.PasswordSignInAsync(user, loginViewModel.Password, loginViewModel.RememberMe, true);
             if (signInResult.IsLockedOut)
             {
-                ModelState.AddModelError("", "Get sonra gelersen");
+                ModelState.AddModelError("", "Your account has been locked out. Please try again later.");
                 return View();
             }
             if (!signInResult.Succeeded)
             {
-                ModelState.AddModelError("", "Email or Password is incorrect");
+                ModelState.AddModelError("", "Email or Password is incorrect!");
                 return View();
             }
             return RedirectToAction("Index", "DashBoard");

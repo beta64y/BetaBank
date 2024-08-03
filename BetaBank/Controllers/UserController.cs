@@ -332,13 +332,13 @@ namespace BetaBank.Controllers
 
                 if (!userUpdateViewModel.ProfilePhoto.CheckFileSize(3000))
                 {
-                    ModelState.AddModelError("Image", "get ariqla");
+                    ModelState.AddModelError("Image", "The image is too large, please upload a smaller one.");
                     return View(nameof(Profile));
                 }
 
                 if (!userUpdateViewModel.ProfilePhoto.CheckFileType("image/"))
                 {
-                    ModelState.AddModelError("Image", "get ariqla");
+                    ModelState.AddModelError("Image", "The image is too large, please upload a smaller one.");
                     return View(nameof(Profile));
                 }
                 string basePath = Path.Combine(_webHostEnvironment.WebRootPath, "img", "data");
@@ -371,7 +371,7 @@ namespace BetaBank.Controllers
             {
                 if (userUpdateViewModel.NewPassword == null)
                 {
-                    ModelState.AddModelError("NewPassword", "new password bos ola bilmez");
+                    ModelState.AddModelError("NewPassword", "New password cannot be empty.");
                     return View(nameof(Profile));
 
                 }

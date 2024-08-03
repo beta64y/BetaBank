@@ -1,6 +1,7 @@
-﻿using BetaBank.Areas.Admin.ViewModels;
+﻿using BetaBank.Areas.SuperAdmin.ViewModels;
 using BetaBank.Contexts;
 using BetaBank.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Transactions;
@@ -8,6 +9,7 @@ using System.Transactions;
 namespace BetaBank.Areas.SuperAdmin.Controllers
 {
     [Area("SuperAdmin")]
+    [Authorize(Roles = "SuperAdmin")]
     public class CashBackController : Controller
     {
         private readonly BetaBankDbContext _context;
@@ -19,11 +21,11 @@ namespace BetaBank.Areas.SuperAdmin.Controllers
         public async Task<IActionResult> Index()
         {
             List<CashBack> cashBacks = await _context.CashBacks.AsNoTracking().ToListAsync();
-            List<Admin.ViewModels.CashBackViewModel> walletViewModels = new();
+            List<SuperAdmin.ViewModels.CashBackViewModel> walletViewModels = new();
             foreach (CashBack wallet in cashBacks)
             {
                 AppUser user = await _context.Users.FirstOrDefaultAsync(x => x.Id ==  wallet.UserId);
-                walletViewModels.Add(new Admin.ViewModels.CashBackViewModel()
+                walletViewModels.Add(new SuperAdmin.ViewModels.CashBackViewModel()
                 {
                     Id = wallet.Id,
                     Balance = wallet.Balance,
