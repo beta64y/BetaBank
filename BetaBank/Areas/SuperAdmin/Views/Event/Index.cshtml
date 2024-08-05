@@ -4,7 +4,7 @@
 }
 
 @*await Component.InvokeAsync("SuperAdminBox")*@
-@await Component.InvokeAsync("EventFilter")
+@*await Component.InvokeAsync("EventFilter")*@
 <div class="col-md-12 mt-sm-3 mt-md-0">
     <!--Panel for website overview-->
     <div class="card">
@@ -97,14 +97,14 @@
                                 else if (eventViewModel.EntityType == "BankAccount")
                                 {
                                     <a asp-controller="BankAccount" asp-action="Detail" asp-route-id="@eventViewModel.EntityId" style="color:#FFFFFF;">
-                                        <img src="~/img/data/@eventViewModel.EntityUserProfilePhoto" class="img-fluid rounded-circle" style="width: 45px; height: 45px; object-fit: cover;">
+                                        <img src="~/areaAssets/images/Bank-Account.png" class="img-fluid " style="width: 45px; height: 45px; object-fit: cover;">
                                         @eventViewModel.EntityUserFirstName @eventViewModel.EntityUserLastName
                                     </a>
                                 }
                                 else if (eventViewModel.EntityType == "Wallet")
                                 {
                                     <a asp-controller="CashBack" asp-action="Index" asp-route-id="@eventViewModel.EntityId" style="color:#FFFFFF;">
-                                        <img src="~/img/data/@eventViewModel.EntityUserProfilePhoto" class="img-fluid rounded-circle" style="width: 45px; height: 45px; object-fit: cover;">
+                                        <img src="~/areaAssets/images/Cashback-Icon.png" class="img-fluid " style="width: 45px; height: 45px; object-fit: cover;">
                                         @eventViewModel.EntityUserFirstName @eventViewModel.EntityUserLastName
                                     </a>
                                 }

@@ -86,26 +86,33 @@
             }
             else if (data.PaidByType.Name == "BankAccount")
             {
+
+
+
                 <div class="account-info">
-                    <div class="account-number-and-info">
-                        <h3>Account Number: <span class="account-number">@paidByData.Account.AccountNumber</span></h3>
-                        @if (paidByData.Account.AccountStatus.Name == "Active")
-                        {
-                            <span class="badge bg-success text-dark">Active</span>
-                        }
-                        else if (paidByData.Account.AccountStatus.Name == "Suspended")
-                        {
-                            <span class="badge bg-danger text-dark">Suspended</span>
+                    <div class="icon-and-info-div">
+                        <img src="~/areaAssets/images/Bank-Account.png" alt="">
+                        <div class="details-div">
+                            <div class="account-number-and-info">
+                                <h3>Account Number: <span class="account-number">@paidByData.Account.AccountNumber</span></h3>
+                                @if (paidByData.Account.AccountStatus.Name == "Active")
+                                {
+                                    <span class="badge bg-success text-dark">Active</span>
+                                }
+                                else if (paidByData.Account.AccountStatus.Name == "Suspended")
+                                {
+                                    <span class="badge bg-danger text-dark">Suspended</span>
 
-                        }
-
-                    </div>
-                    <div class="account-details">
-                        <span class="account-amount">@paidByData.Account.Balance.ToString("C")</span>
+                                }
+                            </div>
+                            <div class="account-details">
+                                <span class="account-amount">@paidByData.Account.Balance.ToString("C")</span>
+                            </div>
+                        </div>
                     </div>
                     <div class="iban-box d-flex align-items-center border rounded p-2 mb-4">
                         <button class="btn btn-copy mr-2" onclick="copyIBAN()">
-                            <i class="fas fa-copy"></i>
+                            <i class="fas fa-copy"></i> <!-- Font Awesome Copy Icon -->
                         </button>
                         <span class="iban">@paidByData.Account.IBAN</span>
                     </div>
@@ -113,21 +120,24 @@
                         <a asp-controller="BankAccount" asp-action="Detail" asp-route-id="@paidByData.Account.AccountNumber" class="btn btn-primary">Details</a>
                     </div>
                 </div>
+              
             }
             else if (data.PaidByType.Name == "CashBack")
             {
-   
-                        <div class="account-info">
+
+                <div class="account-info">
+                    <div class="icon-and-info-div">
+                        <img src="~/areaAssets/images/Cashback-Icon.png" alt="">
+                        <div class="details-div">
                             <div class="account-number-and-info">
                                 <h3>Account Number: <span class="account-number">@paidByData.CashBack.CashBackNumber</span></h3>
                             </div>
                             <div class="account-details">
                                 <span class="account-amount">@paidByData.CashBack.Balance.ToString("C")</span>
                             </div>
-
-                       
                         </div>
-   
+                    </div>
+                </div>
             }
             
             
@@ -184,25 +194,29 @@
             else if (data.DestinationType.Name == "BankAccount")
             {
                 <div class="account-info">
-                    <div class="account-number-and-info">
-                        <h3>Account Number: <span class="account-number">@destinationData.Account.AccountNumber</span></h3>
-                        @if (destinationData.Account.AccountStatus.Name == "Active")
-                        {
-                            <span class="badge bg-success text-dark">Active</span>
-                        }
-                        else if (destinationData.Account.AccountStatus.Name == "Suspended")
-                        {
-                            <span class="badge bg-danger text-dark">Suspended</span>
+                    <div class="icon-and-info-div">
+                        <img src="~/areaAssets/images/Bank-Account.png" alt="">
+                        <div class="details-div">
+                            <div class="account-number-and-info">
+                                <h3>Account Number: <span class="account-number">@destinationData.Account.AccountNumber</span></h3>
+                                @if (destinationData.Account.AccountStatus.Name == "Active")
+                                {
+                                    <span class="badge bg-success text-dark">Active</span>
+                                }
+                                else if (destinationData.Account.AccountStatus.Name == "Suspended")
+                                {
+                                    <span class="badge bg-danger text-dark">Suspended</span>
 
-                        }
-
-                    </div>
-                    <div class="account-details">
-                        <span class="account-amount">@destinationData.Account.Balance.ToString("C")</span>
+                                }
+                            </div>
+                            <div class="account-details">
+                                <span class="account-amount">@destinationData.Account.Balance.ToString("C")</span>
+                            </div>
+                        </div>
                     </div>
                     <div class="iban-box d-flex align-items-center border rounded p-2 mb-4">
                         <button class="btn btn-copy mr-2" onclick="copyIBAN()">
-                            <i class="fas fa-copy"></i>
+                            <i class="fas fa-copy"></i> <!-- Font Awesome Copy Icon -->
                         </button>
                         <span class="iban">@destinationData.Account.IBAN</span>
                     </div>

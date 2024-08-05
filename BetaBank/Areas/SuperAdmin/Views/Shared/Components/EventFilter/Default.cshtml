@@ -1,4 +1,10 @@
-﻿<div class="col-md-12 mt-sm-3 mt-md-0">
+﻿@{
+
+    var sections = ViewData["Sections"] as List<BetaBank.Utils.Enums.SectionType>;
+    var entities = ViewData["Entities"] as List<BetaBank.Utils.Enums.EntityType>;
+}
+
+<div class="col-md-12 mt-sm-3 mt-md-0">
     <!--Panel for website overview-->
     <div class="card">
         <div class="card-header main-color-bg">
@@ -14,6 +20,7 @@
                                 Select Actions
                             </button>
                             <div class="dropdown-menu" aria-labelledby="actionSelectDropdown">
+
                                 <div class="form-check dropdown-item">
                                     <input class="form-check-input" type="checkbox" value="1" id="action1">
                                     <label class="form-check-label" for="action1">Get</label>
@@ -33,15 +40,16 @@
                                 Select Sections
                             </button>
                             <div class="dropdown-menu" aria-labelledby="sectionSelectDropdown">
-                                <div class="form-check dropdown-item">
-                                    <input class="form-check-input" type="checkbox" value="1" id="section1">
-                                    <label class="form-check-label" for="section1">Dashboard</label>
-                                </div>
-                                <div class="form-check dropdown-item">
-                                    <input class="form-check-input" type="checkbox" value="2" id="section2">
-                                    <label class="form-check-label" for="section2">News</label>
-                                </div>
-                                <!-- Add more sections similarly -->
+                                @if (sections != null)
+                                {
+                                    foreach (var Section in sections)
+                                    {
+                                        <div class="form-check dropdown-item">
+                                            <input class="form-check-input" type="checkbox" value="@((int)Section)" id="section@(Section)">
+                                            <label class="form-check-label" for="section@(Section)">@Section.ToString()</label>
+                                        </div>
+                                    }
+                                }
                             </div>
                         </div>
                     </div>
@@ -52,15 +60,16 @@
                                 Select Entities
                             </button>
                             <div class="dropdown-menu" aria-labelledby="entitySelectDropdown">
-                                <div class="form-check dropdown-item">
-                                    <input class="form-check-input" type="checkbox" value="1" id="entity1">
-                                    <label class="form-check-label" for="entity1">Page</label>
-                                </div>
-                                <div class="form-check dropdown-item">
-                                    <input class="form-check-input" type="checkbox" value="2" id="entity2">
-                                    <label class="form-check-label" for="entity2">News</label>
-                                </div>
-                                <!-- Add more entities similarly -->
+                                @if (entities != null)
+                                {
+                                    foreach (var entity in entities)
+                                    {
+                                        <div class="form-check dropdown-item">
+                                            <input class="form-check-input" type="checkbox" value="@((int)entity)" id="entity@(entity)">
+                                            <label class="form-check-label" for="entity@(entity)">@entity.ToString()</label>
+                                        </div>
+                                    }
+                                }
                             </div>
                         </div>
                     </div>

@@ -2,8 +2,10 @@
 using BetaBank.Contexts;
 using BetaBank.Models;
 using BetaBank.Services.Implementations;
+using BetaBank.Utils.Enums;
 using BetaBank.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualBasic;
@@ -15,10 +17,13 @@ namespace BetaBank.Areas.Admin.Controllers
     public class PaymentController : Controller
     {
         private readonly BetaBankDbContext _context;
+        private readonly UserManager<AppUser> _userManager;
 
-        public PaymentController(BetaBankDbContext context)
+
+        public PaymentController(BetaBankDbContext context, UserManager<AppUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         public async Task<IActionResult> Index()
@@ -28,7 +33,7 @@ namespace BetaBank.Areas.Admin.Controllers
             foreach (Transaction transaction in transactions)
             {
                 TransactionTypeModel paidByType = await _context.TransactionTypeModels.FirstOrDefaultAsync(x => x.Id == transaction.PaidByTypeId);
-                BankCardType paidByCardType = null;
+                Models.BankCardType paidByCardType = null;
                 if (paidByType.Name == "Card")
                 {
                     BankCard card = await _context.BankCards.FirstOrDefaultAsync(x => x.CardNumber == transaction.PaidById);
@@ -37,7 +42,7 @@ namespace BetaBank.Areas.Admin.Controllers
 
 
                 TransactionTypeModel destinationType = await _context.TransactionTypeModels.FirstOrDefaultAsync(x => x.Id == transaction.DestinationTypeId);
-                BankCardType destinationCardType = null;
+                Models.BankCardType destinationCardType = null;
 
                 if (destinationType.Name == "Card")
                 {
@@ -74,7 +79,26 @@ namespace BetaBank.Areas.Admin.Controllers
 
 
             ViewData["Transactions"] = transactionViewModels;
-            
+
+            var employee = await _userManager.FindByNameAsync(User.Identity.Name);
+            if (employee == null)
+            {
+                return NotFound();
+            }
+
+            UserEvent userEvent = new()
+            {
+                Id = $"{Guid.NewGuid()}",
+                UserId = employee.Id,
+                Action = UserActionType.Get.ToString(),
+                Date = DateTime.UtcNow,
+                Section = SectionType.Payments.ToString(),
+                EntityType = EntityType.Page.ToString(),
+                EntityId = "Index"
+            };
+            await _context.UserEvents.AddAsync(userEvent);
+            await _context.SaveChangesAsync();
+
             TempData["Tab"] = "Payments";
             return View();
         }
@@ -118,8 +142,8 @@ namespace BetaBank.Areas.Admin.Controllers
             if (transactionViewModel.PaidByType.Name == "Card")
             {
                 BankCard bankCard = await _context.BankCards.FirstOrDefaultAsync(x => x.CardNumber == transactionViewModel.PaidById);
-                BankCardStatus cardStatus = await _context.BankCardStatuses.FirstOrDefaultAsync(x => x.CardId == bankCard.Id);
-                BankCardType cardType = await _context.BankCardTypes.FirstOrDefaultAsync(x => x.CardId == bankCard.Id);
+                Models.BankCardStatus cardStatus = await _context.BankCardStatuses.FirstOrDefaultAsync(x => x.CardId == bankCard.Id);
+                Models.BankCardType cardType = await _context.BankCardTypes.FirstOrDefaultAsync(x => x.CardId == bankCard.Id);
                 bankCardViewModel = new UserBankCardViewModel()
                 {
                     Id = bankCard.Id,
@@ -139,7 +163,7 @@ namespace BetaBank.Areas.Admin.Controllers
             if (transactionViewModel.PaidByType.Name == "BankAccount")
             {            
                 BankAccount bankAccount = await _context.BankAccounts.FirstOrDefaultAsync(x => x.AccountNumber == transactionViewModel.PaidById);
-                BankAccountStatus accountStatus = await _context.BankAccountStatuses.FirstOrDefaultAsync(x => x.AccountId == bankAccount.Id);
+                Models.BankAccountStatus accountStatus = await _context.BankAccountStatuses.FirstOrDefaultAsync(x => x.AccountId == bankAccount.Id);
                 bankAccountViewModel = new()
                 {
                     Id = bankAccount.Id,
@@ -188,8 +212,8 @@ namespace BetaBank.Areas.Admin.Controllers
             if (transactionViewModel.DestinationType.Name == "Card")
             {
                 BankCard destinationBankCard = await _context.BankCards.FirstOrDefaultAsync(x => x.CardNumber == transactionViewModel.DestinationId);
-                BankCardStatus destinationCardStatus = await _context.BankCardStatuses.FirstOrDefaultAsync(x => x.CardId == destinationBankCard.Id);
-                BankCardType destinationCardType = await _context.BankCardTypes.FirstOrDefaultAsync(x => x.CardId == destinationBankCard.Id);
+                Models.BankCardStatus destinationCardStatus = await _context.BankCardStatuses.FirstOrDefaultAsync(x => x.CardId == destinationBankCard.Id);
+                Models.BankCardType destinationCardType = await _context.BankCardTypes.FirstOrDefaultAsync(x => x.CardId == destinationBankCard.Id);
                 destinationBankCardViewModel = new UserBankCardViewModel()
                 {
                     Id = destinationBankCard.Id,
@@ -209,7 +233,7 @@ namespace BetaBank.Areas.Admin.Controllers
             if (transactionViewModel.DestinationType.Name == "BankAccount")
             {
                 BankAccount destinationBankAccount = await _context.BankAccounts.FirstOrDefaultAsync(x => x.AccountNumber == transactionViewModel.DestinationId);
-                BankAccountStatus destinationAccountStatus = await _context.BankAccountStatuses.FirstOrDefaultAsync(x => x.AccountId == destinationBankAccount.Id);
+                Models.BankAccountStatus destinationAccountStatus = await _context.BankAccountStatuses.FirstOrDefaultAsync(x => x.AccountId == destinationBankAccount.Id);
                 destinationBankAccountViewModel = new()
                 {
                     Id = destinationBankAccount.Id,
@@ -239,6 +263,25 @@ namespace BetaBank.Areas.Admin.Controllers
             ViewData["PaidBy"] = paidBy;
             ViewData["TransactionViewModel"] = transactionViewModel;
             TempData["Tab"] = "Payments";
+
+            var employee = await _userManager.FindByNameAsync(User.Identity.Name);
+            if (employee == null)
+            {
+                return NotFound();
+            }
+
+            UserEvent userEvent = new()
+            {
+                Id = $"{Guid.NewGuid()}",
+                UserId = employee.Id,
+                Action = UserActionType.Viewed.ToString(),
+                Date = DateTime.UtcNow,
+                Section = SectionType.Payments.ToString(),
+                EntityType = EntityType.Transaction.ToString(),
+                EntityId = transaction.Id
+            };
+            await _context.UserEvents.AddAsync(userEvent);
+            await _context.SaveChangesAsync();
 
 
             return View();

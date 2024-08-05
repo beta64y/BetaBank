@@ -68,7 +68,7 @@ namespace BetaBank.Areas.Moderator.Controllers
             }
             if (user.Banned)
             {
-                ModelState.AddModelError("", "Email or Password is incorrect!");
+                ModelState.AddModelError("", "Your account has been banned. Please contact support for more information.");
                 return View();
             }
             var signInResult = await _signInManager.PasswordSignInAsync(user, loginViewModel.Password, loginViewModel.RememberMe, true);

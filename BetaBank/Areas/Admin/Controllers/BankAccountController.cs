@@ -2,6 +2,7 @@
 using BetaBank.Contexts;
 using BetaBank.Models;
 using BetaBank.Services.Implementations;
+using BetaBank.Utils.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -29,7 +30,7 @@ namespace BetaBank.Areas.Admin.Controllers
             foreach (BankAccount bankAccount in bankAccounts)
             {
                 AppUser user = await _context.Users.FirstOrDefaultAsync(x => x.Id == bankAccount.UserId);
-                BankAccountStatus accountStatus = await _context.BankAccountStatuses.FirstOrDefaultAsync(x => x.AccountId == bankAccount.Id);
+                Models.BankAccountStatus accountStatus = await _context.BankAccountStatuses.FirstOrDefaultAsync(x => x.AccountId == bankAccount.Id);
 
                 bankAccountViewModels.Add(new Admin.ViewModels.BankAccountViewModel()
                 {
@@ -47,6 +48,31 @@ namespace BetaBank.Areas.Admin.Controllers
             }
             ViewData["BankAccounts"] = bankAccountViewModels;
 
+
+
+
+            var employee = await _userManager.FindByNameAsync(User.Identity.Name);
+            if (employee == null)
+            {
+                return NotFound();
+            }
+
+            UserEvent userEvent = new()
+            {
+                Id = $"{Guid.NewGuid()}",
+                UserId = employee.Id,
+                Action = UserActionType.Get.ToString(),
+                Date = DateTime.UtcNow,
+                Section = SectionType.Accounts.ToString(),
+                EntityType = EntityType.Page.ToString(),
+                EntityId = "Index"
+            };
+            await _context.UserEvents.AddAsync(userEvent);
+            await _context.SaveChangesAsync();
+
+
+
+
             TempData["Tab"] = "BankAccounts";
             return View();
         }
@@ -62,7 +88,7 @@ namespace BetaBank.Areas.Admin.Controllers
 
             if (bankAccount != null)
             {
-                BankAccountStatus accountStatus = await _context.BankAccountStatuses.FirstOrDefaultAsync(x => x.AccountId == bankAccount.Id);
+                Models.BankAccountStatus accountStatus = await _context.BankAccountStatuses.FirstOrDefaultAsync(x => x.AccountId == bankAccount.Id);
                 bankAccountViewModel = new()
                 {
                     Id = bankAccount.Id,
@@ -113,7 +139,7 @@ namespace BetaBank.Areas.Admin.Controllers
             foreach (Transaction transaction in filteredTransactions)
             {
                 TransactionTypeModel paidByType = await _context.TransactionTypeModels.FirstOrDefaultAsync(x => x.Id == transaction.PaidByTypeId);
-                BankCardType paidByCardType = null;
+                Models.BankCardType paidByCardType = null;
                 if (paidByType.Name == "Card")
                 {
                     BankCard card = await _context.BankCards.FirstOrDefaultAsync(x => x.CardNumber == transaction.PaidById);
@@ -122,7 +148,7 @@ namespace BetaBank.Areas.Admin.Controllers
 
 
                 TransactionTypeModel destinationType = await _context.TransactionTypeModels.FirstOrDefaultAsync(x => x.Id == transaction.DestinationTypeId);
-                BankCardType destinationCardType = null;
+                Models.BankCardType destinationCardType = null;
 
                 if (destinationType.Name == "Card")
                 {
@@ -166,9 +192,102 @@ namespace BetaBank.Areas.Admin.Controllers
 
 
 
+            var employee = await _userManager.FindByNameAsync(User.Identity.Name);
+            if (employee == null)
+            {
+                return NotFound();
+            }
+
+            UserEvent userEvent = new()
+            {
+                Id = $"{Guid.NewGuid()}",
+                UserId = employee.Id,
+                Action = UserActionType.Viewed.ToString(),
+                Date = DateTime.UtcNow,
+                Section = SectionType.Accounts.ToString(),
+                EntityType = EntityType.BankAccount.ToString(),
+                EntityId = bankAccount.AccountNumber
+            };
+            await _context.UserEvents.AddAsync(userEvent);
+            await _context.SaveChangesAsync();
+
+
+
+
+
+
+
+
 
 
             return View();
+        }
+
+        public async Task<IActionResult> Suspend(string id)
+        {
+            BankAccount bankAccount = await _context.BankAccounts.FirstOrDefaultAsync(x => x.AccountNumber == id);
+            if (bankAccount == null)
+            {
+                return NotFound();
+            }
+            Models.BankAccountStatus bankAccountStatus = await _context.BankAccountStatuses.FirstOrDefaultAsync(x => x.AccountId == bankAccount.Id);
+            BankAccountStatusModel bankAccountStatusModel = await _context.BankAccountStatusModels.FirstOrDefaultAsync(x => x.Name == "Suspended");
+            bankAccountStatus.StatusId = bankAccountStatusModel.Id;
+
+            var employee = await _userManager.FindByNameAsync(User.Identity.Name);
+            if (employee == null)
+            {
+                return NotFound();
+            }
+
+            UserEvent userEvent = new()
+            {
+                Id = $"{Guid.NewGuid()}",
+                UserId = employee.Id,
+                Action = UserActionType.Suspended.ToString(),
+                Date = DateTime.UtcNow,
+                Section = SectionType.Accounts.ToString(),
+                EntityType = EntityType.BankAccount.ToString(),
+                EntityId = bankAccount.AccountNumber,
+            };
+            await _context.UserEvents.AddAsync(userEvent);
+            await _context.SaveChangesAsync();
+
+
+            return Json(new { message = "Account has been Suspended." });
+        }
+        public async Task<IActionResult> UnSuspend(string id)
+        {
+            BankAccount bankAccount = await _context.BankAccounts.FirstOrDefaultAsync(x => x.AccountNumber == id);
+            if (bankAccount == null)
+            {
+                return NotFound();
+            }
+            Models.BankAccountStatus bankAccountStatus = await _context.BankAccountStatuses.FirstOrDefaultAsync(x => x.AccountId == bankAccount.Id);
+            BankAccountStatusModel bankAccountStatusModel = await _context.BankAccountStatusModels.FirstOrDefaultAsync(x => x.Name == "Active");
+            bankAccountStatus.StatusId = bankAccountStatusModel.Id;
+
+            var employee = await _userManager.FindByNameAsync(User.Identity.Name);
+            if (employee == null)
+            {
+                return NotFound();
+            }
+
+            UserEvent userEvent = new()
+            {
+                Id = $"{Guid.NewGuid()}",
+                UserId = employee.Id,
+                Action = UserActionType.MakeActive.ToString(),
+                Date = DateTime.UtcNow,
+                Section = SectionType.Accounts.ToString(),
+                EntityType = EntityType.BankAccount.ToString(),
+                EntityId = bankAccount.AccountNumber,
+            };
+            await _context.UserEvents.AddAsync(userEvent);
+            await _context.SaveChangesAsync();
+
+
+            return Json(new { message = "Account has been Active." });
         }
     }
 }

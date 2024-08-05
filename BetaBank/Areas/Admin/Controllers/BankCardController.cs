@@ -2,6 +2,7 @@
 using BetaBank.Contexts;
 using BetaBank.Models;
 using BetaBank.Services.Implementations;
+using BetaBank.Utils.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -33,8 +34,8 @@ namespace BetaBank.Areas.Admin.Controllers
                 foreach (var bankCard in bankCards)
                 {
                     AppUser user = await _context.Users.FirstOrDefaultAsync(x => x.Id == bankCard.UserId);
-                    BankCardStatus cardStatus = await _context.BankCardStatuses.FirstOrDefaultAsync(x => x.CardId == bankCard.Id);
-                    BankCardType cardType = await _context.BankCardTypes.FirstOrDefaultAsync(x => x.CardId == bankCard.Id);
+                    Models.BankCardStatus cardStatus = await _context.BankCardStatuses.FirstOrDefaultAsync(x => x.CardId == bankCard.Id);
+                    Models.BankCardType cardType = await _context.BankCardTypes.FirstOrDefaultAsync(x => x.CardId == bankCard.Id);
 
                     bankCardViewModels.Add(new BankCardViewModel()
                     {
@@ -59,6 +60,35 @@ namespace BetaBank.Areas.Admin.Controllers
             }
             ViewData["UserBankCardViewModels"] = bankCardViewModels;
             TempData["Tab"] = "BankCards";
+
+
+
+
+
+            var employee = await _userManager.FindByNameAsync(User.Identity.Name);
+            if (employee == null)
+            {
+                return NotFound();
+            }
+
+            UserEvent userEvent = new()
+            {
+                Id = $"{Guid.NewGuid()}",
+                UserId = employee.Id,
+                Action = UserActionType.Get.ToString(),
+                Date = DateTime.UtcNow,
+                Section = SectionType.Cards.ToString(),
+                EntityType = EntityType.Page.ToString(),
+                EntityId = "Index"
+            };
+            await _context.UserEvents.AddAsync(userEvent);
+            await _context.SaveChangesAsync();
+
+
+
+
+
+
             return View();
         }
         public async Task<IActionResult> Detail(string id)
@@ -68,8 +98,8 @@ namespace BetaBank.Areas.Admin.Controllers
 
 
             BankCard bankCard = await _context.BankCards.FirstOrDefaultAsync(x => x.CardNumber == id);
-            BankCardStatus cardStatus = await _context.BankCardStatuses.FirstOrDefaultAsync(x => x.CardId == bankCard.Id);
-            BankCardType cardType = await _context.BankCardTypes.FirstOrDefaultAsync(x => x.CardId == bankCard.Id);
+            Models.BankCardStatus cardStatus = await _context.BankCardStatuses.FirstOrDefaultAsync(x => x.CardId == bankCard.Id);
+            Models.BankCardType cardType = await _context.BankCardTypes.FirstOrDefaultAsync(x => x.CardId == bankCard.Id);
 
             UserBankCardViewModel bankCardViewModel = new UserBankCardViewModel()
             {
@@ -118,7 +148,7 @@ namespace BetaBank.Areas.Admin.Controllers
             foreach (Transaction transaction in filteredTransactions)
             {
                 TransactionTypeModel paidByType = await _context.TransactionTypeModels.FirstOrDefaultAsync(x => x.Id == transaction.PaidByTypeId);
-                BankCardType paidByCardType = null;
+                Models.BankCardType paidByCardType = null;
                 if (paidByType.Name == "Card")
                 {
                     BankCard card = await _context.BankCards.FirstOrDefaultAsync(x => x.CardNumber == transaction.PaidById);
@@ -127,7 +157,7 @@ namespace BetaBank.Areas.Admin.Controllers
 
 
                 TransactionTypeModel destinationType = await _context.TransactionTypeModels.FirstOrDefaultAsync(x => x.Id == transaction.DestinationTypeId);
-                BankCardType destinationCardType = null;
+                Models.BankCardType destinationCardType = null;
 
                 if (destinationType.Name == "Card")
                 {
@@ -168,6 +198,24 @@ namespace BetaBank.Areas.Admin.Controllers
             ViewData["User"] = userViewModel;
 
 
+            var employee = await _userManager.FindByNameAsync(User.Identity.Name);
+            if (employee == null)
+            {
+                return NotFound();
+            }
+
+            UserEvent userEvent = new()
+            {
+                Id = $"{Guid.NewGuid()}",
+                UserId = employee.Id,
+                Action = UserActionType.Viewed.ToString(),
+                Date = DateTime.UtcNow,
+                Section = SectionType.Cards.ToString(),
+                EntityType = EntityType.BankCard.ToString(),
+                EntityId = bankCard.CardNumber
+            };
+            await _context.UserEvents.AddAsync(userEvent);
+            await _context.SaveChangesAsync();
 
 
 
@@ -182,10 +230,29 @@ namespace BetaBank.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            BankCardStatus bankCardStatus = await _context.BankCardStatuses.FirstOrDefaultAsync(x => x.CardId == bankCard.Id);
+            Models.BankCardStatus bankCardStatus = await _context.BankCardStatuses.FirstOrDefaultAsync(x => x.CardId == bankCard.Id);
             BankCardStatusModel bankCardStatusModel = await _context.BankCardStatusModels.FirstOrDefaultAsync(x => x.Name == "Disabled");
             bankCardStatus.StatusId = bankCardStatusModel.Id;
+
+            var employee = await _userManager.FindByNameAsync(User.Identity.Name);
+            if (employee == null)
+            {
+                return NotFound();
+            }
+
+            UserEvent userEvent = new()
+            {
+                Id = $"{Guid.NewGuid()}",
+                UserId = employee.Id,
+                Action = UserActionType.Disabled.ToString(),
+                Date = DateTime.UtcNow,
+                Section = SectionType.Cards.ToString(),
+                EntityType = EntityType.BankCard.ToString(),
+                EntityId = bankCard.CardNumber,
+            };
+            await _context.UserEvents.AddAsync(userEvent);
             await _context.SaveChangesAsync();
+
 
             return Json(new { message = "Card has been Disabled." });
         }
@@ -196,10 +263,28 @@ namespace BetaBank.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            BankCardStatus bankCardStatus = await _context.BankCardStatuses.FirstOrDefaultAsync(x => x.CardId == bankCard.Id);
+            Models.BankCardStatus bankCardStatus = await _context.BankCardStatuses.FirstOrDefaultAsync(x => x.CardId == bankCard.Id);
             BankCardStatusModel bankCardStatusModel = await _context.BankCardStatusModels.FirstOrDefaultAsync(x => x.Name == "Active");
             bankCardStatus.StatusId = bankCardStatusModel.Id;
+            var employee = await _userManager.FindByNameAsync(User.Identity.Name);
+            if (employee == null)
+            {
+                return NotFound();
+            }
+
+            UserEvent userEvent = new()
+            {
+                Id = $"{Guid.NewGuid()}",
+                UserId = employee.Id,
+                Action = UserActionType.MakeActive.ToString(),
+                Date = DateTime.UtcNow,
+                Section = SectionType.Cards.ToString(),
+                EntityType = EntityType.BankCard.ToString(),
+                EntityId = bankCard.CardNumber,
+            };
+            await _context.UserEvents.AddAsync(userEvent);
             await _context.SaveChangesAsync();
+
 
             return Json(new { message = "Card has been UnDisabled." });
         }

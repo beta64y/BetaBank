@@ -7,6 +7,9 @@ const newsDeleteBtns = document.querySelectorAll(".newsDeleteBtn");
 const disableBtns = document.querySelectorAll(".disableBtn");
 const unDisableBtns = document.querySelectorAll(".unDisableBtn");
 
+const suspendBtns = document.querySelectorAll(".SuspendBtn");
+const unSuspendBtns = document.querySelectorAll(".UnSuspendBtn");
+
 banBtns.forEach(BanBtn => {
     BanBtn.addEventListener("click", function (e) {
         e.preventDefault();
@@ -179,6 +182,80 @@ unDisableBtns.forEach(unDisableBtn => {
                     .then(data => {
                         Swal.fire({
                             title: "UnDisable!",
+                            text: data.message,
+                            icon: "success",
+                            background: "#131311",
+                            color: "#FFFFFF"
+                        }).then(result => {
+                            location.reload();
+                        });
+                    });
+            }
+        });
+    });
+});
+
+
+suspendBtns.forEach(SuspendBtn => {
+    SuspendBtn.addEventListener("click", function (e) {
+        e.preventDefault();
+
+        let url = this.getAttribute("href");
+        console.log(url)
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to Suspend this Account!",
+            icon: "warning",
+            background: "#131311",
+            color: "#FFFFFF",
+            showCancelButton: true,
+            confirmButtonColor: "#74FA56",
+            cancelButtonColor: "#1E1D1B",
+            confirmButtonText: "Yes, Suspend this account!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                fetch(url, { method: "POST" })
+                    .then(response => response.json())
+                    .then(data => {
+                        Swal.fire({
+                            title: "Suspend!",
+                            text: data.message,
+                            icon: "success",
+                            background: "#131311",
+                            color: "#FFFFFF"
+                        }).then(result => {
+                            location.reload();
+                        });
+                    });
+            }
+        });
+    });
+});
+
+
+unSuspendBtns.forEach(unSuspendBtn => {
+    unSuspendBtn.addEventListener("click", function (e) {
+        e.preventDefault();
+
+        let url = this.getAttribute("href");
+
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to unSuspend this Account!",
+            icon: "warning",
+            background: "#131311",
+            color: "#FFFFFF",
+            showCancelButton: true,
+            confirmButtonColor: "#74FA56",
+            cancelButtonColor: "#1E1D1B",
+            confirmButtonText: "Yes, unSuspend this Account!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                fetch(url, { method: "POST" })
+                    .then(response => response.json())
+                    .then(data => {
+                        Swal.fire({
+                            title: "UnSuspend!",
                             text: data.message,
                             icon: "success",
                             background: "#131311",

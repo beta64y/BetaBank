@@ -71,7 +71,7 @@ namespace BetaBank.Areas.SuperAdmin.Controllers
                     var entityUser = await _userManager.FindByIdAsync(userEvent.EntityId);
                     userEventViewModel.EntityUserFirstName = entityUser.FirstName;
                     userEventViewModel.EntityUserLastName = entityUser.LastName;
-                    userEventViewModel.UserProfilePhoto = entityUser.ProfilePhoto;
+                    userEventViewModel.EntityUserProfilePhoto = entityUser.ProfilePhoto;
 
                 }
                 else if (userEvent.EntityType == EntityType.Transaction.ToString())
@@ -80,17 +80,19 @@ namespace BetaBank.Areas.SuperAdmin.Controllers
                 }
                 else if (userEvent.EntityType == EntityType.BankCard.ToString())
                 {
-                    Models.BankCardStatus bankCardStatus = await _context.BankCardStatuses.FirstOrDefaultAsync(x => x.CardId == userEvent.Id);
-                    BankCardStatusModel bankCardStatusModel = await _context.BankCardStatusModels.FirstOrDefaultAsync(x => x.Id == bankCardStatus.StatusId);
-                    userEventViewModel.Title = bankCardStatusModel.Name;
+                    BankCard bankCard = await _context.BankCards.FirstOrDefaultAsync(x => x.CardNumber == userEvent.EntityId);
+
+                    Models.BankCardType bankCardType = await _context.BankCardTypes.FirstOrDefaultAsync(x => x.CardId == bankCard.Id);
+                    BankCardTypeModel bankCardTypeModel = await _context.BankCardTypeModels.FirstOrDefaultAsync(x => x.Id == bankCardType.TypeId);
+                    userEventViewModel.Title = bankCardTypeModel.Name;
                 }
                 else if (userEvent.EntityType == EntityType.BankAccount.ToString())
                 {
-                    BankAccount bankAccount = await _context.BankAccounts.FirstOrDefaultAsync(x => x.Id == userEvent.EntityId);
-                    var entityUser = await _userManager.FindByIdAsync(bankAccount.UserId);
+                    BankAccount bankAccount = await _context.BankAccounts.FirstOrDefaultAsync(x => x.AccountNumber == userEvent.EntityId);
+                    var entityUser = await _userManager.Users.AsNoTracking().FirstOrDefaultAsync(x => x.Id == bankAccount.UserId);
                     userEventViewModel.EntityUserFirstName = entityUser.FirstName;
                     userEventViewModel.EntityUserLastName = entityUser.LastName;
-                    userEventViewModel.UserProfilePhoto = entityUser.ProfilePhoto;
+                    userEventViewModel.EntityUserProfilePhoto = entityUser.ProfilePhoto;
                 }
                 else if (userEvent.EntityType == EntityType.Wallet.ToString())
                 {
@@ -98,7 +100,7 @@ namespace BetaBank.Areas.SuperAdmin.Controllers
                     var entityUser = await _userManager.FindByIdAsync(cashBack.UserId);
                     userEventViewModel.EntityUserFirstName = entityUser.FirstName;
                     userEventViewModel.EntityUserLastName = entityUser.LastName;
-                    userEventViewModel.UserProfilePhoto = entityUser.ProfilePhoto;
+                    userEventViewModel.EntityUserProfilePhoto = entityUser.ProfilePhoto;
                 }
                 userEventsViewModel.Add(userEventViewModel);
                 

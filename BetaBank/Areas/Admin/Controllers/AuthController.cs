@@ -66,7 +66,7 @@ namespace BetaBank.Areas.Admin.Controllers
             }
             if (user.Banned)
             {
-                ModelState.AddModelError("", "Email or Password is incorrect!");
+                ModelState.AddModelError("", "Your account has been banned. Please contact support for more information.");
                 return View();
             }
             var signInResult = await _signInManager.PasswordSignInAsync(user, loginViewModel.Password, loginViewModel.RememberMe, true);
@@ -100,6 +100,8 @@ namespace BetaBank.Areas.Admin.Controllers
                 return BadRequest();
             }
 
+
+
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
             if (user == null)
             {
@@ -117,6 +119,8 @@ namespace BetaBank.Areas.Admin.Controllers
             };
             await _context.UserEvents.AddAsync(userEvent);
             await _context.SaveChangesAsync();
+
+
 
             await _signInManager.SignOutAsync();
             return RedirectToAction("Login", "Auth");

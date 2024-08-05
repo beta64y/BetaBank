@@ -1,7 +1,9 @@
 ﻿using BetaBank.Areas.Admin.ViewModels;
 using BetaBank.Contexts;
 using BetaBank.Models;
+using BetaBank.Utils.Enums;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Transactions;
@@ -13,10 +15,13 @@ namespace BetaBank.Areas.Admin.Controllers
     public class CashBackController : Controller
     {
         private readonly BetaBankDbContext _context;
+        private readonly UserManager<AppUser> _userManager;
 
-        public CashBackController(BetaBankDbContext context)
+
+        public CashBackController(BetaBankDbContext context, UserManager<AppUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
         public async Task<IActionResult> Index()
         {
@@ -40,6 +45,25 @@ namespace BetaBank.Areas.Admin.Controllers
                 });
             }
             ViewData["Wallets"] = walletViewModels;
+
+            var employee = await _userManager.FindByNameAsync(User.Identity.Name);
+            if (employee == null)
+            {
+                return NotFound();
+            }
+
+            UserEvent userEvent = new()
+            {
+                Id = $"{Guid.NewGuid()}",
+                UserId = employee.Id,
+                Action = UserActionType.Get.ToString(),
+                Date = DateTime.UtcNow,
+                Section = SectionType.Cards.ToString(),
+                EntityType = EntityType.Page.ToString(),
+                EntityId = "Index"
+            };
+            await _context.UserEvents.AddAsync(userEvent);
+            await _context.SaveChangesAsync();
 
             TempData["Tab"] = "Wallets";
             return View();

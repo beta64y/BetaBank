@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using BetaBank.Areas.Admin.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using BetaBank.Services.Implementations;
+using BetaBank.Utils.Enums;
 
 
 namespace BetaBank.Areas.Admin.Controllers
@@ -59,28 +60,91 @@ namespace BetaBank.Areas.Admin.Controllers
                 Users = usersViewModel,
             };
             TempData["Tab"] = "Users";
+
+
+
+
+            var employee = await _userManager.FindByNameAsync(User.Identity.Name);
+            if (employee == null)
+            {
+                return NotFound();
+            }
+
+            UserEvent userEvent = new()
+            {
+                Id = $"{Guid.NewGuid()}",
+                UserId = employee.Id,
+                Action = UserActionType.Get.ToString(),
+                Date = DateTime.UtcNow,
+                Section = SectionType.Users.ToString(),
+                EntityType = EntityType.Page.ToString(),
+                EntityId = "Index",
+            };
+            await _context.UserEvents.AddAsync(userEvent);
+            await _context.SaveChangesAsync();
+
+
+
+
             return View(ViewModel);
         }
         public async Task<IActionResult> BanUser(string id)
         {
-            var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == id);
+            var targetUser = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == id);
+            if (targetUser == null)
+            {
+                return NotFound();
+            }
+            targetUser.Banned = true;
+
+
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
             if (user == null)
             {
                 return NotFound();
             }
-            user.Banned = true;
+
+            UserEvent userEvent = new()
+            {
+                Id = $"{Guid.NewGuid()}",
+                UserId = user.Id,
+                Action = UserActionType.Banned.ToString(),
+                Date = DateTime.UtcNow,
+                Section = SectionType.Users.ToString(),
+                EntityType = EntityType.User.ToString(),
+                EntityId = targetUser.Id,
+            };
+            await _context.UserEvents.AddAsync(userEvent);
             await _context.SaveChangesAsync();
 
             return Json(new { message = "User has been Banned." });
         }
         public async Task<IActionResult> UnBanUser(string id)
         {
-            var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == id);
+            var targetUser = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == id);
+            if (targetUser == null)
+            {
+                return NotFound();
+            }
+            targetUser.Banned = false;
+
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
             if (user == null)
             {
                 return NotFound();
             }
-            user.Banned = false;
+
+            UserEvent userEvent = new()
+            {
+                Id = $"{Guid.NewGuid()}",
+                UserId = user.Id,
+                Action = UserActionType.Unbanned.ToString(),
+                Date = DateTime.UtcNow,
+                Section = SectionType.Users.ToString(),
+                EntityType = EntityType.User.ToString(),
+                EntityId = targetUser.Id,
+            };
+            await _context.UserEvents.AddAsync(userEvent);
             await _context.SaveChangesAsync();
 
             return Json(new { message = "User has been UnBanned." });
@@ -118,8 +182,8 @@ namespace BetaBank.Areas.Admin.Controllers
             {
                 foreach (var bankCard in bankCards)
                 {
-                    BankCardStatus cardStatus = await _context.BankCardStatuses.FirstOrDefaultAsync(x => x.CardId == bankCard.Id);
-                    BankCardType cardType = await _context.BankCardTypes.FirstOrDefaultAsync(x => x.CardId == bankCard.Id);
+                    Models.BankCardStatus cardStatus = await _context.BankCardStatuses.FirstOrDefaultAsync(x => x.CardId == bankCard.Id);
+                    Models.BankCardType cardType = await _context.BankCardTypes.FirstOrDefaultAsync(x => x.CardId == bankCard.Id);
 
                     bankCardViewModels.Add(new UserBankCardViewModel()
                     {
@@ -145,7 +209,7 @@ namespace BetaBank.Areas.Admin.Controllers
 
             if (bankAccount != null)
             {
-                BankAccountStatus accountStatus = await _context.BankAccountStatuses.FirstOrDefaultAsync(x => x.AccountId == bankAccount.Id);
+                Models.BankAccountStatus accountStatus = await _context.BankAccountStatuses.FirstOrDefaultAsync(x => x.AccountId == bankAccount.Id);
                 bankAccountViewModel = new()
                 {
                     Id = bankAccount.Id,
@@ -189,7 +253,7 @@ namespace BetaBank.Areas.Admin.Controllers
             foreach (Transaction transaction in filteredTransactions)
             {
                 TransactionTypeModel paidByType = await _context.TransactionTypeModels.FirstOrDefaultAsync(x => x.Id == transaction.PaidByTypeId);
-                BankCardType paidByCardType = null;
+                Models.BankCardType paidByCardType = null;
                 if (paidByType.Name == "Card")
                 {
                     BankCard card = await _context.BankCards.FirstOrDefaultAsync(x => x.CardNumber == transaction.PaidById);
@@ -198,7 +262,7 @@ namespace BetaBank.Areas.Admin.Controllers
 
 
                 TransactionTypeModel destinationType = await _context.TransactionTypeModels.FirstOrDefaultAsync(x => x.Id == transaction.DestinationTypeId);
-                BankCardType destinationCardType = null;
+                Models.BankCardType destinationCardType = null;
 
                 if (destinationType.Name == "Card")
                 {
@@ -295,12 +359,49 @@ namespace BetaBank.Areas.Admin.Controllers
 
             };
 
+            var employee = await _userManager.FindByNameAsync(User.Identity.Name);
+            if (employee == null)
+            {
+                return NotFound();
+            }
 
+            UserEvent userEvent = new()
+            {
+                Id = $"{Guid.NewGuid()}",
+                UserId = employee.Id,
+                Action = UserActionType.Viewed.ToString(),
+                Date = DateTime.UtcNow,
+                Section = SectionType.Users.ToString(),
+                EntityType = EntityType.User.ToString(),
+                EntityId = user.Id,
+            };
+            await _context.UserEvents.AddAsync(userEvent);
+            await _context.SaveChangesAsync();
 
             return View(userDetailViewModel);
         }
         public async Task<IActionResult> Search(AdminUserViewModel adminUsersViewModel)
         {
+            var employee = await _userManager.FindByNameAsync(User.Identity.Name);
+            if (employee == null)
+            {
+                return NotFound();
+            }
+
+            UserEvent userEvent = new()
+            {
+                Id = $"{Guid.NewGuid()}",
+                UserId = employee.Id,
+                Action = UserActionType.Searched.ToString(),
+                Date = DateTime.UtcNow,
+                Section = SectionType.Users.ToString(),
+                EntityType = EntityType.Page.ToString(),
+                EntityId = adminUsersViewModel.Search.SearchTerm
+            };
+            await _context.UserEvents.AddAsync(userEvent);
+            await _context.SaveChangesAsync();
+
+
             if (adminUsersViewModel.Search.SearchTerm != null)
             {
                 var searchTerm = adminUsersViewModel.Search.SearchTerm.ToLower();

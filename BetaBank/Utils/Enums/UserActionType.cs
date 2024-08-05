@@ -29,6 +29,7 @@
         Banned,          // Example: Banned a user
         Unbanned,        // Example: Unbanned a user
         Disabled,        // Example: Disabled a feature or user
-        Suspended        // Example: Suspended a user or service
+        Suspended,        // Example: Suspended a user or service
+        MakeActive,
     }
 }

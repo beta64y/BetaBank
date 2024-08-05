@@ -31,7 +31,7 @@ namespace BetaBank.Areas.SuperAdmin.ViewModels
         public string LastName { get; set; }
 
         [Required]
-        [MinAge(18, ErrorMessage = "Yaşınız en az 18 olmalıdır.")]
+        [MinAge(18, ErrorMessage = "Your age must be at least 18.")]
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime DateOfBirth { get; set; }

@@ -170,5 +170,37 @@ namespace BetaBank.Areas.SuperAdmin.Controllers
 
             return View();
         }
+        public async Task<IActionResult> Suspend(string id)
+        {
+            BankAccount bankAccount = await _context.BankAccounts.FirstOrDefaultAsync(x => x.AccountNumber == id);
+            if (bankAccount == null)
+            {
+                return NotFound();
+            }
+            Models.BankAccountStatus bankAccountStatus = await _context.BankAccountStatuses.FirstOrDefaultAsync(x => x.AccountId == bankAccount.Id);
+            BankAccountStatusModel bankAccountStatusModel = await _context.BankAccountStatusModels.FirstOrDefaultAsync(x => x.Name == "Suspended");
+            bankAccountStatus.StatusId = bankAccountStatusModel.Id;
+
+            await _context.SaveChangesAsync();
+
+
+            return Json(new { message = "Account has been Suspended." });
+        }
+        public async Task<IActionResult> UnSuspend(string id)
+        {
+            BankAccount bankAccount = await _context.BankAccounts.FirstOrDefaultAsync(x => x.AccountNumber == id);
+            if (bankAccount == null)
+            {
+                return NotFound();
+            }
+            Models.BankAccountStatus bankAccountStatus = await _context.BankAccountStatuses.FirstOrDefaultAsync(x => x.AccountId == bankAccount.Id);
+            BankAccountStatusModel bankAccountStatusModel = await _context.BankAccountStatusModels.FirstOrDefaultAsync(x => x.Name == "Active");
+            bankAccountStatus.StatusId = bankAccountStatusModel.Id;
+
+            await _context.SaveChangesAsync();
+
+
+            return Json(new { message = "Account has been Active." });
+        }
     }
 }

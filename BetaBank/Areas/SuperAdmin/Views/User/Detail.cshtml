@@ -109,12 +109,18 @@
     {
         <div class="card mb-4">
             <div class="card-body">
+
                 <div class="account-info">
-                    <div class="account-number-and-info">
-                        <h3>Account Number: <span class="account-number">@Model.CashBack.CashBackNumber</span></h3>
-                    </div>
-                    <div class="account-details">
-                        <span class="account-amount">@Model.CashBack.Balance.ToString("C")</span>
+                    <div class="icon-and-info-div">
+                        <img src="~/areaAssets/images/Cashback-Icon.png" alt="">
+                        <div class="details-div">
+                            <div class="account-number-and-info">
+                                <h3>Account Number: <span class="account-number">@Model.CashBack.CashBackNumber</span></h3>
+                            </div>
+                            <div class="account-details">
+                                <span class="account-amount">@Model.CashBack.Balance.ToString("C")</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
