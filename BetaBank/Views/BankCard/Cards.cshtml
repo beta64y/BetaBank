@@ -1,0 +1,122 @@
+﻿@{
+    ViewData["Title"] = "Cards";
+    var data = ViewData["Types"] as List<BankCardTypeModel>;
+}
+<style>
+    .modal-content {
+        background-color: var(--background-cards);
+        color: var(--main-text-color);
+    }
+
+    .modal-header button {
+        color: #2fe404;
+        background-color: transparent;
+        border: none;
+    }
+
+    .modal-content h5 {
+        color: #2fe404;
+    }
+</style>
+<main class="mtop">
+    <div class="container card bg-photo bga height" style="width: 750px;">
+        <div class="">
+            <div class="row mt-2 mb-3">
+                <h3 class="card-title center text-light">Get Card</h3>
+            </div>
+            <h4 class="card-title text-light tc">Cards</h4>
+            <div class="d-flex mb-5 mx-5" id="container-cards-res">
+
+                @for(var i =0; i < data.Count; i++)
+                {
+                     <div id="card-@(i+1)" class="center responsive-card" >
+                    <div class="row details container" style="width: 320px;">
+                        <div class="bgasd container" style="border-radius: 10px; background-color: #232324;">
+                            <img src="~/img/images/BetaBank-@(data[i].Name.ToLower()).png" width="250px" style="border-radius:15px;"
+                                 class="img-fluid pt-1">
+                                <h4 class="pt-3" style="font-weight: bold;">@data[i].Name</h4>
+                            <ul class="px-3 Cards-Ul" style="list-style-type: disc;">
+                                <li>Up to 30% cashback and 2x VAT</li>
+                                <li> About 7500 partners</li>
+                            </ul>
+                            <div class="my-3">
+                                    <a asp-controller="BankCard" asp-action="GetCard" asp-route-id="@data[i].Id" class="btn btn-outline-success" id="btn-Order">Order it</a>
+                                    <button class="btn btn-outline-success" data-toggle="modal" data-target="#modal-card-@(i+1)">More detail</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                }
+               
+
+               
+
+
+
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Beta Card -->
+    <div class="modal fade" id="modal-card-1" tabindex="-1" role="dialog" aria-labelledby="modal-card-1-title" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header d-flex justify-content-between">
+                    <h5 class="modal-title" id="modal-card-1-title">Beta Card Details</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>BetaCard</p>
+                    <p>The BetaCard card will give you up to 30% cashback, free transfers and withdrawal from personal funds, double VAT refund and other benefits.</p>
+
+                    <p>Free<br>Delivery to the address</p>
+
+                    <p>USD<br>Currency</p>
+
+                    <p>48 months<br>Card validity period</p>
+
+                    <p>Free<br>Card Price</p>
+
+                    <p>Up to 30% cashback, 2x VAT<br>Bonuses</p>
+
+                    <p>Note: Cashback is given when transferring from BetaCard to Beta Carta.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Debit Card -->
+    <div class="modal fade" id="modal-card-2" tabindex="-1" role="dialog" aria-labelledby="modal-card-2-title" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header d-flex justify-content-between">
+                    <h5 class="modal-title" id="modal-card-2-title">Debit Card Details</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>BetaCard</p>
+                    <p>The BetaCard card will give you up to 30% cashback, free transfers and withdrawal from personal funds, double VAT refund and other benefits.</p>
+
+                    <p>Free<br>Delivery to the address</p>
+
+                    <p>USD<br>Currency</p>
+
+                    <p>48 months<br>Card validity period</p>
+
+                    <p>Free<br>Card Price</p>
+
+                    <p>Up to 30% cashback, 2x VAT<br>Bonuses</p>
+
+                    <p>Note: Cashback is given when transferring from BetaCard to Beta Carta.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+

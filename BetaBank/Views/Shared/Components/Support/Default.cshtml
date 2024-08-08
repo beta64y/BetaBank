@@ -3,32 +3,34 @@
     Layout = null;
 }
 @model SupportViewModel
+<section id="support" class="bga centers pb-5 right">
+    <form method="post" asp-action="Support">
 
-<form method="post" asp-action="Support">
-    <div class="row g-2 dz">
-        <div class="col-auto">
-            <label for="Name" class="form-label text-white half">Name</label>
-            <input asp-for="FirstName" class="form-control text-success ">
-            <span asp-validation-for="FirstName" class="text-danger"></span>
+        <h3 class="tc mb-3">
+            If you have Questions Contact with Us
+        </h3>
+        <div class="row g-2 dz">
+            <div class="col-auto">
+                <label for="Name" class="form-label text-white half">Name</label>
+                <input asp-for="FirstName" placeholder="FirstName" class="form-control text-success bgas">
+                <span asp-validation-for="FirstName" class="text-danger"></span>
 
+            </div>
+            <div class="col-auto">
+                <label for="LastName" class="form-label text-white">LastName</label>
+                <input asp-for="LastName" placeholder="LastName" class="form-control  text-success bgas">
+            </div>
         </div>
-        <div class="col-auto">
-            <label for="LastName" class="form-label text-white">LastName</label>
-            <input asp-for="LastName" class="form-control  text-success ">
-            <span asp-validation-for="LastName" class="text-danger"></span>
 
-        </div>
-    </div>
+        <label for="Email" class="form-label text-white ">Email</label>
+        <input asp-for="Email" placeholder=" Email" class="form-control text-success bgas">
+        <label for="Message" class="form-label text-white">Your Message:</label>
+        <textarea asp-for="Issue" class="form-control mb-3 text-success bgas" rows="10">
+            </textarea>
+        <span asp-validation-for="Issue" class="text-danger"></span>
 
-    <label for="Email" class="form-label text-white">Email</label>
-    <input asp-for="Email" class="form-control text-success ">
-    <span asp-validation-for="Email" class="text-danger"></span>
+        <button class="btn btn-outline-success my-1" type="submit">Submit</button>
 
-    <label for="Message" class="form-label text-white">Your Message:</label>
-    <textarea asp-for="Issue" class="form-control mb-3 text-success" rows="10">
-        </textarea>
-    <span asp-validation-for="Issue" class="text-danger"></span>
+    </form>
+</section>
 
-    <button class="btn btn-outline-success my-1" type="submit">Save Changes</button>
-
-</form>

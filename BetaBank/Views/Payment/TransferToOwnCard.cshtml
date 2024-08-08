@@ -1,70 +1,203 @@
 ﻿@{
     ViewData["Title"] = "TransferToOwnCard";
     var data = ViewData["TransferViewModel"] as TransferViewModel;
-    Layout = null;
 }
 
 @model TransactionViewModel
+<style>
+    /* General Styles */
+    body.bga {
+        background-color: #131311;
+    }
 
-<div class="container mt-5">
-    <h2>Select Card and Transfer Money</h2>
-    <form method="post" asp-action="TransferToCard">
-        <div class="form-group">
-            <label>Select Payment Method</label><br>
+    .navbar.nav {
+        background-color: #131311;
+        padding: 1rem;
+    }
 
-            @if (data.CashBackViewModel != null)
-            {
-                <label class="radio-inline">
-                    <input id="PaidById" type="radio" asp-for="PaidById" value="@data.CashBackViewModel.CashBackNumber">
-                    CashBack - @data.CashBackViewModel.Balance.ToString("C")
-                </label>
+    .bga {
+        padding: 120px 20px;
+    }
 
-                <br>
-            }
-            @if (data.BankAccountViewModel != null)
-            {
-                <label class="radio-inline">
-                    <input id="PaidById" type="radio" asp-for="PaidById" value="@data.BankAccountViewModel.AccountNumber">
-                    @data.BankAccountViewModel.AccountNumber - @data.BankAccountViewModel.Balance.ToString("C")
-                </label>
+    .navbar .btn {
+        margin-right: 1rem;
+    }
 
-                <br>
-            }
-            @foreach (var card in data.BankCardViewModels)
-            {
-                <label class="radio-inline">
-                    <input id="PaidById" type="radio" asp-for="PaidById" value="@card.CardNumber">
-                    @card.CardNumber - @card.Balance.ToString("C")
-                </label>
+    .text-light {
+        color: #ffffff;
+    }
 
-                <br>
-            }
+    .text-size {
+        font-size: 1.5rem;
+    }
+
+    .font-weight-bold {
+        font-weight: bold;
+    }
+
+    .mtop {
+        margin-top: 2rem;
+    }
+
+    .container.card {
+        background: #131311;
+        padding: 2rem;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    h2.mb-4 {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+        color: white !important;
+    }
+
+    .radio-inline {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+
+        .radio-inline img {
+            width: 50px;
+            height: auto;
+            margin-right: 1rem;
+        }
+
+    .form-control {
+        width: 100%;
+        padding: 0.5rem;
+        border-radius: 4px;
+        border: 1px solid #ced4da;
+    }
+
+    .btn-primary {
+        background-color: #74fa56;
+        width: 100%;
+        border: none;
+        color: #ffffff;
+        padding: 0.75rem 1.5rem;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+        .btn-primary:hover {
+            background-color: #2fe404;
+        }
+
+    hr {
+        margin: 1.5rem 0;
+    }
+
+</style>
+<main class="mtop" class="pb-3">
+    <div class="container card bg-photo bga">
+        <div class="container mt-5">
+            <h2 class="mb-4">Select Card and Transfer Money</h2>
+            <form method="post" asp-action="TransferToCard">
+                <div class="form-group">
+                    <h5 class="card-title text-light">Select Payment Method</h5>
+                    @if (data.CashBackViewModel != null)
+                    {
+
+                        <div class="radio-inline">
+                            <input id="PaidById" type="radio" asp-for="PaidById" value="@data.CashBackViewModel.CashBackNumber" name="PaidById">
+                            <label for="PaidById1">
+                                <img src="~/img/icon/Cashback-Icon.png" alt="CashBack">
+                                CashBack - @data.CashBackViewModel.Balance.ToString("C")
+                            </label>
+                        </div>
+                    }
+                    @if (data.BankAccountViewModel != null)
+                    {
+
+                        <div class="radio-inline">
+                            <input id="PaidById" type="radio" asp-for="PaidById" value="@data.BankAccountViewModel.AccountNumber" name="PaidById">
+                            <label for="PaidById2">
+                                <img src="~/img/icon/Bank-Account.png" alt="Bank Account">
+                                @data.BankAccountViewModel.AccountNumber - @data.BankAccountViewModel.Balance.ToString("C")
+                            </label>
+                        </div>
+                    }
+                    @foreach (var card in data.BankCardViewModels)
+                    {
+
+
+
+                        <div class="radio-inline">
+                            <input id="PaidById" type="radio" asp-for="PaidById" value="@card.CardNumber" name="PaidById">
+                            <label for="PaidById3">
+                                <img src="~/img/images/@card.CardType-Easy.png" alt="Card">
+                                @card.CardNumber - @card.Balance.ToString("C")
+                            </label>
+                        </div>
+
+                    }
+
+
+
+                </div>
+                <hr />
+                <div class="form-group">
+                    <h5 class="card-title text-light">Recipient Card Number</h5>
+                    @foreach (var card in data.BankCardViewModels)
+                    {
+
+
+
+                        <div class="radio-inline">
+                            <input id="DestinationId" type="radio" asp-for="DestinationId" value="@card.CardNumber" name="DestinationId">
+                            <label for="PaidById3">
+                                <img src="~/img/images/@card.CardType-Easy.png" alt="Card">
+                                @card.CardNumber - @card.Balance.ToString("C")
+                            </label>
+                        </div>
+
+                    }
+                </div>
+                <hr />
+
+                <div class="form-group">
+                    <h5 class="card-title text-light">Amount</h5>
+                    <input asp-for="Amount" class="form-control" type="text" id="Amount" name="Amount" required />
+                </div>
+                <hr hidden />
+
+                <div class="form-group" id="commissionSection" hidden>
+                    <Label id="commissionLabel">Commission - $0</Label>
+                </div>
+                <button type="button" id="paymentButton" class="btn btn-primary">Payment</button>
+                <button asp-action="TransferToCard" type="submit" type="submit" id="submitButton" class="btn btn-primary" hidden>Submit</button>
+            </form>
         </div>
-        <hr />
-        <div class="form-group">
-            <label for="recipientCardNumber">Recipient Card Number</label><br>
-            @foreach (var card in data.BankCardViewModels)
-            {
-                <label class="radio-inline">
-                    <input id="DestinationId" type="radio" asp-for="DestinationId" value="@card.CardNumber">
-                    @card.CardNumber - @card.Balance.ToString("C")
-                </label>
-
-                <br>
-            }
-        </div>
-
-        <div class="form-group">
-            <label for="amount">Amount</label>
-            <input asp-for="Amount" class="form-control" />
-        </div>
+    </div>
 
 
+</main>
+<script>
+    document.getElementById('paymentButton').addEventListener('click', function () {
+        var amount = document.getElementById('DestinationId').value;
+        var commissionSection = document.getElementById('commissionSection');
+        var commissionLabel = document.getElementById('commissionLabel');
+        var paymentButton = document.getElementById('paymentButton');
+        var submitButton = document.getElementById('submitButton');
+        @*
+        if (amount.startsWith('123')) {
+            commissionLabel.textContent = 'Commission - $0.5';
+        } else {
+            commissionLabel.textContent = 'Commission - $0';
+        }
+        *@
+            commissionLabel.textContent = 'Commission - $0';
 
-        <button asp-action="TransferToCard" type="submit" class="btn btn-primary">Send Money</button>
-    </form>
-</div>
-
+        commissionSection.hidden = false;
+        paymentButton.hidden = true;
+        submitButton.hidden = false;
+    });
+</script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const paidByInputs = document.querySelectorAll('input[name="PaidById"]');
@@ -75,10 +208,13 @@
             const selectedDestination = document.querySelector('input[name="DestinationId"]:checked');
 
             paidByInputs.forEach(input => {
-                const label = input.closest('label');
+                const label = input.closest('.radio-inline');
+
+
+
                 if (selectedDestination && input.value === selectedDestination.value) {
                     input.disabled = true;
-                    label.style.opacity = '0.5';
+                    label.style.opacity = '0.2';
                 } else {
                     input.disabled = false;
                     label.style.opacity = '1';
@@ -86,10 +222,10 @@
             });
 
             destinationInputs.forEach(input => {
-                const label = input.closest('label');
+                const label = input.closest('.radio-inline');
                 if (selectedPaidBy && input.value === selectedPaidBy.value) {
                     input.disabled = true;
-                    label.style.opacity = '0.5';
+                    label.style.opacity = '0.2';
                 } else {
                     input.disabled = false;
                     label.style.opacity = '1';

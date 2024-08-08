@@ -29,7 +29,7 @@ namespace BetaBank.Areas.Moderator.Controllers
         }
         public async Task<IActionResult> Index()
         {
-            List<SendedNotificationMail> notificationMails = await _context.SendedNotificationMails.AsNoTracking().OrderBy(b => b.CreatedDate).ToListAsync();
+            List<SendedNotificationMail> notificationMails = await _context.SendedNotificationMails.AsNoTracking().OrderByDescending(b => b.CreatedDate).ToListAsync();
             ModeratorNotificationMailViewModel ViewModel = new ModeratorNotificationMailViewModel()
             {
                 NotificationMails = notificationMails,

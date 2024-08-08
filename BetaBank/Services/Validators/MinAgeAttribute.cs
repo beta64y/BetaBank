@@ -15,7 +15,7 @@ namespace BetaBank.Services.Validators
         {
             if (value == null)
             {
-                return new ValidationResult("Doğum tarihi gereklidir.");
+                return new ValidationResult("Date of birth is required.");
             }
 
             if (value is DateTime date)
@@ -28,11 +28,11 @@ namespace BetaBank.Services.Validators
 
                 if (age < _minAge)
                 {
-                    return new ValidationResult($"Yaşınız en az {_minAge} olmalıdır.");
+                    return new ValidationResult($"Your age must be at least {_minAge}.");
                 }
                 return ValidationResult.Success;
             }
-            return new ValidationResult("Geçersiz doğum tarihi.");
+            return new ValidationResult("Invalid date of birth.");
         }
     }
 }

@@ -30,7 +30,7 @@ namespace BetaBank.Areas.SuperAdmin.Controllers
             var users = usersInRole
                 .AsQueryable()
                 .AsNoTracking()
-                .OrderBy(b => b.CreatedDate)
+                .OrderByDescending(b => b.CreatedDate)
                 .ToList();
 
 
@@ -309,7 +309,7 @@ namespace BetaBank.Areas.SuperAdmin.Controllers
                 var users = usersInRole
                     .AsQueryable()
                     .AsNoTracking()
-                    .OrderBy(b => b.CreatedDate)
+                    .OrderByDescending(b => b.CreatedDate)
                     .ToList();
 
 

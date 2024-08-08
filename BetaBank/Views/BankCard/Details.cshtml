@@ -1,0 +1,242 @@
+﻿@{
+    ViewData["Title"] = "Details";
+    var Transactions = ViewData["Transactions"] as List<TransactionDetailsViewModel>;
+    var Card = ViewData["Card"] as BankCardDetailsViewModel;
+    var LastMonths = ViewData["LastMonths"] as List<string>;
+    var IncomeData = ViewData["IncomeData"] as List<double>;
+
+}
+<main class="mtop ">
+    <div class="container card bg-photo bga  " style="width: 1500px;    ">
+        <div class="d-flex justify-content-between mx-5" id="flex-col">
+            <div class="card-container mb-4" id="flex-col1">
+
+                <div class="@Card.CardType.Name.ToLower()-card  @Card.CardStatus.Name.ToLower()" style="width: 500px;">
+                        <div class="head">
+                        <h3>@Card.CardType.Name</h3>
+                            <div class="visa-word">VISA</div>
+                        </div>
+                        <div class="card-info">
+                        <p>@Card.CardNumber.ToCreditCardFormat()</p>
+                        <button class="copy-btn" onclick="copyCardNumber(event, this)">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                        <div class="balance-div">
+                            <span class="balance-text">Balance:</span>
+                        <p>@Card.Balance <span class="card-currency">$</span></p>
+                        </div>
+                        <div class="cvv-div">
+                            <span class="fas fa-eye-slash" id="toggleCVV"></span>
+                            <p>•••</p>
+                        </div>
+                        <div class="card-owner">
+                            <div>
+                                <p class="card-holder-p">Card Holder</p>
+                            <p class="owner-name">@Card.UserFirstName @Card.UserLastName</p>
+                            </div>
+                            <div class="expires-div">
+                                <p class="expires-text">Expires</p>
+                            <p class="expires-date">@Card.ExpiryDate.ToString("MM/yy")</p>
+                            </div>
+                        </div>
+                    <div class="block-overlay">
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <div class="disabled-overlay">
+                        <i class="fas fa-ban"></i>
+                    </div>
+                    </div>
+             
+            </div>
+            <div class="row " style="margin-top: 7rem;">
+                <div id="flex-col2">
+                    <canvas id="myChartD"></canvas>
+                </div>
+            </div>
+        </div>
+        @if(!(Card.CardStatus.Name == "Disabled"))
+        {
+            <div class="container center" style="gap: 5rem;" id="flex-col3">
+                @if (Card.CardStatus.Name == "Active")
+                {
+                    <a asp-action="Block" asp-route-id="@Card.CardNumber" class="btn btn-warning blockBtn text-dark " style="width: 200px; height: 60px; border: none; ">
+                       
+                            Block Card
+                       
+                    </a>
+                }
+                else if (Card.CardStatus.Name == "Blocked")
+                {
+                    <a asp-action="UnBlock" asp-route-id="@Card.CardNumber" class="btn btn-warning unBlockBtn text-dark " style="width: 200px; height: 60px; border: none;  ">
+                            UnBlock Card
+                    </a>
+                }
+                <a class="btn btn-light  text-dark" style="width: 200px; height: 60px; background-color: #2fe404; border: none; ">
+                    Card To Card
+                </a>
+                <a class="btn-light btn  text-dark" style="width: 200px; height: 60px; background-color: #2fe404; border: none; ">
+                    DashBoard
+            </a>
+        </div>
+        }
+        
+
+        <div class="row container mt-5 center" id="flex-col4">
+
+            <table class="table table-striped table-hover ">
+                <thead>
+                    <tr>
+                        <th style="background-color: #232324; color: #2fe404;" scope="col" class="h3">Recent Activity</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var transaction in Transactions)
+                    {
+                         <tr>
+
+                        <td style="background-color: #232324;">
+                                <a asp-controller="Payment" asp-action="Transaction" asp-route-id="@transaction.Id">
+                                <div class=" border-b">
+                                    <div class="d-flex justify-content-between">
+                                        <div class="d-flex gap-2">
+                                            <img src="spotify.svg" width="30px" class="mb-4">
+                                            <div>
+                                                <h6 class=" d-flex flex-column ">
+                                                        @transaction.Title <span class="dateSpan">@transaction.TransactionDate.ToString("f")</span>
+                                                </h6>
+                                            </div>
+                                        </div>
+                                            
+                                            @if (transaction.Summary == "Income")
+                                            {
+                                                <div class=" d-flex flex-column " style="color: #2fe404;">
+                                                    +@transaction.Amount.ToString("C")
+                                                    @if (transaction.Status.Name == "Completed")
+                                                    {
+                                                        <span class="text-success rightSpan">
+                                                            @transaction.Status.Name
+                                                        </span>
+                                                    }
+                                                    else if (transaction.Status.Name == "Failed")
+                                                    {
+                                                        <span class="text-danger rightSpan">
+                                                        @transaction.Status.Name
+                                                    </span>
+                                                    }
+
+                                                </div>
+                                            }
+                                            else if (transaction.Summary == "Expense")
+                                            {
+                                                <div class=" d-flex flex-column " style="color: #f01414">
+                                                    -@transaction.Amount.ToString("C")
+                                                    @if (transaction.Status.Name == "Completed")
+                                                    {
+                                                        <span class="text-success rightSpan">
+                                                            @transaction.Status.Name
+                                                        </span>
+                                                    }
+                                                    else if (transaction.Status.Name == "Failed")
+                                                    {
+                                                        <span class="text-danger rightSpan">
+                                                            @transaction.Status.Name
+                                                        </span>
+                                                    }
+                                                </div>
+                                            }
+
+                                    </div>
+                            </a>
+                        </td>
+
+
+                    </tr>
+                    }
+                   
+
+                    
+
+                   
+
+
+                    
+
+
+
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+
+</main>
+
+@section Scripts{
+    <script>
+        const ctxd = document.getElementById('myChartD');
+
+        new Chart(ctxd, {
+            type: 'line',
+            data: {
+                labels: @Html.Raw(Json.Serialize(LastMonths)),
+                datasets: [{
+                    label: 'Income Data',
+                    data: @Html.Raw(Json.Serialize(IncomeData)),
+                    fill: false,
+                    borderColor: 'rgb(75, 255, 0)',
+                    backgroundColor: 'rgb(255,255,255)',
+                    tension: 0.1
+                }]
+            },
+            options: {
+                plugins: {
+                    label: {
+                        'display': 'true',
+                        'visibility': 'hidden'
+
+                    }
+                },
+            }
+
+
+        });
+    </script>
+    <script>
+        document.getElementById('toggleCVV').addEventListener('click', function (event) {
+            event.stopPropagation(); // Tıklama olayını durdur
+            var cvvElement = document.querySelector('#toggleCVV + p');
+            if (cvvElement.textContent === '•••') {
+                cvvElement.textContent = '@Card.CVV';
+                this.classList.remove('fa-eye-slash');
+                this.classList.add('fa-eye');
+            } else {
+                cvvElement.textContent = '•••';
+                this.classList.remove('fa-eye');
+                this.classList.add('fa-eye-slash');
+            }
+        });
+    </script>
+    <script>
+        function copyCardNumber(event, button) {
+
+            var cardNumber = button.previousElementSibling.innerText;
+
+            var tempTextarea = document.createElement("textarea");
+            tempTextarea.value = cardNumber;
+            document.body.appendChild(tempTextarea);
+
+            tempTextarea.select();
+
+            document.execCommand("copy");
+
+            document.body.removeChild(tempTextarea);
+
+            // Bilgilendirme mesajı
+            alert("Kart numarası kopyalandı: " + cardNumber);
+            event.preventDefault();
+
+        }
+    </script>
+}

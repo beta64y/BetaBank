@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using BetaBank.Services.Implementations;
 using BetaBank.Services.Validators;
 using Microsoft.IdentityModel.Tokens;
+using BetaBank.Utils.Enums;
 
 namespace BetaBank.Controllers
 {
@@ -46,7 +47,7 @@ namespace BetaBank.Controllers
             List<BankCardViewModel> bankCardsViewModel = new List<BankCardViewModel>();
             foreach (var bankCard in bankCards)
             {
-                BankCardType cardType = await _context.BankCardTypes.FirstOrDefaultAsync(x => x.CardId == bankCard.Id);
+                Models.BankCardType cardType = await _context.BankCardTypes.FirstOrDefaultAsync(x => x.CardId == bankCard.Id);
 
                 if (await bankCard.IsDisabled(_context) || await bankCard.IsBlocked(_context))
                 {
@@ -188,8 +189,8 @@ namespace BetaBank.Controllers
                     await _context.SaveChangesAsync();
 
 
-                    ViewData["Transaction"] = transaction;
-                    return View("Transaction");
+                    
+                    return RedirectToAction("Transaction" , new { id = transaction.Id });
 
 
                 }
@@ -246,8 +247,8 @@ namespace BetaBank.Controllers
                     await _context.SaveChangesAsync();
 
 
-                    ViewData["Transaction"] = transaction;
-                    return View("Transaction");
+                    return RedirectToAction("Transaction" , new { id = transaction.Id });
+
                 }
             }
             else if (transactionViewModel.PaidById.Replace(" ", "").Length == 10)
@@ -305,9 +306,8 @@ namespace BetaBank.Controllers
                     await _context.Transactions.AddAsync(transaction);
                     await _context.SaveChangesAsync();
 
+                    return RedirectToAction("Transaction" , new { id = transaction.Id });
 
-                    ViewData["Transaction"] = transaction;
-                    return View("Transaction");
 
 
                 }
@@ -351,8 +351,8 @@ namespace BetaBank.Controllers
                     await _context.SaveChangesAsync();
 
 
-                    ViewData["Transaction"] = transaction;
-                    return View("Transaction");
+                    return RedirectToAction("Transaction" , new { id = transaction.Id });
+
                 }
             }
             else if (transactionViewModel.PaidById.Replace(" ", "").Length == 15)
@@ -415,8 +415,8 @@ namespace BetaBank.Controllers
                     await _context.Transactions.AddAsync(transaction);
                     await _context.SaveChangesAsync();
 
-                    ViewData["Transaction"] = transaction;
-                    return View("Transaction");
+                    return RedirectToAction("Transaction" , new { id = transaction.Id });
+
 
 
                 }
@@ -460,8 +460,8 @@ namespace BetaBank.Controllers
                     await _context.Transactions.AddAsync(transaction);
                     await _context.SaveChangesAsync();
 
-                    ViewData["Transaction"] = transaction;
-                    return View("Transaction");
+                    return RedirectToAction("Transaction" , new { id = transaction.Id });
+
                 }
             }
             else
@@ -486,7 +486,7 @@ namespace BetaBank.Controllers
             List<BankCardViewModel> bankCardsViewModel = new List<BankCardViewModel>();
             foreach (var bankCard in bankCards)
             {
-                BankCardType cardType = await _context.BankCardTypes.FirstOrDefaultAsync(x => x.CardId == bankCard.Id);
+                Models.BankCardType cardType = await _context.BankCardTypes.FirstOrDefaultAsync(x => x.CardId == bankCard.Id);
 
                 if (await bankCard.IsDisabled(_context) || await bankCard.IsBlocked(_context))
                 {
@@ -501,7 +501,11 @@ namespace BetaBank.Controllers
 
                 });
             }
-
+            if (bankCardsViewModel.Count == 0)
+            {
+                ViewBag.Message = "You have no available cards.";
+                return View("Warning");
+            }
             var cashBack = await _context.CashBacks.FirstOrDefaultAsync(x => x.UserId == user.Id);
             CashBackViewModel cashBackViewModel = new()
             {
@@ -553,7 +557,7 @@ namespace BetaBank.Controllers
             List<BankCardViewModel> bankCardsViewModel = new List<BankCardViewModel>();
             foreach (var bankCard in bankCards)
             {
-                BankCardType cardType = await _context.BankCardTypes.FirstOrDefaultAsync(x => x.CardId == bankCard.Id);
+                Models.BankCardType cardType = await _context.BankCardTypes.FirstOrDefaultAsync(x => x.CardId == bankCard.Id);
 
                 if (await bankCard.IsDisabled(_context) || await bankCard.IsBlocked(_context))
                 {
@@ -692,8 +696,8 @@ if (transactionViewModel.Amount < 2)
                 await _context.SaveChangesAsync();
 
 
-                ViewData["Transaction"] = transaction;
-                return View("Transaction");
+                return RedirectToAction("Transaction" , new { id = transaction.Id });
+
 
             }
             else if (transactionViewModel.PaidById.Replace(" ", "").Length == 15)
@@ -754,8 +758,8 @@ if (transactionViewModel.Amount < 2)
                 await _context.Transactions.AddAsync(transaction);
                 await _context.SaveChangesAsync();
 
-                ViewData["Transaction"] = transaction;
-                return View("Transaction");
+                return RedirectToAction("Transaction" , new { id = transaction.Id });
+
 
             }
             else
@@ -815,7 +819,7 @@ if (transactionViewModel.Amount < 2)
             List<BankCardViewModel> bankCardsViewModel = new List<BankCardViewModel>();
             foreach (var bankCard in bankCards)
             {
-                BankCardType cardType = await _context.BankCardTypes.FirstOrDefaultAsync(x => x.CardId == bankCard.Id);
+                Models.BankCardType cardType = await _context.BankCardTypes.FirstOrDefaultAsync(x => x.CardId == bankCard.Id);
 
                 if (await bankCard.IsDisabled(_context) || await bankCard.IsBlocked(_context))
                 {
@@ -1262,10 +1266,224 @@ if (transactionViewModel.Amount < 2)
         /* End Tranfer Own Subscription */
 
 
-
-
-        public async Task<IActionResult> Transaction()
+        public async Task<IActionResult> Transaction(string id)
         {
+            Transaction transaction = await _context.Transactions.FirstOrDefaultAsync(x => x.Id == id);
+            if (transaction == null)
+            {
+                return BadRequest();
+            }
+            TransactionDetailsViewModel transactionViewModel = new()
+            {
+                Id = transaction.Id,
+                ReceiptNumber = transaction.ReceiptNumber,
+                Amount = transaction.Amount,
+                Commission = transaction.Commission,
+                BillingAmount = transaction.BillingAmount,
+                CashbackAmount = transaction.CashbackAmount,
+                TransactionDate = transaction.TransactionDate,
+                PaidByType = await _context.TransactionTypeModels.FirstOrDefaultAsync(x => x.Id == transaction.PaidByTypeId),
+                PaidById = transaction.PaidById,
+                DestinationType = await _context.TransactionTypeModels.FirstOrDefaultAsync(x => x.Id == transaction.DestinationTypeId),
+                DestinationId = transaction.DestinationId,
+                Status = await _context.TransactionStatusModels.FirstOrDefaultAsync(x => x.Id == transaction.StatusId),
+                Title = transaction.Title,
+                Description = transaction.Description
+            };
+
+            ViewData["TransactionViewModel"] = transactionViewModel;
+            TempData["Tab"] = "Payments";
+
+            return View();
+        }
+
+        public async Task<IActionResult> RecentActivity()
+        {
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+            if(user == null)
+            {
+                return NotFound();
+            }
+
+            List<BankCard> bankCards = await _context.BankCards.Where(x => x.UserId == user.Id).ToListAsync();
+
+
+            BankAccount bankAccount = await _context.BankAccounts.FirstOrDefaultAsync(x => x.UserId == user.Id);
+
+            CashBack cashBack = await _context.CashBacks.FirstOrDefaultAsync(x => x.UserId == user.Id);
+            
+
+            //start Transaction
+            List<Transaction> allTransactions = await _context.Transactions
+.AsNoTracking().Where(x =>
+                    x.PaidById == cashBack.CashBackNumber ||
+                    x.PaidById == bankAccount.AccountNumber||
+                    x.DestinationId == bankAccount.AccountNumber
+                ).ToListAsync();
+
+
+            foreach(var userCard in bankCards)
+            {
+                allTransactions.AddRange( await _context.Transactions.AsNoTracking().Where(x => x.PaidById == userCard.CardNumber || x.DestinationId == userCard.CardNumber).ToListAsync());
+            }
+
+            List<TransactionDetailsViewModel> transactionViewModels = new();
+
+            foreach (Transaction transaction in allTransactions.OrderByDescending(x => x.TransactionDate))
+            {
+                TransactionTypeModel paidByType = await _context.TransactionTypeModels.FirstOrDefaultAsync(x => x.Id == transaction.PaidByTypeId);
+                Models.BankCardType paidByCardType = null;
+                if (paidByType.Name == "Card")
+                {
+                    BankCard card = await _context.BankCards.FirstOrDefaultAsync(x => x.CardNumber == transaction.PaidById);
+                    paidByCardType = await _context.BankCardTypes.FirstOrDefaultAsync(x => x.CardId == card.Id);
+                }
+
+
+                TransactionTypeModel destinationType = await _context.TransactionTypeModels.FirstOrDefaultAsync(x => x.Id == transaction.DestinationTypeId);
+                Models.BankCardType destinationCardType = null;
+
+                if (destinationType.Name == "Card")
+                {
+                    BankCard card = await _context.BankCards.FirstOrDefaultAsync(x => x.CardNumber == transaction.DestinationId);
+                    destinationCardType = await _context.BankCardTypes.FirstOrDefaultAsync(x => x.CardId == card.Id);
+
+                }
+                string summary = null;
+                if (
+                    (transaction.PaidById == cashBack.CashBackNumber ||
+                    transaction.PaidById == bankAccount.AccountNumber ||
+                    bankCards.Any(userCard =>
+                        transaction.PaidById == userCard.CardNumber
+                    )) &&
+                    (bankCards.Any(userCard =>
+                        transaction.DestinationId == userCard.CardNumber
+                    ) ||
+                    transaction.DestinationId == bankAccount.AccountNumber)
+                )
+                {
+                    summary = "Internally";
+
+                }
+                else if (
+                    (transaction.PaidById == cashBack.CashBackNumber ||
+                    transaction.PaidById == bankAccount.AccountNumber ||
+                    bankCards.Any(userCard =>
+                        transaction.PaidById == userCard.CardNumber
+                    )) &&
+                    !(bankCards.Any(userCard =>
+                        transaction.DestinationId == userCard.CardNumber
+                    ) ||
+                    transaction.DestinationId == bankAccount.AccountNumber)
+                )
+                {
+                    summary = "Expense";
+
+                }
+                else if (
+                    !(transaction.PaidById == cashBack.CashBackNumber ||
+                    transaction.PaidById == bankAccount.AccountNumber ||
+                    bankCards.Any(userCard =>
+                        transaction.PaidById == userCard.CardNumber
+                    )) &&
+                    (bankCards.Any(userCard =>
+                        transaction.DestinationId == userCard.CardNumber
+                    ) ||
+                    transaction.DestinationId == bankAccount.AccountNumber)
+                )
+                {
+                    summary = "Income";
+
+                }
+
+                transactionViewModels.Add(new TransactionDetailsViewModel()
+                {
+                    Id = transaction.Id,
+                    ReceiptNumber = transaction.ReceiptNumber,
+                    Amount = transaction.Amount,
+                    Commission = transaction.Commission,
+                    BillingAmount = transaction.BillingAmount,
+                    CashbackAmount = transaction.CashbackAmount,
+                    TransactionDate = transaction.TransactionDate,
+                    PaidByType = paidByType,
+                    PaidById = transaction.PaidById,
+                    DestinationType = destinationType,
+                    DestinationId = transaction.DestinationId,
+                    Status = await _context.TransactionStatusModels.FirstOrDefaultAsync(x => x.Id == transaction.StatusId),
+                    Title = transaction.Title,
+                    Description = transaction.Description,
+                    PaidByCardType = paidByCardType != null ? await _context.BankCardTypeModels.FirstOrDefaultAsync(x => x.Id == paidByCardType.TypeId) : null,
+                    DestinationCardType = destinationCardType != null ? await _context.BankCardTypeModels.FirstOrDefaultAsync(x => x.Id == destinationCardType.TypeId) : null,
+                    Summary = summary,
+
+
+                });
+
+            }
+
+
+            // Get the last 5 months
+            List<string> last5Months = StatisticsService.GetLastMonths(5);
+
+            // Calculate the start date for filtering transactions
+            DateTime startDate = DateTime.Now.AddMonths(-4).AddDays(-DateTime.Now.Day + 1);
+
+            // Calculate income data for the last 5 months
+            List<double> incomeData = last5Months.Select(month =>
+            {
+                return transactionViewModels
+                    .Where(t => t.Summary == "Income" && t.TransactionDate >= startDate && t.TransactionDate.Month == DateTime.ParseExact(month, "MMMM", System.Globalization.CultureInfo.InvariantCulture).Month)
+                    .Sum(t => t.Amount);
+            }).ToList();
+
+            // Calculate income and expense data for the current and previous months
+            DateTime now = DateTime.Now;
+            DateTime startCurrentMonth = new DateTime(now.Year, now.Month, 1);
+            DateTime startPreviousMonth = startCurrentMonth.AddMonths(-1);
+
+            double currentMonthIncome = transactionViewModels
+                .Where(t => t.Summary == "Income" && t.TransactionDate >= startCurrentMonth && t.TransactionDate < now)
+                .Sum(t => t.Amount);
+
+            double currentMonthExpense = transactionViewModels
+                .Where(t => t.Summary == "Expense" && t.TransactionDate >= startCurrentMonth && t.TransactionDate < now)
+                .Sum(t => t.Amount);
+
+            double previousMonthIncome = transactionViewModels
+                .Where(t => t.Summary == "Income" && t.TransactionDate >= startPreviousMonth && t.TransactionDate < startCurrentMonth)
+                .Sum(t => t.Amount);
+
+            double previousMonthExpense = transactionViewModels
+                .Where(t => t.Summary == "Expense" && t.TransactionDate >= startPreviousMonth && t.TransactionDate < startCurrentMonth)
+                .Sum(t => t.Amount);
+
+            MonthlyIncomeExpenseViewModel monthlyIncomeExpense = new()
+{
+   PreviousMonthExpense = previousMonthExpense,
+   PreviousMonthIncome = previousMonthIncome,
+   CurrentMonthExpense = currentMonthExpense,
+   CurrentMonthIncome = currentMonthIncome
+};
+
+            // Store data in ViewData
+            ViewData["Last5Months"] = last5Months;
+            ViewData["IncomeData"] = incomeData;
+            ViewData["MonthlyIncomeExpense"] = monthlyIncomeExpense;
+
+
+
+
+
+
+
+
+            ViewData["Transactions"] = transactionViewModels;
+
+
+
+
+
+
             return View();
         }
 

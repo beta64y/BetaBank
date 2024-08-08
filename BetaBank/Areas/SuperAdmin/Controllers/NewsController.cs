@@ -25,7 +25,7 @@ namespace BetaBank.Areas.SuperAdmin.Controllers
 
         public async Task<IActionResult> Index()
         {
-            List<News> news = await _context.News.AsNoTracking().OrderBy(b => b.CreatedDate).Where(r => !r.IsDeleted).ToListAsync();
+            List<News> news = await _context.News.AsNoTracking().OrderByDescending(b => b.CreatedDate).Where(r => !r.IsDeleted).ToListAsync();
             SuperAdminNewsViewModel ViewModel = new SuperAdminNewsViewModel()
             {
                 News = news,

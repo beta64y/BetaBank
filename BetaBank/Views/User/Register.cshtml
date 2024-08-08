@@ -3,161 +3,75 @@
 
 }
 @model RegisterViewModel
-
-
-<!-- Start Slider Area -->
-<div class="login-area area-padding fix">
-    <div class="login-overlay"></div>
-    <div class="table">
+<main role="main" class="mt-5">
+    <!-- Start Slider Area -->
+    <div class="login-area area-padding fix ">
+        <div class="login-overlay"></div>
         <div class="table-cell">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-offset-3 col-md-6 col-sm-offset-2 col-sm-8 col-xs-12">
-                        <div class="login-form signup-form">
-                            <h4 class="login-title text-center">REGISTER</h4>
-                            <div class="row">
-                                <form method="POST" class="log-form">
-                                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                                    <div class="col-md-12 col-sm-12 col-xs-12">
-                                        <input class="form-control" asp-for="FirstName" placeholder="Your FirstName" required data-error="Please enter your name">
-                                        <span asp-validation-for="FirstName" class="text-danger"></span>
-                                    </div>
-                                    <div class="col-md-12 col-sm-12 col-xs-12">
-                                        <input class="form-control" asp-for="LastName" placeholder="Your LastName" required data-error="Please enter your message subject">
-                                        <span asp-validation-for="LastName" class="text-danger"></span>
-                                    </div>
-                                    <div class="col-md-12 col-sm-12 col-xs-12">
-                                        <input class="form-control"  asp-for="Email" placeholder="Email" required data-error="Please enter your name">
-                                        <span asp-validation-for="Email" class="text-danger"></span>
-                                    </div>
-                                    <div class="col-md-12 col-sm-12 col-xs-12">
-                                        <input  class="form-control" asp-for="FIN" placeholder="FIN" required data-error="Please enter your message subject">
-                                        <span asp-validation-for="FIN" class="text-danger"></span>
-                                    </div>
-                                    <div class="col-md-12 col-sm-12 col-xs-12">
-                                        <input type="tel"  class="form-control" asp-for="PhoneNumber" placeholder="Phone Number" required data-error="Please enter your message subject">
-                                        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
-                                    </div>
-                                    
-                                    <div class="col-md-12 col-sm-12 col-xs-12">
-                                        <input class="form-control" asp-for="DateOfBirth" required data-error="Please enter your message subject">
-                                        <span asp-validation-for="DateOfBirth" class="text-danger"></span>
-                                    </div>
-                              
-                                    <div class="col-md-12 col-sm-12 col-xs-12">
-                                        <input class="form-control" asp-for="Password" placeholder=" Password" required data-error="Please enter your message subject">
-                                        <span asp-validation-for="Password" class="text-danger"></span>
-                                    </div>
-                                    <div class="col-md-12 col-sm-12 col-xs-12">
-                                        <input class="form-control" asp-for="PasswordConfirm" placeholder="Confirm Password" required data-error="Please enter your message subject">
-                                        <span asp-validation-for="PasswordConfirm" class="text-danger"></span>
-                                    </div>
+            <div class="container center">
+                <div class="col-lg-offset-3 col-lg-6 col-md-offset-2 col-md-8 col-sm-12">
+                    <div class="login-form signup-form mn bga">
+                        <h4 class="login-title text-center">REGISTER</h4>
+                        <div class="row">
+                            <form method="POST" class="log-form bga">
+                                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                <div class="col-lg-12 col-md-12 col-sm-12">
+                                    <input class="form-control" asp-for="FirstName" placeholder="Your FirstName" required data-error="Please enter your name">
+                                    <span asp-validation-for="FirstName" class="text-danger"></span>
+                                </div>
+                                <div class="col-lg-12 col-md-12 col-sm-12">
+                                    <input class="form-control" asp-for="LastName" placeholder="Your LastName" required data-error="Please enter your message subject">
+                                    <span asp-validation-for="LastName" class="text-danger"></span>
+                                </div>
+                                <div class="col-lg-12 col-md-12 col-sm-12">
+                                    <input class="form-control" asp-for="Email" placeholder="Email" required data-error="Please enter your name">
+                                    <span asp-validation-for="Email" class="text-danger"></span>
+                                </div>
+                                <div class="col-lg-12 col-md-12 col-sm-12">
+                                    <input type="text" class="form-control" asp-for="FIN" placeholder="FIN" required data-error="Please enter your message subject">
+                                    <span asp-validation-for="FIN" class="text-danger"></span>
+                                </div>
+                                <div class="col-lg-12 col-md-12 col-sm-12">
+                                    <input type="tel" class="form-control" asp-for="PhoneNumber" placeholder="Phone Number" required data-error="Please enter your message subject">
+                                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                                </div>
+
+                                <div class="col-lg-12 col-md-12 col-sm-12">
+                                    <input class="form-control" asp-for="DateOfBirth" required data-error="Please enter your message subject " type="date">
+                                    <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+                                </div>
+
+                                <div class="col-lg-12 col-md-12 col-sm-12">
+                                    <input class="form-control" asp-for="Password" placeholder=" Password" required data-error="Please enter your message subject">
+                                    <span asp-validation-for="Password" class="text-danger"></span>
+                                </div>
+                                <div class="col-lg-12 col-md-12 col-sm-12">
+                                    <input class="form-control" asp-for="PasswordConfirm" placeholder="Confirm Password" required data-error="Please enter your message subject">
+                                    <span asp-validation-for="PasswordConfirm" class="text-danger"></span>
+                                </div>
 
 
-                                    <div class="col-md-12 col-sm-12 col-xs-12 text-center">
-                                        <button type="submit" class="slide-btn login-btn">Register</button>
+                                <div class="col-lg-12 col-md-12 col-sm-12 text-center">
+                                    <button type="submit" class="slide-btn btn btn-outline-success mzn">Register</button>
+                                </div>
+                                <div class="col-lg-12 col-md-12 col-sm-12 text-center">
+                                    <div class="clear"></div>
+
+                                    <div class="sign-icon">
+                                        <div class="     text-xl">Do you have account?  <a class="pages" asp-controller="Auth" asp-action="Login">Login</a></div>
                                     </div>
-                                    <div class="col-md-12 col-sm-12 col-xs-12 text-center">
-                                        <div class="clear"></div>
-                                        <div class="separetor text-center"><span>Or with signup</span></div>
-                                        <div class="sign-icon">
-                                            <ul>
-                                                <li><a class="facebook" href="#"><i class="ti-facebook"></i></a></li>
-                                                <li><a class="twitter" href="#"><i class="ti-twitter"></i></a></li>
-                                                <li><a class="google" href="#"><i class="ti-google"></i></a></li>
-                                            </ul>
-                                            <div class="acc-not">have an account?  <a class="pages" asp-page="/Login">Login</a></div>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-<!-- End Slider Area -->
-@*<div class="container mt-5">
-    <div class="row justify-content-center align-items-center">
-        <div class="col-sm-12 col-lg-4">
-            <h1 class="mb-3">Register</h1>
+   
+    <!-- End Slider Area -->
+</main>
 
-            <form method="post">
-                <div asp-validation-summary="All" class="text-danger">
-                </div>
-                <div class="mb-3">
-                    <label class="col-form-label" asp-for="Email">Email Address</label>
-                    <input type="email" asp-for="Email" class="form-control" />
-                    <span asp-validation-for="Email" class="text-danger"></span>
-                </div>
-                <div class="mb-3">
-                    <label class="col-form-label" asp-for="FirstName">FirstName</label>
-                    <input type="text" asp-for="FirstName" class="form-control" />
-                    <span asp-validation-for="FirstName" class="text-danger"></span>
-                </div>
-                <div class="mb-3">
-                    <label class="col-form-label" asp-for="LastName">LastName</label>
-                    <input type="text" asp-for="LastName" class="form-control" />
-                    <span asp-validation-for="LastName" class="text-danger"></span>
-                </div>
-                <div class="mb-3">
-                    <label class="col-form-label" asp-for="PhoneNumber">PhoneNumber</label>
-                    <input type="tel" asp-for="PhoneNumber" class="form-control" />
-                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
-                </div>
-                <div class="mb-3">
-                    <label class="col-form-label" asp-for="Gender">Gender</label>
-                    <input type="text" asp-for="Gender" class="form-control" />
-                    <span asp-validation-for="Gender" class="text-danger"></span>
-                </div>
-                <div class="mb-3">
-                    <label class="col-form-label" asp-for="MarriageStatus">Marital Status</label>
-                    <input type="text" asp-for="MarriageStatus" class="form-control" />
-                    <span asp-validation-for="MarriageStatus" class="text-danger"></span>
-                </div>
-                <div class="mb-3">
-                    <label class="col-form-label" asp-for="AccountType">Account Type</label>
-                    <input type="text" asp-for="AccountType" class="form-control" />
-                    <span asp-validation-for="AccountType" class="text-danger"></span>
-                </div>
-                <div class="mb-3">
-                    <label class="col-form-label" asp-for="Occupation">Occupation</label>
-                    <input type="text" asp-for="Occupation" class="form-control" />
-                    <span asp-validation-for="Occupation" class="text-danger"></span>
-                </div>
-                <div class="mb-3">
-                    <label class="col-form-label" asp-for="Address">Address</label>
-                    <input type="text" asp-for="Address" class="form-control" />
-                    <span asp-validation-for="Address" class="text-danger"></span>
-                </div>
-                <div class="mb-3">
-                    <label class="col-form-label" asp-for="State"> State</label>
-                    <input type="text" asp-for="State" class="form-control" />
-                    <span asp-validation-for="State" class="text-danger"></span>
-                </div>
-                <div class="mb-3">
-                    <label class="col-form-label" asp-for="Country">Country</label>
-                    <input type="text" asp-for="Country" class="form-control" />
-                    <span asp-validation-for="Country" class="text-danger"></span>
-                </div>
-                <div class="mb-3">
-                    <label class="col-form-label" asp-for="Password"> Password</label>
-                    <input type="password" asp-for="Password" class="form-control" />
-                    <span asp-validation-for="Password" class="text-danger"></span>
-                </div>
-                <div class="mb-3">
-                    <label class="col-form-label" asp-for="ConfirmPassword">Confirm Password</label>
-                    <input type="password" asp-for="ConfirmPassword" class="form-control" />
-                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
-                </div>
-                <div class="mb-3">
-                    <button type="submit" class="btn btn-primary">Register</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>*@
+
 
 

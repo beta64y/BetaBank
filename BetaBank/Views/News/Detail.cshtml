@@ -1,0 +1,24 @@
+﻿@{
+    ViewData["Title"] = "View";
+    var data = ViewData["News"] as News;
+}
+<div>
+    <main role="main" class="pb-3 center mtop">
+        <div class="row container card  big-container">
+            <h2 class="card-title text-dark mt-3 tc">@Html.Raw(data.Title)</h2>
+            <img src="~/img/website-images/@data.SecondImage" class="img-fluid" style="height: 60%;">
+            <div class="center mb-5 mt-4 ">
+                <div class="row card text-container">
+                    <p class="text-dark mt-3" style="font-size: 18px;">
+                        @Html.Raw(data.Description)
+                    </p>
+                </div>
+            </div>
+            <div class="button-and-date-container">
+                <button class="btn btn-outline-success btns" onclick="javascript:history.back()">Go Back</button>
+                <span style="color: white !important;"><i class="fas fa-calendar"></i>@data.CreatedDate.ToString("yyyy-MM-dd")</span>
+            </div>
+
+        </div>
+    </main>
+</div>

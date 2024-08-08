@@ -1,102 +1,71 @@
 ﻿@{
     ViewData["Title"] = "Profile";
     var data = ViewData["UserProfileViewmodel"] as UserProfileViewmodel;
-    Layout = null;
 }
 @model UserProfileViewmodel
-<form asp-action="Profile" method="post" enctype="multipart/form-data">
-    <div class="form-group">
-        <label asp-for="userUpdateViewModel.FirstName"></label>
+
+<div class="res-from">
+
+
+
+    <form asp-action="Profile" method="post" enctype="multipart/form-data" class="mn mb-4 mtop">
+        <label class="form-label text-white">First Name</label>
         <input asp-for="userUpdateViewModel.FirstName" value="@data.userUpdateViewModel.FirstName" class="form-control" />
         <span asp-validation-for="userUpdateViewModel.FirstName" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="userUpdateViewModel.LastName"></label>
+
+
+        <label class="form-label text-white">Last Name</label>
         <input asp-for="userUpdateViewModel.LastName" value="@data.userUpdateViewModel.LastName" class="form-control" />
         <span asp-validation-for="userUpdateViewModel.LastName" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="userUpdateViewModel.Email"></label>
+
+
+        <label class="form-label text-white">Email</label>
         <input asp-for="userUpdateViewModel.Email" value="@data.userUpdateViewModel.Email" class="form-control" />
         <span asp-validation-for="userUpdateViewModel.Email" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="userUpdateViewModel.CurrentPassword"></label>
+
+
+        <label class="form-label text-white">Current Password</label>
         <input asp-for="userUpdateViewModel.CurrentPassword" class="form-control" />
         <span asp-validation-for="userUpdateViewModel.CurrentPassword" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="userUpdateViewModel.NewPassword"></label>
+
+
+        <label class="form-label text-white">NewPassword</label>
         <input asp-for="userUpdateViewModel.NewPassword" class="form-control" />
         <span asp-validation-for="userUpdateViewModel.NewPassword" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="userUpdateViewModel.ConfirmPassword"></label>
+
+
+        <label class="form-label text-white">Confirm Password</label>
         <input asp-for="userUpdateViewModel.ConfirmPassword" class="form-control" />
         <span asp-validation-for="userUpdateViewModel.ConfirmPassword" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <img src="~/img/data/@TempData["ProfilePhoto"]" alt="Profile Photo" style=" margin-top: 10px;" width="150" />
 
-        <label asp-for="userUpdateViewModel.ProfilePhoto">Profile Photo</label>
-        <input asp-for="userUpdateViewModel.ProfilePhoto" type="file" class="form-control-file" />
-        <img id="profileImage" src="~/img/data/@TempData["ProfilePhoto"]" alt="Profile Photo" style="display: none; margin-top: 10px;" width="150" />
-        <span asp-validation-for="userUpdateViewModel.ProfilePhoto" class="text-danger"></span>
-    </div>
-    <button type="submit" class="btn btn-primary">Submit</button>
-</form>
-<style>
-    #profileImage {
-        display: none;
-        margin-top: 10px;
-        width: 150px;
-        height: 150px;
-        object-fit: cover;
-        border: 2px solid #ddd;
-        border-radius: 5px;
-    }
 
-    .form-group label {
-        font-weight: bold;
-    }
+        <img src="~/img/data/@TempData["ProfilePhoto"]" width="100px"
+             class="img-fluid changeImg">
+        <div class="res-img-d">
+            <div class="container mt-2">
+                <!-- File Input that triggers the modal -->
+                <input asp-for="userUpdateViewModel.ProfilePhoto" name="userUpdateViewModel.ProfilePhoto" accept="image/*" class="" id="myFile" class="btn text-white file " />
+                <span asp-validation-for="userUpdateViewModel.ProfilePhoto" class="text-danger"></span>
+                <br>
+            </div>
+        </div>
+        <button class="btn btn-outline-success my-1" type="submit">Save Changes</button>
 
-    .form-control-file {
-        margin-top: 5px;
-    }
+        <a asp-controller="Auth" asp-action="Logout" class="btn btn-danger my-0">Logout</a>
 
-    .btn-primary {
-        margin-top: 15px;
-    }
-</style>
-
-<script>
-    document.querySelector('input[type="file"]').addEventListener('change', function (event) {
-        const [file] = event.target.files;
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                const img = document.getElementById('profileImage');
-                img.src = e.target.result;
-                img.style.display = 'block';
-            }
-            reader.readAsDataURL(file);
-        }
-    });
-</script>
+    </form>
+</div>
 
 
 
 
+@section Styles {
+    <link rel="stylesheet" href="~/form.css" asp-append-version="true">
+
+}
 
 @section Scripts {
     <script>
-
-
-        document.querySelector(".nav-link.active").classList.remove("active");
-        document.querySelector(".tab-pane.fade.show.active").classList.remove("show", "active");
-
-        document.getElementById("@TempData["Tab"]-tab").classList.add("active");
-        document.getElementById("@TempData["Tab"]").classList.add("show", "active");
 
         if ("@TempData["SuccessMessage"]" != "") {
 

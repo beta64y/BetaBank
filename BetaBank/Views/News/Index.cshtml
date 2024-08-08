@@ -3,4 +3,26 @@
     ViewData["Title"] = "Index";
 }
 
-@await Component.InvokeAsync("News")
+
+<div class="album py-5 mtop" style="background-color: #131311;">
+
+    <div class="container">
+
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3" id="newsBox">
+
+            <input id="newsCount" value="@ViewBag.NewsCount" hidden />
+            @await Component.InvokeAsync("News")
+
+
+   </div>
+    </div>
+<div class="btn-div">
+        <button class="btn btn-outline-primary load-more " id="loadMoreBtn">
+        Load More
+    </button>
+</div>
+
+</div>
+@section Scripts{
+
+}

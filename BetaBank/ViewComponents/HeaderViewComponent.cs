@@ -23,7 +23,8 @@ namespace BetaBank.ViewComponents
                 headerViewModel.FirstName = user.FirstName;
                 headerViewModel.LastName = user.LastName;
             }
-            return View(headerViewModel);
+            ViewData["HeaderViewModel"] = headerViewModel;
+            return View();
         }
     }
 }

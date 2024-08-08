@@ -3,50 +3,54 @@
     ViewData["Title"] = "Login";
 }
 @model LoginViewModel
-<div class="login-area area-padding fix">
-    <div class="login-overlay"></div>
-    <div class="table">
-        <div class="table-cell">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-offset-3 col-md-6 col-sm-offset-2 col-sm-8 col-xs-12">
-                        <div class="login-form">
+<div>
+    <main role="main" class="pb-3 bga mt-4">
+        <div class="login-area area-padding fix">
+            <div class="login-overlay"></div>
+            <div class="table-cell ">
+                <div class="container center">
+                    <div class="col-lg-offset-3 col-lg-6 col-md-offset-2 col-md-8 col-sm-12">
+                        <div class="login-form mn bga mx-auto">
                             <h4 class="login-title text-center">LOGIN</h4>
-                            <div class="row">
-                                <form  method="POST" class="log-form">
-                                    <div class="col-md-12 col-sm-12 col-xs-12">
-                                          <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <div class="row ">
+                                <form method="POST" class="log-form bga">
+                                    <div class="col-lg-12 col-md-12 col-sm-12">
+                                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                                     </div>
-                                    <div class="col-md-12 col-sm-12 col-xs-12">
-                                        <input type="text" class="form-control" asp-for="UsernameOrEmail" placeholder="Email" required data-error="Please enter your name">
+                                    <div class="col-lg-12 col-md-12 col-sm-12 ">
+                                        <input type="text" class="form-control " asp-for="UsernameOrEmail" placeholder="Email"
+                                               required data-error="Please enter your name">
                                     </div>
-                                    <div class="col-md-12 col-sm-12 col-xs-12">
-                                        <input type="password" class="form-control" asp-for="Password" placeholder="Password" required data-error="Please enter your message subject">
+                                    <div class="col-lg-12 col-md-12 col-sm-12">
+                                        <input type="password" class="form-control" asp-for="Password"
+                                               placeholder="Password" required
+                                               data-error="Please enter your message subject">
                                     </div>
-                                    <div class="col-md-12 col-sm-12 col-xs-12 text-center">
+                                    <div class="col-lg-12 col-md-12 col-sm-12 text-center">
                                         <div class="check-group flexbox">
                                             <label class="check-box">
-                                                <input asp-for="RememberMe" class="check-box-input" checked>
-                                                <span class="remember-text">Remember me</span>
+                                                <input asp-for="RememberMe" class="check-box-input" checked type="checkbox">
+                                                <span class="remember-text ">Remember me</span>
                                             </label>
 
                                         </div>
                                     </div>
-                                    <div class="col-md-12 col-sm-12 col-xs-12 text-center">
-                                        <button type="submit" class="slide-btn login-btn">Login</button>
+                                    <div class="col-lg-12 col-md-12 col-sm-12 text-center">
+                                        <button type="submit" class="slide-btn btn btn-outline-success mzn">Login</button>
                                         <div class="h3 text-center hidden"></div>
                                         <div class="clearfix"></div>
                                     </div>
-                                    <div class="col-md-12 col-sm-12 col-xs-12 text-center">
+                                    <div class="col-lg-12 col-md-12 col-sm  -12 text-center">
                                         <div class="clear"></div>
-                                        <div class="separetor text-center"><a asp-controller="Auth" asp-action="ForgotPassword">Forgotten password?</a></div>
-                                        <div class="sign-icon">
-                                            <ul>
-                                                <li><a class="facebook" href="#"><i class="ti-facebook"></i></a></li>
-                                                <li><a class="twitter" href="#"><i class="ti-twitter"></i></a></li>
-                                                <li><a class="google" href="#"><i class="ti-google"></i></a></li>
-                                            </ul>
-                                            <div class="acc-not">Don't have an account?  <a class="pages" asp-page="/Register">Sign up</a></div>
+                                        <div class="separetor text-center">
+                                            <a asp-controller="Auth"
+                                               asp-action="ForgotPassword">Forgotten password?</a>
+                                        </div>
+                                        <div class="sign-icon ">
+                                            <div class="">
+                                                Don't have an account? <a class="pages"
+                                                                          asp-controller="User" asp-action="Register">Sign up</a>
+                                            </div>
                                         </div>
                                     </div>
                                 </form>
@@ -56,6 +60,8 @@
                 </div>
             </div>
         </div>
-    </div>
 </div>
+
+
+
 

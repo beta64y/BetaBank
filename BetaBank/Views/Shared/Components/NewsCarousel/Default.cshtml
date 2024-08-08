@@ -1,0 +1,23 @@
+﻿
+@{
+    Layout = null;
+    var newsCarousel = ViewData["NewsCarusel"] as List<News>;
+}
+<section id="tools-tech" class="section bg pt-5">
+    <div class="slider-container">
+
+        <div class="slider mb-5">
+        @foreach(var news in newsCarousel)
+            {
+                <div class="slide">
+                    <a asp-controller="News" asp-action="Detail" asp-route-id="@news.Id" ><img src="~/img/website-images/@news.SecondImage" alt="@news.Title"></a>
+            </div>
+            }
+            
+           
+            </div>
+        </div>
+    </div>
+</section>
+
+

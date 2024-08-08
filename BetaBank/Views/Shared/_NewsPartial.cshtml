@@ -1,4 +1,25 @@
 ﻿@{
     Layout = null;
+    var news = ViewData["News"] as List<News>;
 }
-@model List<News>
+@foreach (var item in news)
+{
+    <a asp-controller="News" asp-action="Detail" asp-route-id="@item.Id">
+        <div class="col">
+            <div class="card shadow-sm">
+                <img class="bd-placeholder-img card-img-top" width="100%" height="auto" src="~/img/website-images/@item.FirstImage" role="img" focusable="false">
+                <div class="card-body  ">
+                    <p class="card-text">
+                        @Html.Raw(item.Title)
+                    </p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="btn-group">
+                        </div>
+                        <small class="text-body-secondary" style="color: white !important;">@item.CreatedDate.ToRelativeTime()</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </a>
+    
+    } 

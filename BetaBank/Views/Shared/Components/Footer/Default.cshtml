@@ -1,28 +1,28 @@
 ﻿@{
     Layout = null;
 }
-@model SubscribeViewModel
-<footer class="footer-1">
+@*model SubscribeViewModel*@
+<footer class="footer-1  bga">
     <div class="footer-area">
         <div class="container">
             <div class="row">
                 <!-- Start column-->
-                <div class="col-md-4 col-sm-6 col-xs-12">
+                <div class="col-md-4  col-sm-12  ">
                     <div class="footer-content logo-footer">
                         <div class="footer-head">
                             <div class="footer-logo">
-                                <a class="footer-black-logo" href="#"><img src="img/logo/logo2.png" alt=""></a>
+                                <a class="footer-black-logo" href="#"><img src="~/img/logo/BetaBank-logo.png" alt=""></a>
                             </div>
                             <p>
                                 The safest and most secured means of sending and recieving money.
                             </p>
                             <div class="subs-feilds">
                                 <div class="suscribe-input">
-                                    <form asp-controller="Home" asp-action="Subscribe" method="post">
+                                    @*<form asp-controller="Home" asp-action="Subscribe" method="post">
                                         <span asp-validation-for="Email" class="text-danger"></span>
                                         <input asp-for="Email" class="email form-control width-80" id="sus_email" placeholder="Type Email">
-                                        <button asp-controller="Home" asp-action="Subscribe" type="submit" id="sus_submit" class="add-btn">Subscribe</button>
-                                    </form> 
+                                        <button asp-controller="Home" asp-action="Subscribe" type="submit" id="sus_submit" class="btn btn-outline-success  py-2">Subscribe</button>
+                                    </form>*@
                                 </div>
                             </div>
                         </div>
@@ -30,7 +30,7 @@
                 </div>
                 <!-- End column-->
                 <!-- Start column-->
-                <div class="col-md-2 col-sm-3 col-xs-12">
+                <div class="col-lg-2 col-md-3 col-sm-12">
                     <div class="footer-content">
                         <div class="footer-head">
                             <h4>Products</h4>
@@ -47,7 +47,7 @@
                 </div>
                 <!-- End column-->
                 <!-- Start column-->
-                <div class="col-md-2 col-sm-3 col-xs-12">
+                <div class="col-lg-2 col-md-3 col-sm-12">
                     <div class="footer-content">
                         <div class="footer-head">
                             <h4>Payments</h4>
@@ -64,7 +64,7 @@
                 </div>
                 <!-- End column-->
                 <!-- Start column-->
-                <div class="col-md-2 hidden-sm col-xs-12">
+                <div class="col-lg-2 col-md-3 col-sm-12 d-inline d-xl-inline d-md-none ">
                     <div class="footer-content">
                         <div class="footer-head">
                             <h4>Company</h4>
@@ -81,7 +81,7 @@
                 </div>
                 <!-- End column-->
                 <!-- Start column-->
-                <div class="col-md-2 hidden-sm col-xs-12">
+                <div class="col-lg-2 col-md-3 col-sm-12 d-inline d-xl-inline d-md-none">
                     <div class="footer-content last-content">
                         <div class="footer-head">
                             <h4>Support</h4>
@@ -101,14 +101,14 @@
         </div>
     </div>
     <!-- Start footer bottom area -->
-    <div class="footer-area-bottom">
+    <div class="footer-area-bottom bga mla ">
         <div class="container">
             <div class="row">
-                <div class="col-md-6 col-sm-6 col-xs-12">
+                <div class="col-lg-6 col-md-6 col-sm-12">
                     <div class="copyright">
-                        <p>
-                            Copyright © 2022
-                            <a asp-page="/Index">PGC Bank Plc</a> All Rights Reserved
+                        <p style="color: gray;">
+                            Copyright © 2024
+                            <a asp-page="/Index">Beta Bank</a> All Rights Reserved
                         </p>
                     </div>
                 </div>
@@ -117,3 +117,5 @@
     </div>
     <!-- End footer bottom area -->
 </footer>
+
+

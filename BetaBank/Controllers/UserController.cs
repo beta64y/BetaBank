@@ -213,66 +213,257 @@ namespace BetaBank.Controllers
             {
                 return NotFound();
             }
-            DashBoardUserViewModel dashBoardUserViewModel = new()
-            {
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                PhoneNumber = user.PhoneNumber,
-                DateOfBirth = user.DateOfBirth,
-                CreatedDate = user.CreatedDate,
-                UpdateDate = user.UpdateDate,
-                Email = user.Email
-
-            };
-
-
-
+            //start BankCards
             List<BankCard> bankCards = await _context.BankCards.Where(x => x.UserId == user.Id).ToListAsync();
 
-            List<DashBoardBankCardViewModel> bankCardViewModels = new();
+            List<BankCardDetailsViewModel> bankCardViewModels = new();
             if (bankCards != null)
             {
                 foreach (var bankCard in bankCards)
                 {
-                    bankCardViewModels.Add(new DashBoardBankCardViewModel()
+                    Models.BankCardStatus cardStatus = await _context.BankCardStatuses.FirstOrDefaultAsync(x => x.CardId == bankCard.Id);
+                    Models.BankCardType cardType = await _context.BankCardTypes.FirstOrDefaultAsync(x => x.CardId == bankCard.Id);
+
+                    bankCardViewModels.Add(new BankCardDetailsViewModel()
                     {
+                        Id = bankCard.Id,
                         CardNumber = bankCard.CardNumber,
-                        Balance = bankCard.Balance
+                        CVV = bankCard.CVV,
+                        ExpiryDate = bankCard.ExpiryDate,
+                        Balance = bankCard.Balance,
+                        CardStatus = await _context.BankCardStatusModels.FirstOrDefaultAsync(x => x.Id == cardStatus.StatusId),
+                        CardType = await _context.BankCardTypeModels.FirstOrDefaultAsync(x => x.Id == cardType.TypeId),
+                        UserFirstName = user.FirstName,
+                        UserLastName = user.LastName,
+
                     });
                 }
             }
-            
-
-
-
-
-            DashBoardBankAccountViewModel dashBoardBankAccountViewModel = new();
+            ViewData["Cards"] = bankCardViewModels;
+            //end BankCards
+            //start BankAccount
+            BankAccountDetailsViewModel bankAccountViewModel = null;
 
             BankAccount bankAccount = await _context.BankAccounts.FirstOrDefaultAsync(x => x.UserId == user.Id);
 
-            if(bankAccount != null)
+            if (bankAccount != null)
             {
-                dashBoardBankAccountViewModel = new()
+                Models.BankAccountStatus accountStatus = await _context.BankAccountStatuses.FirstOrDefaultAsync(x => x.AccountId == bankAccount.Id);
+                bankAccountViewModel = new()
                 {
+                    Id = bankAccount.Id,
                     AccountNumber = bankAccount.AccountNumber,
                     IBAN = bankAccount.IBAN,
-                    Balance = bankAccount.Balance
+                    Balance = bankAccount.Balance,
+                    AccountStatus = await _context.BankAccountStatusModels.FirstOrDefaultAsync(x => x.Id == accountStatus.StatusId),
+
                 };
             }
+            ViewData["BankAccount"] = bankAccountViewModel;
+
+
+            //end BankAccount
+            //start CasBack
             CashBack cashBack = await _context.CashBacks.FirstOrDefaultAsync(x => x.UserId == user.Id);
-
-
-            DashBoardViewModel dashBoardViewModel = new()
+            CashBackDetailsViewModel wallet = new()
             {
-                User = dashBoardUserViewModel,
-                BankCards = bankCardViewModels,
-                BankAccount = dashBoardBankAccountViewModel,
-                CashBack = cashBack,
+                Id = cashBack.Id,
+                Balance = cashBack.Balance,
+                CreatedDate = cashBack.CreatedDate,
+                UpdatedDate = cashBack.UpdatedDate,
+                CashBackNumber = cashBack.CashBackNumber,};
+            ViewData["CashBack"] = wallet;
 
+            //end Cashback
+            //start Transaction
+            List<Transaction> allTransactions = await _context.Transactions
+.AsNoTracking().Where(x =>
+                    x.PaidById == wallet.CashBackNumber ||
+                    x.PaidById == bankAccountViewModel.AccountNumber||
+                    x.DestinationId == bankAccountViewModel.AccountNumber
+                ).ToListAsync();
+
+
+            foreach(var userCard in bankCardViewModels)
+            {
+                allTransactions.AddRange( await _context.Transactions.AsNoTracking().Where(x => x.PaidById == userCard.CardNumber || x.DestinationId == userCard.CardNumber).ToListAsync());
+            }
+
+            List<TransactionDetailsViewModel> transactionViewModels = new();
+
+            foreach (Transaction transaction in allTransactions)
+            {
+                TransactionTypeModel paidByType = await _context.TransactionTypeModels.FirstOrDefaultAsync(x => x.Id == transaction.PaidByTypeId);
+                Models.BankCardType paidByCardType = null;
+                if (paidByType.Name == "Card")
+                {
+                    BankCard card = await _context.BankCards.FirstOrDefaultAsync(x => x.CardNumber == transaction.PaidById);
+                    paidByCardType = await _context.BankCardTypes.FirstOrDefaultAsync(x => x.CardId == card.Id);
+                }
+
+
+                TransactionTypeModel destinationType = await _context.TransactionTypeModels.FirstOrDefaultAsync(x => x.Id == transaction.DestinationTypeId);
+                Models.BankCardType destinationCardType = null;
+
+                if (destinationType.Name == "Card")
+                {
+                    BankCard card = await _context.BankCards.FirstOrDefaultAsync(x => x.CardNumber == transaction.DestinationId);
+                    destinationCardType = await _context.BankCardTypes.FirstOrDefaultAsync(x => x.CardId == card.Id);
+
+                }
+                string summary = null;
+                if (
+                    (transaction.PaidById == wallet.CashBackNumber ||
+                    transaction.PaidById == bankAccountViewModel.AccountNumber ||
+                    bankCardViewModels.Any(userCard =>
+                        transaction.PaidById == userCard.CardNumber
+                    )) &&
+                    (bankCardViewModels.Any(userCard =>
+                        transaction.DestinationId == userCard.CardNumber
+                    ) ||
+                    transaction.DestinationId == bankAccountViewModel.AccountNumber)
+                )
+                {
+                    summary = "Internally";
+
+                }
+                else if (
+                    (transaction.PaidById == wallet.CashBackNumber ||
+                    transaction.PaidById == bankAccountViewModel.AccountNumber ||
+                    bankCardViewModels.Any(userCard =>
+                        transaction.PaidById == userCard.CardNumber
+                    )) &&
+                    !(bankCardViewModels.Any(userCard =>
+                        transaction.DestinationId == userCard.CardNumber
+                    ) ||
+                    transaction.DestinationId == bankAccountViewModel.AccountNumber)
+                )
+                {
+                    summary = "Expense";
+
+                }
+                else if (
+                    !(transaction.PaidById == wallet.CashBackNumber ||
+                    transaction.PaidById == bankAccountViewModel.AccountNumber ||
+                    bankCardViewModels.Any(userCard =>
+                        transaction.PaidById == userCard.CardNumber
+                    )) &&
+                    (bankCardViewModels.Any(userCard =>
+                        transaction.DestinationId == userCard.CardNumber
+                    ) ||
+                    transaction.DestinationId == bankAccountViewModel.AccountNumber)
+                )
+                {
+                    summary = "Income";
+
+                }
+
+                transactionViewModels.Add(new TransactionDetailsViewModel()
+                {
+                    Id = transaction.Id,
+                    ReceiptNumber = transaction.ReceiptNumber,
+                    Amount = transaction.Amount,
+                    Commission = transaction.Commission,
+                    BillingAmount = transaction.BillingAmount,
+                    CashbackAmount = transaction.CashbackAmount,
+                    TransactionDate = transaction.TransactionDate,
+                    PaidByType = paidByType,
+                    PaidById = transaction.PaidById,
+                    DestinationType = destinationType,
+                    DestinationId = transaction.DestinationId,
+                    Status = await _context.TransactionStatusModels.FirstOrDefaultAsync(x => x.Id == transaction.StatusId),
+                    Title = transaction.Title,
+                    Description = transaction.Description,
+                    PaidByCardType = paidByCardType != null ? await _context.BankCardTypeModels.FirstOrDefaultAsync(x => x.Id == paidByCardType.TypeId) : null,
+                    DestinationCardType = destinationCardType != null ? await _context.BankCardTypeModels.FirstOrDefaultAsync(x => x.Id == destinationCardType.TypeId) : null,
+                    Summary = summary,
+
+
+                });
+
+            }
+
+            var lastTwoTransactions = transactionViewModels.OrderByDescending(t => t.TransactionDate).Take(2).ToList();
+
+            // Get transactions where the destination type is "Card".
+            var cardTransactions = transactionViewModels
+                .Where(t => t.DestinationType.Name == "Card")
+                .OrderByDescending(t => t.TransactionDate) // Optional: Order by date if needed
+                .Take(2).ToList();
+
+            // Add to ViewData
+            ViewData["LastTwoTransactions"] = lastTwoTransactions;
+            ViewData["CardTransactions"] = cardTransactions;
+
+
+            ViewData["Transactions"] = transactionViewModels;
+            //end Transaction
+
+
+
+
+
+
+
+
+            // Get the last 5 months
+            List<string> last5Months = StatisticsService.GetLastMonths(5);
+
+            // Calculate the start date for filtering transactions
+            DateTime startDate = DateTime.Now.AddMonths(-4).AddDays(-DateTime.Now.Day + 1);
+
+            // Calculate income data for the last 5 months
+            List<double> incomeData = last5Months.Select(month =>
+            {
+                return transactionViewModels
+                    .Where(t => t.Summary == "Income" && t.TransactionDate >= startDate && t.TransactionDate.Month == DateTime.ParseExact(month, "MMMM", System.Globalization.CultureInfo.InvariantCulture).Month)
+                    .Sum(t => t.Amount);
+            }).ToList();
+
+            // Calculate income and expense data for the current and previous months
+            DateTime now = DateTime.Now;
+            DateTime startCurrentMonth = new DateTime(now.Year, now.Month, 1);
+            DateTime startPreviousMonth = startCurrentMonth.AddMonths(-1);
+
+            double currentMonthIncome = transactionViewModels
+                .Where(t => t.Summary == "Income" && t.TransactionDate >= startCurrentMonth && t.TransactionDate < now)
+                .Sum(t => t.Amount);
+
+            double currentMonthExpense = transactionViewModels
+                .Where(t => t.Summary == "Expense" && t.TransactionDate >= startCurrentMonth && t.TransactionDate < now)
+                .Sum(t => t.Amount);
+
+            double previousMonthIncome = transactionViewModels
+                .Where(t => t.Summary == "Income" && t.TransactionDate >= startPreviousMonth && t.TransactionDate < startCurrentMonth)
+                .Sum(t => t.Amount);
+
+            double previousMonthExpense = transactionViewModels
+                .Where(t => t.Summary == "Expense" && t.TransactionDate >= startPreviousMonth && t.TransactionDate < startCurrentMonth)
+                .Sum(t => t.Amount);
+
+            MonthlyIncomeExpenseViewModel monthlyIncomeExpense = new()
+            {
+                PreviousMonthExpense = previousMonthExpense,
+                PreviousMonthIncome = previousMonthIncome,
+                CurrentMonthExpense = currentMonthExpense,
+                CurrentMonthIncome = currentMonthIncome
             };
-            ViewData["DashBoardViewModel"] = dashBoardViewModel;
+
+            // Store data in ViewData
+            ViewData["Last5Months"] = last5Months;
+            ViewData["IncomeData"] = incomeData;
+            ViewData["MonthlyIncomeExpense"] = monthlyIncomeExpense;
+
+
+
+
+
             return View();
         }
+
+
+
+
         [Authorize]
         public async Task<IActionResult> Profile()
         {
@@ -349,6 +540,7 @@ namespace BetaBank.Controllers
                 }
                 string profilePhotoFileName = await ImageSaverService.SaveImage(userUpdateViewModel.ProfilePhoto, _webHostEnvironment.WebRootPath,"data");
                 user.ProfilePhoto = profilePhotoFileName;
+                TempData["ProfilePhoto"] = profilePhotoFileName;
             }
 
 

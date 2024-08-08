@@ -29,7 +29,7 @@ namespace BetaBank.Areas.Moderator.Controllers
 
         public async Task<IActionResult> Index()
         {
-            List<News> news = await _context.News.AsNoTracking().OrderBy(b => b.CreatedDate).Where(r => !r.IsDeleted).ToListAsync();
+            List<News> news = await _context.News.AsNoTracking().OrderByDescending(b => b.CreatedDate).Where(r => !r.IsDeleted).ToListAsync();
             ModeratorNewsViewModel ViewModel = new ModeratorNewsViewModel()
             {
                 News = news,

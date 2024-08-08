@@ -51,7 +51,7 @@ namespace BetaBank.Areas.SuperAdmin.Controllers
             var users = usersInRoles
                 .AsQueryable()
                 .AsNoTracking()
-                .OrderBy(b => b.FirstName)
+                .OrderByDescending(b => b.FirstName)
                 .ToList();
 
 

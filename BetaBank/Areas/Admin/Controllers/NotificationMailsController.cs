@@ -27,7 +27,7 @@ namespace BetaBank.Areas.Admin.Controllers
         }
         public async Task<IActionResult> Index()
         {
-            List<SendedNotificationMail> notificationMails = await _context.SendedNotificationMails.AsNoTracking().OrderBy(b => b.CreatedDate).ToListAsync();
+            List<SendedNotificationMail> notificationMails = await _context.SendedNotificationMails.AsNoTracking().OrderByDescending(b => b.CreatedDate).ToListAsync();
             AdminNotificationMailViewModel ViewModel = new AdminNotificationMailViewModel()
             {
                 NotificationMails = notificationMails,

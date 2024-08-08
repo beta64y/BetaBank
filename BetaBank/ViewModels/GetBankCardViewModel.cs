@@ -4,6 +4,6 @@ namespace BetaBank.ViewModels
 {
     public class GetBankCardViewModel
     {
-        public string TypeId { get; set; }
+        public bool IsTermsAndConditionsAccepted { get; set; }
     }
 }

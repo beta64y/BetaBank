@@ -1,5 +1,4 @@
-﻿
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html class="no-js" lang="en">
 <head>
 
@@ -11,36 +10,42 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- favicon -->
-    <link rel="shortcut icon" type="image/x-icon" href="img/logo/favicon.ico">
+    <link rel="shortcut icon" type="image/x-icon" href="~/img/logo/betabank-favicon.png" asp-append-version="true">
 
     <!-- all css here -->
-    <!-- bootstrap v3.3.6 css -->
-    <link rel="stylesheet" href="~/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/lib/bootstrap-5.3.3-dist/css/bootstrap.css" asp-append-version="true">
     <!-- owl.carousel css -->
-    <link rel="stylesheet" href="~/css/owl.carousel.css">
-    <link rel="stylesheet" href="~/css/owl.transitions.css">
+    <link rel="stylesheet" href="~/css/owl.carousel.css" asp-append-version="true">
+    <link rel="stylesheet" href="~/css/owl.transitions.css" asp-append-version="true">
     <!-- Animate css -->
-    <link rel="stylesheet" href="~/css/animate.css">
+    <link rel="stylesheet" href="~/css/animate.css" asp-append-version="true">
     <!-- Nice-select css -->
-    <link rel="stylesheet" href="~/css/nice-select.css">
+    <link rel="stylesheet" href="~/css/nice-select.css" asp-append-version="true">
     <!-- meanmenu css -->
-    <link rel="stylesheet" href="~/css/meanmenu.min.css">
+    <link rel="stylesheet" href="~/css/meanmenu.min.css" asp-append-version="true">
     <!-- font-awesome css -->
-    <link rel="stylesheet" href="~/css/font-awesome.min.css">
-    <link rel="stylesheet" href="~/css/themify-icons.css">
-    <link rel="stylesheet" href="~/css/flaticon.css">
+    <link rel="stylesheet" href="~/css/font-awesome.min.css" asp-append-version="true">
+    <link rel="stylesheet" href="~/css/themify-icons.css" asp-append-version="true">
+    <link rel="stylesheet" href="~/css/flaticon.css" asp-append-version="true">
     <!-- magnific css -->
-    <link rel="stylesheet" href="~/css/magnific.min.css">
+    <link rel="stylesheet" href="~/css/magnific.min.css" asp-append-version="true">
     <!-- style css -->
-    <link rel="stylesheet" href="~/style.css">
+    <link rel="stylesheet" href="~/style.css" asp-append-version="true">
     <!-- responsive css -->
-    <link rel="stylesheet" href="~/css/responsive.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css" />
-
+    <link rel="stylesheet" href="~/css/responsive.css" asp-append-version="true">
+    <link rel="stylesheet" href="~/index.css" asp-append-version="true">
+    
     <!-- modernizr css -->
-    <script src="~/js/vendor/modernizr-2.8.3.min.js"></script>
+    <script src="~/js/vendor/modernizr-2.8.3.min.js" asp-append-version="true"></script>
+    <!-- Font Awesome 4 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- Font Awesome 5 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    @await RenderSectionAsync("Styles", required: false)
 </head>
-<body>
+<body class="bg">
 
     <script type="text/javascript">
         function googleTranslateElementInit() {
@@ -52,8 +57,7 @@
 
     <!--[if lt IE 8]>
         <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
-    <![endif]-->
-
+    <![endif]--
     <div id="preloader"></div>
     <!-- Start Header Area -->
     @await Component.InvokeAsync("Header")
@@ -64,45 +68,49 @@
         </main>
     </div>
     @await Component.InvokeAsync("Footer")
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="~/backend/script.js" asp-append-version="true"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- Start footer area -->
-    
-
-    @*<footer class="border-top footer text-muted">
-    <div class="container">
-    &copy; 2022 - Bank - <a  asp-page="/Privacy">Privacy</a>
-    </div>
-    </footer>*@
-
     <!-- all js here -->
     <!-- jquery latest version -->
-    <script src="~/js/vendor/jquery-1.12.4.min.js"></script>
+    <script src="~/js/vendor/jquery-1.12.4.min.js" asp-append-version="true"></script>
     <!-- bootstrap js -->
-    <script src="~/js/bootstrap.min.js"></script>
+    <script src="~/js/bootstrap.min.js" asp-append-version="true"></script>
     <!-- owl.carousel js -->
-    <script src="~/js/owl.carousel.min.js"></script>
+    <script src="~/js/owl.carousel.min.js" asp-append-version="true"></script>
     <!-- stellar js -->
-    <script src="~/js/jquery.stellar.min.js"></script>
+    <script src="~/js/jquery.stellar.min.js" asp-append-version="true"></script>
     <!-- magnific js -->
-    <script src="~/js/magnific.min.js"></script>
+    <script src="~/js/magnific.min.js" asp-append-version="true"></script>
     <!-- Nice-select js -->
-    <script src="~/js/jquery.nice-select.min.js"></script>
+    <script src="~/js/jquery.nice-select.min.js" asp-append-version="true"></script>
     <!-- wow js -->
-    <script src="~/js/wow.min.js"></script>
+    <script src="~/js/wow.min.js" asp-append-version="true"></script>
     <!-- meanmenu js -->
-    <script src="~/js/jquery.meanmenu.js"></script>
+    <script src="~/js/jquery.meanmenu.js" asp-append-version="true"></script>
     <!-- Form validator js -->
-    <script src="~/js/form-validator.min.js"></script>
+    <script src="~/js/form-validator.min.js" asp-append-version="true"></script>
     <!-- plugins js -->
-    <script src="~/js/plugins.js"></script>
+    <script src="~/js/plugins.js" asp-append-version="true"></script>
     <!-- main js -->
     <script src="~/js/main.js" asp-append-version="true"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+    <script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
+   
+    <script src="~/js/site.js" asp-append-version="true"></script>
+       
 
 
 
     <!--Start of Tawk.to Script-->
-
     <!--End of Tawk.to Script-->
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js" asp-append-version="true"></script>
+
+
     @await RenderSectionAsync("Scripts", required: false)
+    
+
+    
 </body>
 </html>

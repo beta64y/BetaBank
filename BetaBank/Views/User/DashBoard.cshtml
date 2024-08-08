@@ -1,107 +1,743 @@
 ﻿
 @{
     ViewData["Title"] = "DashBoard";
-    var data = ViewData["DashBoardViewModel"] as DashBoardViewModel;
+    var Cards = ViewData["Cards"] as List<BankCardDetailsViewModel>;
+    var BankAccount = ViewData["BankAccount"] as BankAccountDetailsViewModel;
+    var CashBack = ViewData["CashBack"] as CashBackDetailsViewModel;
+
+    var Last5Months = ViewData["Last5Months"] as List<string>;
+    var IncomeData = ViewData["IncomeData"] as List<double>;
+    var MonthlyIncomeExpense = ViewData["MonthlyIncomeExpense"] as MonthlyIncomeExpenseViewModel;
+
+
+    var lastTwoTransactions = ViewData["LastTwoTransactions"] as List<TransactionDetailsViewModel>;
+    var cardTransactions = ViewData["CardTransactions"] as List<TransactionDetailsViewModel>;
 }
-<section style="display: flex;padding-top: 150px;color: black;">
-    <nav style="width: 200px; background: #f4f4f4; padding: 20px;">
-        <ul style="list-style-type: none; padding: 0;">
-            <li style="margin: 10px 0;"><a href="#" onclick="showSection('dashboard')">Dashboard</a></li>
-            <li style="margin: 10px 0;"><a href="#" onclick="showSection('account-cards')">Accounts and Cards</a></li>
-            <li style="margin: 10px 0;"><a href="#" onclick="showSection('payments')">Payments</a></li>
-            <li style="margin: 10px 0;"><a href="logout.html">Log Out</a></li>
-        </ul>
-    </nav>
-    <section style="flex-grow: 1; padding: 20px;">
-        <div id="dashboard" class="section" style="display: block;">
-            <h2>Dashboard</h2>
-             <form>
-                 <div>
-                     <label>First Name:</label>
-                     <input asp-for="@data.User.FirstName"  id="name" name="name">
-                 </div>
-                 <div>
-                     <label >Last Name:</label>
-                     <input asp-for="@data.User.LastName"  id="lastName" name="lastName" >
-                 </div>
-                 <div>
-                     <label >Phone Number:</label>
-                     <input asp-for="@data.User.PhoneNumber"  id="phone" name="phone" >
-                 </div>
-                 <div>
-                     <label >Email:</label>
-                     <input asp-for="@data.User.Email"  id="mail" name="mail" >
-                 </div>
-                 <div>
-                     <label >Date Of Birth:</label>
-                     <input asp-for="@data.User.DateOfBirth" type="text" id="dateOfBirth" name="dateOfBirth" >
-                 </div>
-                 <div>
-                     <label>Created Date:</label>
-                     <input asp-for="@data.User.CreatedDate" type="text" id="createdDate" name="createdDate">
-                 </div>
-                 <div>
-                     <label>Updated Date:</label>
-                     <input asp-for="@data.User.UpdateDate" type="text" id="updatedDate" name="updatedDate">
-                 </div>
-             </form>
-        </div>
-        <div id="account-cards" class="section" style="display: none;">
-            <h2>Accounts and Cards</h2>
-                    @if(data.BankAccount != null)
-                    {
-                <div style="border: 1px solid #000; padding: 10px; margin-bottom: 20px;">
-                    <h3 style="color: #000;">IBAN: @data.BankAccount.IBAN</h3>
-                    <h3 style="color: #000;">Account Number: @data.BankAccount.AccountNumber</h3>
-                    <p style="color: #000;">Balance: @data.BankAccount.Balance</p>
 
-                </div>
-                    }
-                @if (data.BankCards != null)
-                    {
-                @foreach (var BankCard in data.BankCards)
-                        {
-                    <div class="card" style="display: flex; justify-content: space-between; padding: 10px; border: 1px solid #000; margin-bottom: 10px;">
-                        <div>
-                            <h4 style="color: #000;">@BankCard.CardNumber</h4>
-                            <p style="color: #000;">Balance: $@BankCard.Balance</p>
-                        </div>
-                        <div class="card-icon" style="width: 40px; height: 40px; background-color: #000;"></div>
+
+}
+<main class="mtop" style="background-color: #131311;">
+
+    @await Component.InvokeAsync("NewsCarousel")
+    <div class="container " style="padding-inline: 5rem; background-color: #131311;">
+        <div class="row d-flex justify-content-between">
+            <div class="card" style="width: 65%; height: 281px;background-color: #232324;">
+                <h4 class="card-title d-flex justify-content-between" style="color: #2fe404;">
+                    My Net Worth
+                    <div class="mt-1 mx-2">
+                        <button class="btn btn-success" onclick="FirstMonthChange()" id="secondMonthBtn">@Last5Months[3]</button>
+                        <button class="btn btn-outline-success" onclick="SecondMonthChange()" id="firstMonthBtn">@Last5Months[4]</button>
                     </div>
-                        }
-                    }
-            @if (data.CashBack != null)
-            {
-                <div style="border: 1px solid #000; padding: 10px; margin-bottom: 20px;">
-                    <h3 style="color: #000;">CashBackBalance: @data.CashBack.Balance</h3>
+                </h4>
+                <div class="d-flex justify-content-between">
+                    <div style="width: 300px;" class="chartss">
+                        <canvas id="myChart2"></canvas>
+                    </div>
+                    <div style="width: 300px;" class="">
+                        <canvas id="myChart" style="width: 10%; height: 20px;"></canvas>
+                    </div>
+                </div>
 
+            </div>
+            <div class="card" style="width: 30%;background-color: #232324;">
+                <h4 class="card-title center mt-1" style="color: #2fe404;">Recent Activity</h4>
+
+                @if (! (lastTwoTransactions.Count == 0))
+                {
+                    <table class="table table-striped table-hover mb-5">
+                        <thead>
+                        </thead>
+                        <tbody>
+                            @foreach (var transaction in lastTwoTransactions)
+                            {
+                                <tr>
+                                    <td style="background-color: #232324">
+                                        <a asp-controller ="Payment" asp-action="Transaction" asp-route-id="@transaction.Id">
+                                            <div class="border-b">
+                                                <div class="d-flex justify-content-between">
+                                                    <div class="d-flex gap-2">
+                                                        <img src="spotify.svg" width="30px" class="mb-4">
+                                                        <div>
+                                                            <h6 class="text-dark d-flex flex-column" style="color: white !important;">
+                                                                @transaction.Description <span class="dateSpan">@transaction.TransactionDate.ToString("dd/MM/yyyy")</span>
+                                                            </h6>
+                                                        </div>
+                                                    </div>
+                                                    @if (transaction.Summary == "Income")
+                                                    {
+                                                        <div class=" d-flex flex-column " style="color: #2fe404;">
+                                                            +@transaction.Amount.ToString("C")
+                                                            @if (transaction.Status.Name == "Completed")
+                                                            {
+                                                                <span class="text-success rightSpan">
+                                                                    @transaction.Status.Name
+                                                                </span>
+                                                            }
+                                                            else if (transaction.Status.Name == "Failed")
+                                                            {
+                                                                <span class="text-danger rightSpan">
+                                                                    @transaction.Status.Name
+                                                                </span>
+                                                            }
+
+                                                        </div>
+                                                    }
+                                                    else if (transaction.Summary == "Expense")
+                                                    {
+                                                        <div class=" d-flex flex-column " style="color: #f01414">
+                                                            -@transaction.Amount.ToString("C")
+                                                            @if (transaction.Status.Name == "Completed")
+                                                            {
+                                                                <span class="text-success rightSpan">
+                                                                    @transaction.Status.Name
+                                                                </span>
+                                                            }
+                                                            else if (transaction.Status.Name == "Failed")
+                                                            {
+                                                                <span class="text-danger rightSpan">
+                                                                    @transaction.Status.Name
+                                                                </span>
+                                                            }
+                                                        </div>
+                                                    }
+                                                    else if (transaction.Summary == "Internally")
+                                                    {
+                                                        <div class=" d-flex flex-column " style="color: #007bff">
+                                                            @transaction.Amount.ToString("C")
+                                                            @if (transaction.Status.Name == "Completed")
+                                                            {
+                                                                <span class="text-success rightSpan">
+                                                                    @transaction.Status.Name
+                                                                </span>
+                                                            }
+                                                            else if (transaction.Status.Name == "Failed")
+                                                            {
+                                                                <span class="text-danger rightSpan">
+                                                                    @transaction.Status.Name
+                                                                </span>
+                                                            }
+                                                        </div>
+                                                    }
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <div class="center">
+                        <a asp-controller="Payment" asp-action="RecentActivity" class="btn btn-success btn-5">View More</a>
+                    </div>
+                }
+                else
+                {
+                    <div class="text-center text-white" style="margin-top: 3.9rem !important;">
+                        <p>You haven't made any transactions yet.</p>
+                        <a asp-controller="Payment" asp-action="TransferToCard" class="btn btn-success btn-5">Transaction </a>
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="row d-flex justify-content-between mt-4" style="height: 281px;">
+            <div class="card" style="width: 30%;background-color: #232324;">
+                <h4 class="card-title center mt-1" style="color: #2fe404;">Transfers</h4>
+                @if (!(cardTransactions.Count == 0))
+                {
+                    <table class="table table-striped table-hover mb-5">
+                        <thead>
+                        </thead>
+                        <tbody>
+                            @foreach (var transaction in cardTransactions)
+                            {
+                                <tr>
+                                    <td style="background-color: #232324">
+                                        <a asp-controller="Payment" asp-action="Transaction" asp-route-id="@transaction.Id">
+                                            <div class="border-b">
+                                                <div class="d-flex justify-content-between">
+                                                    <div class="d-flex gap-2">
+                                                        <img src="spotify.svg" width="30px" class="mb-4">
+                                                        <div>
+                                                            <h6 class="text-dark d-flex flex-column" style="color: white !important;">
+                                                                @transaction.Description <span class="dateSpan">@transaction.TransactionDate.ToString("dd/MM/yyyy")</span>
+                                                            </h6>
+                                                        </div>
+                                                    </div>
+                                                    @if (transaction.Summary == "Income")
+                                                    {
+                                                        <div class=" d-flex flex-column " style="color: #2fe404;">
+                                                            +@transaction.Amount.ToString("C")
+                                                            @if (transaction.Status.Name == "Completed")
+                                                            {
+                                                                <span class="text-success rightSpan">
+                                                                    @transaction.Status.Name
+                                                                </span>
+                                                            }
+                                                            else if (transaction.Status.Name == "Failed")
+                                                            {
+                                                                <span class="text-danger rightSpan">
+                                                                    @transaction.Status.Name
+                                                                </span>
+                                                            }
+
+                                                        </div>
+                                                    }
+                                                    else if (transaction.Summary == "Expense")
+                                                    {
+                                                        <div class=" d-flex flex-column " style="color: #f01414">
+                                                            -@transaction.Amount.ToString("C")
+                                                            @if (transaction.Status.Name == "Completed")
+                                                            {
+                                                                <span class="text-success rightSpan">
+                                                                    @transaction.Status.Name
+                                                                </span>
+                                                            }
+                                                            else if (transaction.Status.Name == "Failed")
+                                                            {
+                                                                <span class="text-danger rightSpan">
+                                                                    @transaction.Status.Name
+                                                                </span>
+                                                            }
+                                                        </div>
+                                                    }
+                                                    else if (transaction.Summary == "Internally")
+                                                    {
+                                                        <div class=" d-flex flex-column " style="color: #007bff">
+                                                            @transaction.Amount.ToString("C")
+                                                            @if (transaction.Status.Name == "Completed")
+                                                            {
+                                                                <span class="text-success rightSpan">
+                                                                    @transaction.Status.Name
+                                                                </span>
+                                                            }
+                                                            else if (transaction.Status.Name == "Failed")
+                                                            {
+                                                                <span class="text-danger rightSpan">
+                                                                    @transaction.Status.Name
+                                                                </span>
+                                                            }
+                                                        </div>
+                                                    }
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <div class="center">
+                        <a asp-controller="Payment" asp-action="RecentActivity" class="btn btn-success btn-5">View More</a>
+                    </div>
+                }
+                else
+                {
+                    <div class="text-center text-white " style="margin-top: 3.9rem !important;">
+                        <p>You haven't made any Transfer yet.</p>
+                        <a asp-controller="Payment" asp-action="TransferToCard" class="btn btn-success btn-5">Transfer to Card</a>
+                    </div>
+                }
+
+
+
+
+               
+            </div>
+
+            <div class="card" style="width: 30%; background-color: #232324;">
+                <div class="row">
+                    <h4 class="card-title center mt-1" style="color: #2fe404;">Payments</h4>
+                </div>
+                <div class="d-flex justify-content-between mt-3">
+                    <!-- Transfer Money Section -->
+                    <a class="text-dark d-flex flex-column"
+                       style="
+               align-items: center;
+               border: 2px solid #131311;
+               border-radius: 5px;
+               width: 90px;
+               background-color: #2fe404;
+           ">
+                        <ion-icon name="cash-outline" class="md hydrated" style="font-size: 3rem;" role="img"></ion-icon>
+                        Transfer <br> Money
+                    </a>
+
+                    <!-- Payment Modal Trigger -->
+                    <p class="text-dark d-flex flex-column"
+                       style="
+               cursor: pointer;
+               align-items: center;
+               border: 2px solid #131311;
+               border-radius: 5px;
+               width: 100px;
+               padding-top: 1rem;
+               margin-left: 10px;
+               background-color: #2fe404;
+           "
+                       data-toggle="modal" data-target="#exampleModalCenter">
+                        <img src="/img/images/4827568.png" alt="Payment icon" width="60px">
+                        <span class="pt-3">Payment</span>
+                    </p>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header d-flex justify-content-between"
+                                     style="
+                             background-color: black;
+                             border: none;
+                         ">
+                                    <h5 class="modal-title text-dark" id="exampleModalLongTitle" style="color: #2fe404 !important;">Modal</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                                            style="
+                                    color: black;
+                                    background-color: red;
+                                    padding: 1px 10px;
+                                    border: none;
+                                    border-radius: 3px;
+                                ">
+                                        <span aria-hidden="true">×</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body"
+                                     style="
+                             background-color: #131311;
+                             border-bottom-left-radius: 5px;
+                             border-bottom-right-radius: 5px;
+                             border: 2px solid black;
+                         ">
+                                    <div class="container">
+                                        <div class="row details modal-elements">
+                                            <!-- Communal Payment Option -->
+                                            <p class="text-light btn btn-secondary"
+                                               style="
+                                       background-color: #232324;
+                                   ">
+                                                <img src="/img/icon/home-icon.png" width="65px" class="img-fluid"
+                                                     style="
+                                             background-color: #131311;
+                                             border-radius: 6px;
+                                         ">Communal
+                                                <span class="mt-3 text-dark" style="font-weight: bold;">
+                                                    <i class="fa fa-angle-double-right" aria-hidden="true" style="color: #2fe404;"></i>
+                                                </span>
+                                            </p>
+
+                                            <!-- Internet Payment Option -->
+                                            <p class="text-light btn btn-secondary"
+                                               style="
+                                       background-color: #232324;
+                                   ">
+                                                <img src="/img/icon/internet-cion.png" width="65px" class="img-fluid"
+                                                     style="
+                                             background-color: #131311;
+                                             border-radius: 6px;
+                                         ">Internet
+                                                <span class="mt-3 text-dark" style="font-weight: bold;">
+                                                    <i class="fa fa-angle-double-right" aria-hidden="true" style="color: #2fe404;"></i>
+                                                </span>
+                                            </p>
+
+                                            <!-- Mobile Operators Payment Option -->
+                                            <p class="text-light btn btn-secondary"
+                                               style="
+                                       background-color: #232324;
+                                   ">
+                                                <img src="/img/icon/Mobile-phone-icon.png" width="65px" class="img-fluid"
+                                                     style="
+                                             background-color: #131311;
+                                             border-radius: 6px;
+                                         ">Mobile Operators
+                                                <span class="mt-3 text-dark" style="font-weight: bold;">
+                                                    <i class="fa fa-angle-double-right" aria-hidden="true" style="color: #2fe404;"></i>
+                                                </span>
+                                            </p>
+
+                                            <!-- BakiKart Payment Option -->
+                                            <p class="text-light btn btn-secondary"
+                                               style="
+                                       background-color: #232324;
+                                   ">
+                                                <img src="/img/icon/BakiKart-Icon-Green.png" width="65px" class="img-fluid"
+                                                     style="
+                                             background-color: #131311;
+                                             border-radius: 6px;
+                                         ">BakiKart
+                                                <span class="mt-3 text-dark" style="font-weight: bold;">
+                                                    <i class="fa fa-angle-double-right" aria-hidden="true" style="color: #2fe404;"></i>
+                                                </span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Mobile Number Section -->
+                    <a class="text-dark d-flex flex-column"
+                       style="
+               align-items: center;
+               border: 2px solid #131311;
+               border-radius: 5px;
+               width: 100px;
+               padding-top: 1rem;
+               background-color: #2fe404;
+           ">
+                        <ion-icon name="phone-portrait-outline" class="md hydrated" style="font-size: 3rem;" role="img"></ion-icon>
+                        Mobile <br> Number
+                    </a>
+                </div>
+
+                <div class="d-flex justify-content-between">
+                    <!-- Communal Section -->
+                    <a class="text-dark d-flex flex-column"
+                       style="
+               align-items: center;
+               border: 2px solid #131311;
+               border-radius: 5px;
+               width: 90px;
+               background-color: #2fe404;
+           ">
+                        <ion-icon name="home-outline" style="font-size: 3rem;" role="img" class="md hydrated"></ion-icon>
+                        <span class="">Communal</span>
+                    </a>
+
+                    <!-- BakiKart Section -->
+                    <a class="text-dark d-flex flex-column"
+                       style="
+               align-items: center;
+               border: 2px solid #131311;
+               border-radius: 5px;
+               width: 90px;
+               background-color: #2fe404;
+           ">
+                        <img src="/img/images/BakiKart-Icon-Black.png" alt="BakiKart icon" class="imge">
+                        <span class="">BakiKart</span>
+                    </a>
+
+                    <!-- Card Transfer Section -->
+                    <a class="text-dark d-flex flex-column"
+                       style="
+               align-items: center;
+               border: 2px solid #131311;
+               border-radius: 5px;
+               background-color: #2fe404;
+           ">
+                        <img src="/img/images/1785.png" alt="Card Transfer icon" class="imge">
+                        <span class="">Card Transfer</span>
+                    </a>
+                </div>
+            </div>
+
+
+            <div class="card" style="width: 30%;background-color: #232324;">
+                <div class="row ">
+                    <h4 class="card-title center mt-1" style="color: #2fe404;">Income</h4>
 
                 </div>
-            }
-            
-            
+                <div style="width: 340px; height: 200px;">
+                    <canvas id="myChartD"></canvas>
+                </div>
+            </div>
         </div>
-        <div id="payments" class="section" style="display: none;">
-            <h2>Payments</h2>
-            <p>Coming Soon</p>
-        </div>
-    </section>
+        <div class="row d-flex justify-content-between mt-5">
 
+            <div class="card" style="width: 100%; background-color: #232324;">
+                <div class="container d-flex justify-content-between pt-1 ">
+                    <div class="w-45 mx-5  ">
+                        <h4 class="card-title tc" style="color: #2fe404;">CashBack</h4>
+                        <div class="containers my-4">
+                            <div class="card1 text-light " style="height:225px; width: 200px;
+                                background-color: #131311;
+                                font-family: 'Open Sans', sans-serif;
+                                letter-spacing: 1px;">
+                                <div class="item">
+                                    <div class="label" style="color: #2fe404;">Balance</div>
+                                    <div class="value">@CashBack.Balance.ToString("C")</div>
+                                </div>
+                                <div class="balance">
+                                    <div class="value">@CashBack.CashBackNumber</div>
+                                </div>
+                                <div class="details-btn-div" style="display: flex; justify-content: center;">
+                                    <a asp-controller="BankAccountAndWallet" asp-action="Details" class="btn btn-outline-success">Details</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="">
+                        <h4 class="card-title tc" style="color: #2fe404;">Bank Account</h4>
+                        <div class="my-4 mx-3 big container">
+                            <div class="containers">
+                                <div class="card1 text-light " style="height:225px; width: 200px;
+                                    background-color: #131311;
+                                    font-family: 'Open Sans', sans-serif;
+                                    letter-spacing: 1px;">
+                                    <div class="item">
+                                        <div class="label" style="color: #2fe404;">Balance</div>
+                                        <div class="value">@BankAccount.Balance.ToString("C")</div>
+                                    </div>
+                                    <div class="balance">
+                                       
+                                        <div class="value">@BankAccount.AccountNumber</div>
+                                    </div>
+                                    <div class="details-btn-div" style="display: flex; justify-content: center;">
+                                        <a asp-controller="BankAccountAndWallet" asp-action="Details" class="btn btn-outline-success">Details</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="w-30">
+                        @if (Cards == null || Cards.Count == 0)
+                        {
+                            <div class="text-center" style=" padding: 119px 245px;">
+                                <p>You have no cards.</p>
+                                <a class="btn btn-success" asp-controller="BankCard" asp-action="Cards">Get Card</a>
+                            </div>
+                        }
+                        else
+                        {
+                            <div id="carouselExampleIndicators" class="carousel slide pt-5" style="width: 650px;" data-ride="carousel">
+                                <div class="carousel-inner">
+                                    @for (int i = 0; i < Cards.Count; i++)
+                                    {
+                                        <div class="carousel-item @(i == 0 ? "active" : "")">
+                                            <div class="d-block border-ra">
+                                                <div class="card-container mb-4" id="flex-col1">
+                                                    <a asp-controller="BankCard" asp-action="Details" asp-route-id="@Cards[i].CardNumber">
+                                                        <div class="@Cards[i].CardType.Name.ToLower()-card @Cards[i].CardStatus.Name.ToLower()" style="width: 400px;">
+                                                            <div class="head">
+                                                                <h3>@Cards[i].CardType.Name</h3>
+                                                                <div class="visa-word">VISA</div>
+                                                            </div>
+                                                            <div class="card-info">
+                                                                <p>@Cards[i].CardNumber.ToCreditCardFormat()</p>
+                                                                <button class="copy-btn" onclick="copyCardNumber(event, this)">
+                                                                    <i class="fas fa-copy"></i>
+                                                                </button>
+                                                            </div>
+                                                            <div class="balance-div">
+                                                                <span class="balance-text">Balance:</span>
+                                                                <p>@Cards[i].Balance <span class="card-currency">$</span></p>
+                                                            </div>
+                                                            <div class="card-owner">
+                                                                <div>
+                                                                    <p class="card-holder-p">Card Holder</p>
+                                                                    <p class="owner-name">@Cards[i].UserFirstName @Cards[i].UserLastName</p>
+                                                                </div>
+                                                                <div class="expires-div">
+                                                                    <p class="expires-text">Expires</p>
+                                                                    <p class="expires-date">@Cards[i].ExpiryDate.ToString("MM/yy")</p>
+                                                                </div>
+                                                            </div>
+                                                            <div class="block-overlay">
+                                                                <i class="fas fa-lock"></i>
+                                                            </div>
+                                                            <div class="disabled-overlay">
+                                                                <i class="fas fa-ban"></i>
+                                                            </div>
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                                <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev" style="margin-right: -20px;">
+                                    <span class="carousel-control-prev-icon bg-success" aria-hidden="true" style="background-color: #74FA56 !important; border-radius: 50% !important; margin-right: -40px !important;"></span>
+                                    <span class="sr-only">Previous</span>
+                                </a>
+                                <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+                                    <span class="carousel-control-next-icon bg-success" aria-hidden="true" style="background-color: #74FA56 !important; border-radius: 50% !important; margin-left: -40px !important;"></span>
+                                    <span class="sr-only">Next</span>
+                                </a>
+                            </div>
+                        }
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+@section Scripts{
     <script>
-        function showSection(sectionId) {
-            var sections = document.querySelectorAll('.section');
-            sections.forEach(function (section) {
-                section.style.display = 'none';
-            });
-            var selectedSection = document.getElementById(sectionId);
-            if (selectedSection) {
-                selectedSection.style.display = 'block';
+
+
+
+
+        const ctx = document.getElementById('myChart');
+
+        const myChart2 = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                datasets: [{
+                    label: 'Statics',
+                    data: [@MonthlyIncomeExpense.CurrentMonthExpense, @MonthlyIncomeExpense.CurrentMonthIncome],
+                    backgroundColor: [
+                        'rgba(255, 0, 0, 0.4)',
+                        'rgba(50, 205, 50, 0.4)'
+                    ],
+                    borderColor: [
+                        'rgb(255, 0, 0)',
+                        'rgb(0, 255, 0)',
+                    ], borderWidth: 1
+                }],
+
+                // These labels appear in the legend and in the tooltips when hovering different arcs
+                labels: [
+                    'Expense',
+                    'Income',
+
+                ],
+
             }
+
+        });
+
+
+
+        const FirstMonthBtn = document.getElementById('FirstMonthBtn')
+        const SecondMonthBtn = document.getElementById('SecondMonthBtn')
+
+
+        function FirstMonthChange() {
+            myChart2.data.datasets[0].data = [@MonthlyIncomeExpense.PreviousMonthExpense, @MonthlyIncomeExpense.PreviousMonthIncome]
+            myChart2.update()
+            SecondMonthBtn.classList.remove('btn-success',)
+            SecondMonthBtn.classList.add('btn-outline-success')
+            FirstMonthBtn.classList.remove('btn-outline-success')
+            FirstMonthBtn.classList.add('btn-success')
+        }
+        function SecondMonthChange() {
+            myChart2.data.datasets[0].data = [@MonthlyIncomeExpense.CurrentMonthExpense, @MonthlyIncomeExpense.CurrentMonthIncome]
+            myChart2.update()
+            myChart2.update()
+            FirstMonthBtn.classList.remove('btn-success',)
+            FirstMonthBtn.classList.add('btn-outline-success')
+            SecondMonthBtn.classList.remove('btn-outline-success')
+            SecondMonthBtn.classList.add('btn-success')
         }
 
-        document.addEventListener('DOMContentLoaded', function () {
-            showSection('dashboard');
-        });
-    </script>
-</section>
 
+        datas = {
+            datasets: [{
+                labels: 'History',
+                data: [@BankAccount.Balance, @CashBack.Balance, @foreach (var card in Cards)
+        {
+            @card.Balance @Html.Raw(",")
+        } ],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(255, 159, 64, 0.2)',
+                    'rgba(255, 205, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+
+                ],
+                borderColor: [
+                    'rgb(255, 99, 132)',
+                    'rgb(255, 159, 64)',
+                    'rgb(255, 205, 86)',
+                    'rgb(75, 192, 192)',
+                    'rgb(54, 162, 235)',
+
+                ], borderWidth: 1
+            }],
+
+            // These labels appear in the legend and in the tooltips when hovering different arcs
+
+            labels: [
+                'Account',
+                'Wallet',
+        @foreach (var card in Cards)
+        {
+            @Html.Raw($"\"{@card.CardNumber[^4..]}\" ,")
+
+        }
+     ],
+
+        };
+
+        const ctxs = document.getElementById('myChart2');
+
+        new Chart(ctxs, {
+            type: 'doughnut',
+            data: datas,
+            options: {
+                plugins: {
+                    legend: {
+                        'display': 'true',
+                        "position": 'right',
+                        'align': 'center',
+                        'Width': '400px'
+                    }
+                },
+            }
+        });
+
+
+        const ctxd = document.getElementById('myChartD');
+
+        new Chart(ctxd, {
+            type: 'line',
+            data: {
+                labels: @Html.Raw(Json.Serialize(Last5Months)),
+                datasets: [{
+                    label: 'Income Data',
+                    data: @Html.Raw(Json.Serialize(IncomeData)),
+                    fill: false,
+                    borderColor: 'rgb(75, 255, 0)',
+                    backgroundColor: 'rgb(255,255,255)',
+                    tension: 0.1
+                }]
+            },
+            options: {
+                plugins: {
+                    label: {
+                        'display': 'true',
+                        'visibility': 'hidden'
+
+                    }
+                },
+            }
+
+
+        });
+        
+        
+
+
+
+
+
+</script>
+        
+    <script>
+        function copyCardNumber(event, button) {
+
+            var cardNumber = button.previousElementSibling.innerText;
+
+            var tempTextarea = document.createElement("textarea");
+            tempTextarea.value = cardNumber;
+            document.body.appendChild(tempTextarea);
+
+            tempTextarea.select();
+
+            document.execCommand("copy");
+
+            document.body.removeChild(tempTextarea);
+
+            // Bilgilendirme mesajı
+            alert("Kart numarası kopyalandı: " + cardNumber);
+            event.preventDefault();
+
+        }
+    </script>
+
+    
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+}

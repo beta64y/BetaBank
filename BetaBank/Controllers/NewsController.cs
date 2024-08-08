@@ -14,8 +14,11 @@ namespace BetaBank.Controllers
         {
             _context = context;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
+            int newsCount = await _context.News.Where(p => !p.IsDeleted).CountAsync();
+            ViewBag.NewsCount = newsCount;
+
             return View();
         }
         public async Task<IActionResult> LoadMore(int skip)
@@ -25,12 +28,13 @@ namespace BetaBank.Controllers
             {
                 return BadRequest();
             }
-            var news = await _context.News.Where(p => !p.IsDeleted).Skip(skip).Take(8).ToListAsync();
-            return View("_NewsPartial", news);
+            ViewData["News"] = await _context.News.Where(p => !p.IsDeleted).OrderByDescending(x => x.CreatedDate).Skip(skip).Take(6).ToListAsync();
+            return View("_NewsPartial");
         }
-        public async Task<IActionResult> NewsDetail(string id)
+        public async Task<IActionResult> Detail(string id)
         {
             var news = await _context.News.FirstOrDefaultAsync(p => p.Id == id && !p.IsDeleted);
+            ViewData["News"] = news;
             return View(news);
         }
     }

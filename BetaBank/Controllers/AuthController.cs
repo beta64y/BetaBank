@@ -95,7 +95,12 @@ namespace BetaBank.Controllers
                 return View();
             }
             var user = await _userManager.FindByEmailAsync(forgotPasswordViewModel.Email);
-            if (user == null)
+            if (user == null )
+            {
+                ModelState.AddModelError("", "Email Not Found");
+                return View();
+            }
+            if (!(await _userManager.GetRolesAsync(user)).First().Contains("User"))
             {
                 ModelState.AddModelError("", "Email Not Found");
                 return View();

@@ -1,140 +1,70 @@
 ﻿@{
     Layout = null;
+    var headerViewModel = ViewData["HeaderViewModel"] as HeaderViewModel;
 }
-@model HeaderViewModel
-<header class="header-one">
-    <div id="sticker" class="header-area hidden-xs">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12 col-sm-12">
-                    <div class="row">
-                        <!-- logo start -->
-                        <div class="col-md-3 col-sm-3">
-                            <div class="logo">
-                                <!-- Brand -->
-                                <a class="navbar-brand page-scroll" asp-controller="Home" asp-action="Index">
-                                    <img src="img/logo/logo2.png" alt="">
-                                </a>
-                            </div>
-                            <!-- logo end -->
-                        </div>
-                        <div class="col-md-9 col-sm-9">
-                            <div class="header-right-link">
-                                <!-- search option end -->
-                                @if (User.Identity.IsAuthenticated && User.IsInRole("User"))
-                                {
-                                    <a class="s-menu " asp-controller="Auth" asp-action="Logout">Logout</a>
-                         
-                                }
-                                else
-                                {
-                                    <a class="s-menu" asp-area="" asp-controller="Auth" asp-action="Login">Login</a>
 
-                                }
+<nav class="navbar navbar-expand-lg nav text-white" >
+    <a class="navbar-brand text-white " asp-controller="Home" asp-action="Index"><img src="~/img/logo/BetaBank-logo.png" width="110px "> </a>
+       
 
-
-
-                            </div>
-                            <nav class="navbar navbar-default">
-                                <div class="collapse navbar-collapse" id="navbar-example">
-                                    <div class="main-menu">
-                                        <ul class="nav navbar-nav navbar-right">
-                                            <li>
-                                            </li>
-                                            <li><a asp-controller="Home" asp-action="About">About us</a></li>
-                                            <li>
-                                                <a class="pages" href="#">Info</a>
-                                                <ul class="sub-menu">
-                                                    <li><a asp-page="/Team">team</a></li>
-                                                    <li><a asp-controller="Home" asp-action="FAQ">FAQ</a></li>
-                                                    <li><a asp-page="/Reviews">Reviews</a></li>
-                                                    <li><a asp-page="/Privacy">Terms & Conditions</a></li>
-                                                </ul>
-                                            </li>
-                                            <li><a asp-page="/Contact">contacts</a></li>
-                                            <li>
-                                                <a class="pages" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                                            </li>
-                                            <li>
-                                                <a class="pages" asp-controller="User" asp-action="Register">Register</a>
-                                            </li>
-                                            @if (User.Identity.IsAuthenticated)
-                                            {
-                                                <li>
-                                                    <a class="pages" asp-controller="User" asp-action="Profile">Profile</a>
-                                                    <ul class="sub-menu">
-                                                        <li><a asp-controller="User" asp-action="Profile">@Model.FirstName @Model.LastName</a></li>
-                                                        <li><a asp-controller="Accounts" asp-action="Index">Manage Accounts</a></li>
-                                                        <li><a asp-page="/Reviews">Reviews</a></li>
-                                                        <li><a asp-page="/Privacy">Terms & Conditions</a></li>
-                                                    </ul>
-                                                </li>
-                                            }
-
-
-
-                                        </ul>
-                                    </div>
-                                </div>
-                            </nav>
-                        </div>
-                    </div>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto text-white">
+                <li class="nav-item active">
+                    <a class="nav-link text-white" asp-controller="Home" asp-action="Index">Home</a>
+                </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button"
+                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Info
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" style="color: #2FE404 !important;" asp-controller="Home" asp-action="About">About</a>
+                    <a class="dropdown-item" style="color: #2FE404 !important;" asp-controller="Home" asp-action="FAQ">FAQ</a>
+                    <a class="dropdown-item" style="color: #2FE404 !important;" asp-controller="Home" asp-action="Privacy">Privacy</a>
                 </div>
-            </div>
-        </div>
-    </div>
-    <!--Start mobile menu area-->
-    <div class="mobile-menu-area hidden-lg hidden-md hidden-sm">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="mobile-menu">
-                        <div class="logo">
-                            <a asp-page="/Index"><img src="img/logo/logo2.png" alt="" /></a>
-                        </div>
-                        <nav id="dropdown">
-                            <ul>
-                                <li>
-                                    <a class="pages" asp-page="/Index">Home</a>
+            </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" asp-controller="News" asp-action="Index">News</a>
+                </li>
+            <li class="nav-item">
+                <a class="nav-link text-white" asp-controller="BankCard" asp-action="Cards">Cards</a>
+            </li>
+            @if (User.Identity.IsAuthenticated && User.IsInRole("User"))
+            {
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button"
+                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        @headerViewModel.FirstName
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" style="color: #2FE404 !important;" asp-controller="User" asp-action="Profile">Profile</a>
+                        <a class="dropdown-item" style="color: #2FE404 !important;" asp-controller="BankAccountAndWallet" asp-action="Details">Account and Wallet</a>
+                        <a class="dropdown-item" style="color: #2FE404 !important;" asp-controller="Payment" asp-action="RecentActivity">Recent Activity</a>
 
-                                </li>
-                                <li><a asp-page="/About">About us</a></li>
-                                <li>
-                                    <a class="pages" href="#">Info</a>
-                                    <ul class="sub-menu">
-                                        <li><a asp-page="/Team">team</a></li>
-                                        <li><a asp-page="/FAQ">FAQ</a></li>
-                                        <li><a asp-page="/Reviews">Reviews</a></li>
-                                        <li><a asp-page="/Privacy">Terms & Conditions</a></li>
-                                    </ul>
-                                </li>
-
-                                <li><a asp-page="/Contact">contacts</a></li>
-
-
-
-                                <li>
-                                    <a class="pages" asp-controller="User" asp-action="Register">Register</a>
-                                </li>
-                                <li>
-                                    @if (User.Identity.IsAuthenticated)
-                                    {
-                                        <a class="pages" asp-controller="Auth" asp-action="Logout">Logout</a>
-                                    }
-                                    else
-                                    {
-                                        <a class="pages" asp-controller="Auth" asp-action="Login">Login</a>
-                                    }
-                                </li>
-
-
-
-                            </ul>
-                        </nav>
                     </div>
-                </div>
-            </div>
+                </li>
+
+            }
+            else
+            {
+                <li class="nav-item">
+                    <a class="nav-link text-white" asp-controller="User" asp-action="Register">Register</a>
+                </li>
+            }
+
+            </ul>
+        @if (User.Identity.IsAuthenticated && User.IsInRole("User"))
+        {
+            <a class="btn btn-outline-success my-2 my-sm-0" asp-controller="User" asp-action="Dashboard">Dashboard</a>
+
+        }
+        else
+        {
+            <a class="btn btn-outline-success my-2 my-sm-0" asp-area="" asp-controller="Auth" asp-action="Login">Login</a>
+
+        }
         </div>
-    </div>
-    <!-- End mobile menu area -->
-</header>
+    </nav>
+
+
+

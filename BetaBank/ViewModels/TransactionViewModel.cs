@@ -1,5 +1,4 @@
 ﻿using BetaBank.Models;
-using System.Transactions;
 
 namespace BetaBank.ViewModels
 {

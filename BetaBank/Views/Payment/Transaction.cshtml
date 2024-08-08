@@ -1,8 +1,84 @@
 ﻿@{
     ViewData["Title"] = "Transaction";
-    var data = ViewData["Transaction"] as Transaction;
-    Layout = null;
+    var data = ViewData["TransactionViewModel"] as TransactionDetailsViewModel;
 }
+
+<main class="mtop">
+    <div class="container card bg-photo bga">
+        <div class="">
+            <div class="icon-correct center mt-5">
+                @if (data.Status.Name == "Completed")
+                {
+                    <img src="~/img/images/8888205.png" alt="correct-img" width="120px">
+                }
+                else if (data.Status.Name == "Failed")
+                {
+                    <img src="~/img/images/11695444.png" alt="correct-img" width="120px">
+                }
+            </div>
+            <div class="row mt-3 mb-3">
+                <h3 class="card-title center text-light responsive">@data.Status.Name Operation!</h3>
+                
+            </div>
+            <div class="row details px-3 pb-4">
+                <button type="button" class="btn btn-success btns-hover" data-toggle="modal"
+                        data-target="#exampleModal">
+                    Details
+                </button>
+
+                <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content ">
+                            <div class="modal-header d-flex justify-content-between">
+                                <h5 class="modal-title" id="exampleModalLabel">Details</h5>
+                                <button type="button" class="close" st data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+
+
+                                <div class="icon-correct center mt-5">
+                                    @if (data.Status.Name == "Completed")
+                                    {
+                                        <img src="~/img/images/8888205.png" alt="correct-img" width="120px">
+                                    }
+                                    else if (data.Status.Name == "Failed")
+                                    {
+                                        <img src="~/img/images/11695444.png" alt="correct-img" width="120px">
+                                    }
+                                </div>
+                                <div class="row mt-2 mb-3">
+                                    <h3 class="card-title">Details</h3>
+                                </div>
+                                <div class="row details">
+                                    <p >Receipt Number<span>@data.ReceiptNumber</span></p>
+                                    <p >Amount<span>@data.Amount.ToString("C")</span></p>
+                                    <p >Commission<span>@data.Commission.ToString("C")</span></p>
+                                    <p >Billing Amount<span>@data.BillingAmount.ToString("C")</span></p>
+                                    <p >Cashback Amount<span>@data.CashbackAmount.ToString("C")</span></p>
+                                    <p >Transaction Date<span>@data.TransactionDate.ToString("f")</span></p>
+                                    <p >Title<span>@data.Title</span></p>
+                                    <p >Description<span>@data.Description</span></p>
+                                </div>
+                            </div>
+
+
+
+
+                        </div>
+                    </div>
+                </div>
+                <a asp-controller="User" asp-action="Dashboard" class="btn btn-success mt-2 btns-hover">
+                    Go to DashBoard
+                </a>
+            </div>
+        </div>
+    </div>
+</main>
+
+@*
+
 <div class="transaction-details">
     <div class="form-group">
         <label>Transaction ID:</label>
@@ -52,7 +128,7 @@
         <label>Status ID:</label>
         <p>@data.StatusId</p>
     </div>
-    
+
     <div class="form-group">
         <label>Title:</label>
         <p>@data.Title</p>
@@ -60,4 +136,4 @@
         <label>Description:</label>
         <p>@data.Description</p>
     </div>
-</div>
+</div>*@
