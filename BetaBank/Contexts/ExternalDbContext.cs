@@ -13,6 +13,7 @@ namespace BetaBank.Contexts
         public DbSet<UtilityForExternal> Utilities { get; set; } = null!;
         public DbSet<InternetForExternal> InternetProviders { get; set; } = null!;
 
+        public DbSet<BakuCardForExternal> BakuCards { get; set; } = null!;
         //protected override void OnModelCreating(ModelBuilder modelBuilder)
         //{
         //    base.OnModelCreating(modelBuilder);

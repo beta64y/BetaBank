@@ -54,10 +54,21 @@
                             <td>
                                 @if (transaction.DestinationType.Name == "Card")
                                 {
-                                    <a asp-controller="BankCard" asp-action="Detail" asp-route-id="@transaction.DestinationId" style="color:#FFFFFF;">
+                                    @if(transaction.Description == "BetaBank")
+                                    {
+                                        <a asp-controller="BankCard" asp-action="Detail" asp-route-id="@transaction.DestinationId" style="color:#FFFFFF;">
                                         <img src="~/areaAssets/images/@transaction.DestinationCardType.Name.ToLower()-Easy.png" class="img-fluid " style="width: 52.5px; height: 30px; object-fit: cover; border-radius:2px;">
                                         *@transaction.DestinationId[^4..]
                                     </a>
+                                    }
+                                    else
+                                    {
+                                        <a  style="color:#FFFFFF;">
+                                            <img src="~/img/Banks/@Html.Raw($"{transaction.Description}.png")" class="img-fluid " style="width: 45px; height: 45px; object-fit: cover;">
+                                            *@transaction.DestinationId[^4..]
+                                        </a>
+                                    }
+                                    
                                 }
                                 else if (transaction.DestinationType.Name == "BankAccount")
                                 {
@@ -80,10 +91,10 @@
                                         @transaction.Title
                                     </a>
                                 }
-                                else if (transaction.DestinationType.Name == "Utility" || transaction.DestinationType.Name == "MobileOperators")
+                                else if (transaction.DestinationType.Name == "Utility" || transaction.DestinationType.Name == "Internet")
                                 {
                                     <a href="#" style="color:#FFFFFF;">
-                                        <img src="~/img/data/default.png"  class="img-fluid " style="width: 45px; height: 45px; object-fit: cover;">
+                                        <img src="~/img/Subscriptions/@Html.Raw($"{transaction.Description}.png")"  class="img-fluid " style="width: 45px; height: 45px; object-fit: cover;">
                                         @transaction.Title
                                     </a>
                                 }

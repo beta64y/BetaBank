@@ -35,9 +35,6 @@
         font-weight: bold;
     }
 
-    .mtop {
-        margin-top: 2rem;
-    }
 
     .container.card {
         background: #131311;
@@ -162,7 +159,7 @@
 
                 <div class="form-group">
                     <h5 class="card-title text-light">Amount</h5>
-                    <input asp-for="Amount" class="form-control" type="text" id="Amount" name="Amount" required />
+                    <input asp-for="Amount" class="form-control" type="text" pattern="\d*" id="Amount" name="Amount" required />
                 </div>
                 <hr hidden />
 
@@ -170,7 +167,7 @@
                     <Label id="commissionLabel">Commission - $0</Label>
                 </div>
                 <button type="button" id="paymentButton" class="btn btn-primary">Payment</button>
-                <button asp-action="TransferToCard" type="submit" type="submit" id="submitButton" class="btn btn-primary" hidden>Submit</button>
+                <button asp-action="TransferToCard" type="submit" id="submitButton" class="btn btn-primary" hidden>Submit</button>
             </form>
         </div>
     </div>

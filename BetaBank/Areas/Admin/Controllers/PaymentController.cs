@@ -28,7 +28,7 @@ namespace BetaBank.Areas.Admin.Controllers
 
         public async Task<IActionResult> Index()
         {
-            List<Transaction> transactions = await _context.Transactions.AsNoTracking().ToListAsync();
+            List<Transaction> transactions = await _context.Transactions.AsNoTracking().OrderByDescending(x => x.TransactionDate).ToListAsync();
             List<Admin.ViewModels.TransactionViewModel> transactionViewModels = new();
             foreach (Transaction transaction in transactions)
             {
@@ -47,7 +47,12 @@ namespace BetaBank.Areas.Admin.Controllers
                 if (destinationType.Name == "Card")
                 {
                     BankCard card = await _context.BankCards.FirstOrDefaultAsync(x => x.CardNumber == transaction.DestinationId);
-                    destinationCardType = await _context.BankCardTypes.FirstOrDefaultAsync(x => x.CardId == card.Id);
+                    if (card != null)
+                    {
+                        destinationCardType = await _context.BankCardTypes.FirstOrDefaultAsync(x => x.CardId == card.Id);
+                    }
+
+
 
                 }
 

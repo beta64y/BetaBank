@@ -175,7 +175,13 @@ namespace BetaBank.Controllers
                 if (destinationType.Name == "Card")
                 {
                     BankCard card = await _context.BankCards.FirstOrDefaultAsync(x => x.CardNumber == transaction.DestinationId);
-                    destinationCardType = await _context.BankCardTypes.FirstOrDefaultAsync(x => x.CardId == card.Id);
+                    if (card != null)
+                    {
+                        destinationCardType = await _context.BankCardTypes.FirstOrDefaultAsync(x => x.CardId == card.Id);
+                    }
+
+
+
                 }
                 string summary = null;
                 
