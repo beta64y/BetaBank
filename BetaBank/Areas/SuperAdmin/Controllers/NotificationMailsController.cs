@@ -3,6 +3,7 @@ using BetaBank.Contexts;
 using BetaBank.Models;
 using BetaBank.Services.Implementations;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,12 +15,15 @@ namespace BetaBank.Areas.SuperAdmin.Controllers
     {
         private readonly BetaBankDbContext _context;
         private readonly IConfiguration _configuration;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
 
-        public NotificationMailsController(BetaBankDbContext context, IConfiguration configuration)
+
+        public NotificationMailsController(BetaBankDbContext context, IConfiguration configuration, IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
             _configuration = configuration;
+            _webHostEnvironment = webHostEnvironment;
         }
         public async Task<IActionResult> Index()
         {
@@ -43,14 +47,31 @@ namespace BetaBank.Areas.SuperAdmin.Controllers
         public async Task<IActionResult> SendMail(SuperAdminCreateNotificationMailViewModel adminCreateNotificationMailView)
         {
 
-            MailService mailService = new(_configuration);
 
             List<Subscriber> subscribers = await _context.Subscribers.Where(x => x.IsSubscribe).ToListAsync();
 
+
+
+            string path = Path.Combine(_webHostEnvironment.WebRootPath, "templates", "ModeratorMessage.html");
+            using StreamReader streamReader = new(path);
+
+            string content = await streamReader.ReadToEndAsync();
+
+            string body = content.Replace("[FirstAndSurName]", $"Subscriber");
+            body = body.Replace("[Body]", adminCreateNotificationMailView.Body);
+            body = body.Replace("[Subject]", adminCreateNotificationMailView.Title);
+            body = body.Replace("[Link]", $"https://localhost:7110/");
+
+
+
+
+            MailService mailService = new(_configuration);
+
+
+
             foreach (Subscriber subscriber in subscribers)
             {
-                await mailService.SendEmailAsync(new BetaBank.ViewModels.MailRequest { ToEmail = subscriber.Mail, Subject = adminCreateNotificationMailView.Title, Body = adminCreateNotificationMailView.Body });
-
+                await mailService.SendEmailAsync(new BetaBank.ViewModels.MailRequest { ToEmail = subscriber.Mail, Subject = adminCreateNotificationMailView.Title, Body = body });
             }
             SendedNotificationMail sendedNotificationMail = new SendedNotificationMail()
             {

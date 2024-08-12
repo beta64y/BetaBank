@@ -10,12 +10,12 @@
 
     <form asp-action="Profile" method="post" enctype="multipart/form-data" class="mn mb-4 mtop">
         <label class="form-label text-white">First Name</label>
-        <input asp-for="userUpdateViewModel.FirstName" value="@data.userUpdateViewModel.FirstName" class="form-control" />
+        <input asp-for="userUpdateViewModel.FirstName" value="@data.userUpdateViewModel.FirstName" class="form-control  text-dark" disabled />
         <span asp-validation-for="userUpdateViewModel.FirstName" class="text-danger"></span>
 
 
         <label class="form-label text-white">Last Name</label>
-        <input asp-for="userUpdateViewModel.LastName" value="@data.userUpdateViewModel.LastName" class="form-control" />
+        <input asp-for="userUpdateViewModel.LastName" value="@data.userUpdateViewModel.LastName" class="form-control text-dark" disabled />
         <span asp-validation-for="userUpdateViewModel.LastName" class="text-danger"></span>
 
 

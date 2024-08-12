@@ -61,7 +61,6 @@
                         <th scope="col">Section</th>
                         <th scope="col">Action</th>
                         <th scope="col">Entity</th>
-                        <th scope="col">Type</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -107,21 +106,21 @@
                                 {
                                     <a asp-controller="User" asp-action="Detail" asp-route-id="@eventViewModel.EntityId" style="color:#FFFFFF;">
                                         <img src="~/img/data/@eventViewModel.EntityUserProfilePhoto" class="img-fluid rounded-circle" style="width: 45px; height: 45px; object-fit: cover;">
-                                        @eventViewModel.EntityUserFirstName 
+                                        @eventViewModel.EntityUserFirstName @eventViewModel.EntityUserLastName
                                     </a>
                                 }
                                 else if (eventViewModel.EntityType == "Transaction")
                                 {
-                                    <a asp-controller="Payment" asp-action="Detail" asp-route-id="@eventViewModel.EntityId" style="color:#FFFFFF;">
-                                        <img src="~/img/data/@@eventViewModel.UserProfilePhoto" class="img-fluid rounded-circle" style="width: 45px; height: 45px; object-fit: cover;">
-                                        @eventViewModel.Title
+                                    <a asp-controller="Payment" asp-action="ViewMail" asp-route-id="@eventViewModel.EntityId" style="color:#FFFFFF;">
+                                        <img src="~/areaAssets/images/payment.png" class="img-fluid rounded-circle" style="width: 45px; height: 45px; object-fit: cover;">
+                                        *@eventViewModel.Title[^6..]
                                     </a>
                                 }
                                 else if (eventViewModel.EntityType == "BankCard")
                                 {
                                     <a asp-controller="BankCard" asp-action="Detail" asp-route-id="@eventViewModel.EntityId" style="color:#FFFFFF;">
                                         <img src="~/areaAssets/images/@eventViewModel.Title.ToLower()-Easy.png" class="img-fluid" style="width: 52.5px; height: 30px; object-fit: cover; border-radius:2px;">
-                                        *@eventViewModel.EntityId[^4..]
+                                        *@eventViewModel.EntityId.ToCreditCardFormat()[^4..]
 
                                     </a>
                                 }
@@ -129,21 +128,19 @@
                                 {
                                     <a asp-controller="BankAccount" asp-action="Detail" asp-route-id="@eventViewModel.EntityId" style="color:#FFFFFF;">
                                         <img src="~/areaAssets/images/Bank-Account.png" class="img-fluid " style="width: 45px; height: 45px; object-fit: cover;">
-                                        @eventViewModel.EntityUserFirstName 
+                                        @eventViewModel.EntityUserFirstName @eventViewModel.EntityUserLastName
                                     </a>
                                 }
                                 else if (eventViewModel.EntityType == "Wallet")
                                 {
                                     <a asp-controller="CashBack" asp-action="Index" asp-route-id="@eventViewModel.EntityId" style="color:#FFFFFF;">
                                         <img src="~/areaAssets/images/Cashback-Icon.png" class="img-fluid " style="width: 45px; height: 45px; object-fit: cover;">
-                                        @eventViewModel.EntityUserFirstName 
+                                        @eventViewModel.EntityUserFirstName @eventViewModel.EntityUserLastName
                                     </a>
                                 }
 
                             </td>
-                            <td>
-                                @eventViewModel.EntityType
-                            </td>
+                       
 
                         </tr>
                     }

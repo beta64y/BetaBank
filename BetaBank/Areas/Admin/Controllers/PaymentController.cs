@@ -217,6 +217,8 @@ namespace BetaBank.Areas.Admin.Controllers
             if (transactionViewModel.DestinationType.Name == "Card")
             {
                 BankCard destinationBankCard = await _context.BankCards.FirstOrDefaultAsync(x => x.CardNumber == transactionViewModel.DestinationId);
+                if(destinationBankCard != null)
+                {
                 Models.BankCardStatus destinationCardStatus = await _context.BankCardStatuses.FirstOrDefaultAsync(x => x.CardId == destinationBankCard.Id);
                 Models.BankCardType destinationCardType = await _context.BankCardTypes.FirstOrDefaultAsync(x => x.CardId == destinationBankCard.Id);
                 destinationBankCardViewModel = new UserBankCardViewModel()
@@ -231,6 +233,8 @@ namespace BetaBank.Areas.Admin.Controllers
 
                 };
                 destination.User = await _context.Users.FirstOrDefaultAsync(x => x.Id == destinationBankCard.UserId);
+                }
+               
             }
 
 

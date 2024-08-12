@@ -123,11 +123,11 @@
                                             }
                                             else if (transaction.DestinationType.Name == "BakuCard")
                                             {
-                                                <img src="~/img/data/default.png" class="img-fluid " style="width: 52.5px;  height: 52px; border-radius:2px;">
+                                                <img src="~/img/icon/BakiKart-Icon-Green.png" class="img-fluid " style="width: 52.5px;  height: 52px; border-radius:2px;">
                                             }
                                             else if (transaction.DestinationType.Name == "MobileOperators")
                                             {
-                                                <img src="~/img/data/default.png" class="img-fluid " style="width: 52.5px; height: 52px;border-radius:2px;">
+                                                <img src="~/img/images/@Html.Raw($"{transaction.Description}.png")" class="img-fluid " style="width: 52.5px; height: 52px;border-radius:2px;">
                                             }
                                             else if (transaction.DestinationType.Name == "Utility" || transaction.DestinationType.Name == "Internet")
                                             {

@@ -72,11 +72,11 @@
                             UnBlock Card
                     </a>
                 }
-                <a class="btn btn-light  text-dark" style="width: 200px; height: 60px; background-color: #2fe404; border: none; ">
+                <a asp-controller="Payment" asp-action="TransferToCard" class="btn btn-light  text-dark" style="width: 200px; height: 60px; background-color: #2fe404; border: none; ">
                     Card To Card
                 </a>
-                <a class="btn-light btn  text-dark" style="width: 200px; height: 60px; background-color: #2fe404; border: none; ">
-                    DashBoard
+                <a asp-controller="User" asp-action="Dashboard" class="btn-light btn  text-dark" style="width: 200px; height: 60px; background-color: #2fe404; border: none; ">
+                    Dashboard
             </a>
         </div>
         }
@@ -119,11 +119,11 @@
                                                 }
                                                 else if (transaction.DestinationType.Name == "BakuCard")
                                                 {
-                                                    <img src="~/img/data/default.png" class="img-fluid " style="width: 52.5px;  height: 52px; border-radius:2px;">
+                                                    <img src="~/img/icon/BakiKart-Icon-Green.png" class="img-fluid " style="width: 52.5px;  height: 52px; border-radius:2px;">
                                                 }
                                                 else if (transaction.DestinationType.Name == "MobileOperators")
                                                 {
-                                                    <img src="~/img/data/default.png" class="img-fluid " style="width: 52.5px; height: 52px;border-radius:2px;">
+                                                    <img src="~/img/images/@Html.Raw($"{transaction.Description}.png")" class="img-fluid " style="width: 52.5px; height: 52px;border-radius:2px;">
                                                 }
                                                 else if (transaction.DestinationType.Name == "Utility" || transaction.DestinationType.Name == "Internet")
                                                 {

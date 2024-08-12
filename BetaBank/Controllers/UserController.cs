@@ -8,11 +8,14 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 
 namespace BetaBank.Controllers
 {
     public class UserController : Controller
     {
+        private readonly ExternalDbContext _externalContext;
+
         private readonly SignInManager<AppUser> _signInManager;
         private readonly BetaBankDbContext _context;
         private readonly UserManager<AppUser> _userManager;
@@ -20,13 +23,35 @@ namespace BetaBank.Controllers
         private readonly IWebHostEnvironment _webHostEnvironment;
 
 
-        public UserController(UserManager<AppUser> userManager, IConfiguration configuration, IWebHostEnvironment webHostEnvironment, BetaBankDbContext context, SignInManager<AppUser> signInManager)
+        public UserController(UserManager<AppUser> userManager, IConfiguration configuration, IWebHostEnvironment webHostEnvironment, BetaBankDbContext context, SignInManager<AppUser> signInManager, ExternalDbContext externalContext)
         {
             _userManager = userManager;
             _configuration = configuration;
             _webHostEnvironment = webHostEnvironment;
             _context = context;
             _signInManager = signInManager;
+            _externalContext = externalContext;
+        }
+
+
+
+
+        public async Task<IActionResult> CheckFIN(string id)
+        {
+            var userFromDb = await _context.Users.FirstOrDefaultAsync(x => x.FIN == id);
+            if (userFromDb != null)
+            {
+                return Json(new { message = "This FIN already used" });
+            }
+
+            var UserFromExternal = await _externalContext.Users.FirstOrDefaultAsync(x => x.FIN == id);
+            if (UserFromExternal == null)
+            {
+                return Json(new { message = "The FIN is invalid." });
+            }
+            return Json(new { message = "true" });
+
+
         }
 
         public IActionResult Register()
@@ -43,14 +68,23 @@ namespace BetaBank.Controllers
         {
             if (!ModelState.IsValid)
             {
+                foreach (var entry in ModelState)
+                {
+                    var key = entry.Key;
+                    var value = entry.Value;
+
+                    foreach (var error in value.Errors)
+                    {
+                        Console.WriteLine($"Key: {key}, Error: {error.ErrorMessage}");
+                    }
+                }
                 return View();
             }
-            AppUser userByFin = await _userManager.Users.FirstOrDefaultAsync(x => x.FIN ==  registerViewModel.FIN);
+            AppUser userByFin = await _userManager.Users.FirstOrDefaultAsync(x => x.FIN == registerViewModel.FIN);
             if (userByFin != null)
             {
-                ModelState.AddModelError("", "FIN must be unique");
-
-                return View();
+                ViewBag.Message = "Something went wrong!";
+                return View("Error");
             }
             AppUser userByPhoneNumber = await _userManager.Users.FirstOrDefaultAsync(x => x.PhoneNumber == registerViewModel.PhoneNumber);
             if (userByPhoneNumber != null)
@@ -58,14 +92,20 @@ namespace BetaBank.Controllers
                 ModelState.AddModelError("", "PhoneNumber must be unique");
                 return View();
             }
-
+            var UserFromExternal = await _externalContext.Users.FirstOrDefaultAsync(x => x.FIN == registerViewModel.FIN);
+            if (UserFromExternal == null)
+            {
+                ViewBag.Message = "Something went wrong!";
+                return View("Error");
+            }
             AppUser appUser = new AppUser()
             {
                 UserName = registerViewModel.Email,
-                FIN = registerViewModel.FIN,
-                FirstName = registerViewModel.FirstName,
-                LastName = registerViewModel.LastName,
-                DateOfBirth = registerViewModel.DateOfBirth,
+                FIN = UserFromExternal.FIN,
+                FirstName = UserFromExternal.FirstName,
+                LastName = UserFromExternal.LastName,
+                DateOfBirth = UserFromExternal.DateOfBirth,
+                FatherName = UserFromExternal.FatherName,
                 PhoneNumber = registerViewModel.PhoneNumber,
                 Email = registerViewModel.Email,
                 CreatedDate = DateTime.UtcNow,
@@ -87,19 +127,35 @@ namespace BetaBank.Controllers
                 return View();
             }
 
+
+
+
+
+
             string token = await _userManager.GenerateEmailConfirmationTokenAsync(appUser);
 
             string link = Url.Action("ConfirmEmail", "Auth", new { email = appUser.Email, token = token },
                 HttpContext.Request.Scheme, HttpContext.Request.Host.Value);
+
+
+
             string path = Path.Combine(_webHostEnvironment.WebRootPath, "templates", "ConfirmEmail.html");
+
             using StreamReader streamReader = new(path);
 
             string content = await streamReader.ReadToEndAsync();
+            string body = content.Replace("[FirstAndSurName]", $"{appUser.FirstName} {appUser.LastName}");
 
-            string body = content.Replace("[link]", link);
+            body = body.Replace("[Link]", link);
 
             MailService mailService = new(_configuration);
-            await mailService.SendEmailAsync(new MailRequest { ToEmail = appUser.Email, Subject = "Confirm Email", Body = body });
+            await mailService.SendEmailAsync(new MailRequest { ToEmail = appUser.Email, Subject = "Confirm Email !", Body = body });
+
+
+
+
+
+
 
             //subscribe section
 
@@ -405,9 +461,13 @@ namespace BetaBank.Controllers
             //end Transaction
 
 
+            //subscriptions
+            TransactionTypeModel utilityTransactionTypeModel = await _context.TransactionTypeModels.FirstOrDefaultAsync(x => x.Name == "Utility");
+            TransactionTypeModel internetProviderTransactionTypeModel = await _context.TransactionTypeModels.FirstOrDefaultAsync(x => x.Name == "Internet");
 
 
-
+            ViewData["UtilityTransactionTypeModel"] = utilityTransactionTypeModel;
+            ViewData["InternetProviderTransactionTypeModel"] = internetProviderTransactionTypeModel;
 
 
 
@@ -583,8 +643,7 @@ namespace BetaBank.Controllers
                 }
             }
 
-            user.FirstName = userUpdateViewModel.FirstName;
-            user.LastName = userUpdateViewModel.LastName;
+        
             user.UserName = userUpdateViewModel.Email;
             user.Email = userUpdateViewModel.Email;
             user.UpdateDate = DateTime.UtcNow;

@@ -6,6 +6,10 @@ using BetaBank.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Org.BouncyCastle.Crypto.Macs;
+using System;
+using static Org.BouncyCastle.Crypto.Engines.SM2Engine;
+using System.Diagnostics;
 
 namespace BetaBank.Controllers
 {
@@ -26,19 +30,98 @@ namespace BetaBank.Controllers
             _externalContext = externalContext;
         }
         /* Start Create Section */
-        public async Task<IActionResult> AddInternetForExternal()
+        public async Task<IActionResult> AddBankCardsForExternal()
         {
-            List<InternetForExternal> internetList = new List<InternetForExternal>
-            {
-                new InternetForExternal { SubscriberCode = "6437970093017", AppointmentType = "Individuals", Title = "BeeOnline" },
-new InternetForExternal { SubscriberCode = "8721489981745", AppointmentType = "Individuals", Title = "KatvInternet" },
-new InternetForExternal { SubscriberCode = "5540467233574", AppointmentType = "Individuals", Title = "AzEuroNet" },
+            List<BankCardForExternal> bankCardList = new List<BankCardForExternal>
+    {
+        new BankCardForExternal { Title = "AzerbaijanNationalBank", CardNumber = "5239151711226012" },
+        new BankCardForExternal { Title = "AzerbaijanNationalBank", CardNumber = "5239158273645921" },
+        new BankCardForExternal { Title = "AzerbaijanNationalBank", CardNumber = "5239159837412564" },
+        new BankCardForExternal { Title = "AzerbaijanNationalBank", CardNumber = "5239152654931872" },
+        new BankCardForExternal { Title = "AzerbaijanNationalBank", CardNumber = "5239153649274158" },
 
-                //.... daha cox vardi sadece istifade ettiyini gostermek ucun saxladin
+        new BankCardForExternal { Title = "AzerbaijanTurkishBank", CardNumber = "6348271632547896" },
+        new BankCardForExternal { Title = "AzerbaijanTurkishBank", CardNumber = "6348279874152369" },
+        new BankCardForExternal { Title = "AzerbaijanTurkishBank", CardNumber = "6348275948172364" },
+        new BankCardForExternal { Title = "AzerbaijanTurkishBank", CardNumber = "6348273658942173" },
+        new BankCardForExternal { Title = "AzerbaijanTurkishBank", CardNumber = "6348278943261759" },
+
+        new BankCardForExternal { Title = "BirBank", CardNumber = "7894521236894567" },
+        new BankCardForExternal { Title = "BirBank", CardNumber = "7894526598741236" },
+        new BankCardForExternal { Title = "BirBank", CardNumber = "7894523987654123" },
+        new BankCardForExternal { Title = "BirBank", CardNumber = "7894529876543126" },
+        new BankCardForExternal { Title = "BirBank", CardNumber = "7894525632147896" },
+
+        new BankCardForExternal { Title = "LeoBank", CardNumber = "4923586471236987" },
+        new BankCardForExternal { Title = "LeoBank", CardNumber = "4923581236549874" },
+        new BankCardForExternal { Title = "LeoBank", CardNumber = "4923587896541239" },
+        new BankCardForExternal { Title = "LeoBank", CardNumber = "4923586547891236" },
+        new BankCardForExternal { Title = "LeoBank", CardNumber = "4923583216549871" },
+
+        new BankCardForExternal { Title = "PashaBank", CardNumber = "8745213698542176" },
+        new BankCardForExternal { Title = "PashaBank", CardNumber = "8745219635874216" },
+        new BankCardForExternal { Title = "PashaBank", CardNumber = "8745216874321985" },
+        new BankCardForExternal { Title = "PashaBank", CardNumber = "8745213746985216" },
+        new BankCardForExternal { Title = "PashaBank", CardNumber = "8745218653741296" },
+
+        new BankCardForExternal { Title = "XalqBank", CardNumber = "7412589632147895" },
+        new BankCardForExternal { Title = "XalqBank", CardNumber = "7412583654128795" },
+        new BankCardForExternal { Title = "XalqBank", CardNumber = "7412587894563214" },
+        new BankCardForExternal { Title = "XalqBank", CardNumber = "7412589632154879" },
+        new BankCardForExternal { Title = "XalqBank", CardNumber = "7412583654789126" },
+
+        new BankCardForExternal { Title = "UniBank", CardNumber = "9632145874123658" },
+        new BankCardForExternal { Title = "UniBank", CardNumber = "9632147852369415" },
+        new BankCardForExternal { Title = "UniBank", CardNumber = "9632143214569871" },
+        new BankCardForExternal { Title = "UniBank", CardNumber = "9632147896543125" },
+        new BankCardForExternal { Title = "UniBank", CardNumber = "9632145632147896" }
+    };
+
+            _externalContext.BankCards.AddRange(bankCardList);
+            _externalContext.SaveChanges();
+            return Content("Bank cards added successfully.");
+        }
+
+        public async Task<IActionResult> AddPhoneNumbersForExternal()
+        {
+            List<PhoneNumberForExternal> internetList = new List<PhoneNumberForExternal>
+            {
+
+new PhoneNumberForExternal { MobileOperator = "Bakcell", Number = "+994558967013" },
+new PhoneNumberForExternal { MobileOperator = "Nar", Number = "+994704050424" },
+
+
 
             };
 
-            _externalContext.InternetProviders.AddRange(internetList);
+            _externalContext.PhoneNumbers.AddRange(internetList);
+            _externalContext.SaveChanges();
+            return Content("sdasda");
+        }
+        public async Task<IActionResult> AddUsersForExternal()
+        {
+            List<UsersForExternal> internetList = new List<UsersForExternal>
+            {
+new UsersForExternal { FIN = "83178RZ" , FirstName = "Məryəm" , LastName ="Cəbrayılova" , FatherName= "Ceyhun" , DateOfBirth = new DateTime(1982, 3, 23) },
+ new UsersForExternal { FIN = "7GBHQC9" , FirstName = "İsgəndər" , LastName ="Pənahov" , FatherName= "İlham" , DateOfBirth = new DateTime(1987, 2, 14) },
+ new UsersForExternal { FIN = "7S77C0B" , FirstName = "Yəhya" , LastName ="Camalzadə" , FatherName= "Vüqar" , DateOfBirth = new DateTime(2002, 9, 19) },
+
+            };
+
+            _externalContext.Users.AddRange(internetList);
+            _externalContext.SaveChanges();
+            return Content("sdasda");
+        }
+        public async Task<IActionResult> AddBakiCartForExternal()
+        {
+            List<BakuCardForExternal> internetList = new List<BakuCardForExternal>
+            {
+                new BakuCardForExternal { BakuCardId = "83481-15225-0", Amount = 15.1 },
+new BakuCardForExternal { BakuCardId = "36014-00962-9", Amount = 10.1 },
+new BakuCardForExternal { BakuCardId = "40889-06435-7", Amount = 9.3 },
+            };
+
+            _externalContext.BakuCards.AddRange(internetList);
             _externalContext.SaveChanges();
             return Content("sdasda");
         }
@@ -172,50 +255,36 @@ new UtilityForExternal { SubscriberCode = "3624729778039", AppointmentType = "In
             @TempData["SuccessMessage"] = "Your Issue has been sent !";
             return RedirectToAction("FAQ","");
         }
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Subscribe(SubscribeViewModel subscribeViewModel)
+
+        public async Task<IActionResult> Subscribe(string id)
         {
-            if (!ModelState.IsValid)
-            {
-                return View("Index");
-            }
-            
-            Subscriber subscriber = await _context.Subscribers.FirstOrDefaultAsync(x => x.Mail == subscribeViewModel.Email);
+            Subscriber subscriber = await _context.Subscribers.FirstOrDefaultAsync(x => x.Mail == id);
             if (subscriber != null)
             {
-                if(subscriber.IsSubscribe)
+                if (subscriber.IsSubscribe)
                 {
-                    @TempData["SuccessMessage"] = "You are already subscribed!";
+                    return Json(new { message = "You are already subscribed!" });
                 }
                 else
                 {
                     subscriber.IsSubscribe = true;
-                    @TempData["SuccessMessage"] = "You are subscribed!";
                     await _context.SaveChangesAsync();
+                    return Json(new { message = "You are subscribed!" });
                 }
-                return View("Index");
-
             }
             else
             {
                 Subscriber newSubscriber = new()
                 {
-         
-                    Id = $"{Guid.NewGuid()}",
-                    Mail = subscribeViewModel.Email,
+                    Id = Guid.NewGuid().ToString(),
+                    Mail = id,
                     IsSubscribe = true
                 };
                 await _context.Subscribers.AddAsync(newSubscriber);
                 await _context.SaveChangesAsync();
-                @TempData["SuccessMessage"] = "You are subscribed!";
+                return Json(new { message = "You are subscribed!" });
             }
-            //string refererUrl = Request.Headers["Referer"].ToString();
-            // Burani Duzeldecekdin ama sonra erindin 
-
-            return View("Index");
         }
-
 
     }
 }

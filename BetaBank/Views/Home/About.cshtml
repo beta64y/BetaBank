@@ -121,6 +121,69 @@
     </div>
 
     <!-- End about area -->
+    <section class="payment-method py-5 bga">
+        <div class="container">
+            <div class="row text-center mb-5">
+                <div class="col">
+                    <h2 class="section-title">Baku Card Payment</h2>
+                </div>
+            </div>
+
+            <!-- Images Section -->
+            <div class="row text-center mb-5">
+                <div class="col-md-4">
+                    <img src="~/img/images/bk-iamge.jpeg" alt="Beta Bank" class="img-fluid feature-image">
+                </div>
+                <div class="col-md-4">
+                    <img src="~/img/images/bakıkart ödəmə 4103424.jpg" alt="Baku Card" class="img-fluid feature-image">
+                </div>
+                <div class="col-md-4">
+                    <img src="~/img/images/BAKIKART.jpg" alt="Secure Payment" class="img-fluid feature-image">
+                </div>
+            </div>
+
+            <!-- Features Section -->
+            <div class="row text-center">
+                <div class="col-md-4">
+                    <div class="feature-box">
+                        <i class="fa fa-clock-o" aria-hidden="true"></i>
+                        <h3>Fast Transactions</h3>
+                        <p>Experience swift and seamless transactions with Beta Bank and Baku Card.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-box">
+                        <i class="fa fa-check-square-o" aria-hidden="true"></i>
+                        <h3>Secure System</h3>
+                        <p>Our system ensures the highest level of security for your transactions.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-box">
+                        <i class="fa fa-simplybuilt" aria-hidden="true"></i>
+                        <h3>Easy to Use</h3>
+                        <p>Enjoy a user-friendly interface for effortless transactions and account management.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Learn More Button -->
+            <div class="row text-center mt-5">
+                <div class="col">
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <a asp-controller="Payment" asp-action="BakuCardTransaction" class="btn btn-outline-success btn-lg">Try now</a>
+
+                    }
+                    else
+                    {
+                                            <a href="#" class="btn btn-outline-success btn-lg">Try now</a>
+
+                    }
+                </div>
+            </div>
+        </div>
+    </section>
     <!-- Start testimonials Area -->
     <div class="reviews-page-area bga fix area-padding-2 ">
         <div class="container  ">
@@ -210,6 +273,9 @@
             </div>
         </div>
     </div>
+
+
+
     <!-- End testimonials end -->
     <!-- Start overview Area -->
     <div class="overview-area bga fix ">

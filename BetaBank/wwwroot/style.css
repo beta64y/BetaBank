@@ -2845,7 +2845,6 @@ span.email-notes{
     font-size: 14px;
     line-height: 1.42857143;
     color: #fff;
-    background-color: transparent;
     background-image: none;
     border: 1px solid #666;
     border-radius: 3px;
@@ -3407,6 +3406,43 @@ textarea {
 .debit-card.disabled .disabled-overlay {
     visibility: visible;
 }
-/*--------------------------------*/
-/* .End CSS
-/*--------------------------------*/
+.select-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.select-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.selected-img {
+    width: 40px;
+    height: auto;
+    margin-right: 10px;
+    border-radius: 4px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    -ms-border-radius: 4px;
+    -o-border-radius: 4px;
+}
+
+.select-style {
+    width: 100px;
+    padding: 10px;
+    border: 2px solid #131311;
+    border-radius: 5px;
+    background-color: var(--background-cards) !important;
+    color: white;
+    appearance: none;
+    background: transparent;
+}
+
+.form-control {
+    margin-left: 10px;
+}
+
+    .form-control.mobile-input::placeholder {
+    }

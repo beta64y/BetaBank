@@ -14,11 +14,22 @@ namespace BetaBank.Contexts
         public DbSet<InternetForExternal> InternetProviders { get; set; } = null!;
 
         public DbSet<BakuCardForExternal> BakuCards { get; set; } = null!;
-        //protected override void OnModelCreating(ModelBuilder modelBuilder)
-        //{
-        //    base.OnModelCreating(modelBuilder);
+        public DbSet<UsersForExternal> Users { get; set; } = null!;
+        public DbSet<PhoneNumberForExternal> PhoneNumbers { get; set; } = null!;
 
-        //}
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<UsersForExternal>(entity =>
+            {
+                entity.HasIndex(e => e.FIN).IsUnique();
+            });
+            modelBuilder.Entity<PhoneNumberForExternal>(entity =>
+            {
+                entity.HasIndex(e => e.Number).IsUnique();
+            });
+            base.OnModelCreating(modelBuilder);
+
+        }
 
     }
 }

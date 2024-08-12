@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 
 namespace BetaBank.Controllers
 {
@@ -115,11 +116,21 @@ namespace BetaBank.Controllers
             using StreamReader streamReader = new(path);
 
             string content = await streamReader.ReadToEndAsync();
+            string body = content.Replace("[FirstAndSurName]", $"{user.FirstName} {user.LastName}");
 
-            string body = content.Replace("[link]", link);
+            body = body.Replace("[Link]", link);
 
             MailService mailService = new(_configuration);
             await mailService.SendEmailAsync(new MailRequest { ToEmail = user.Email, Subject = "Reset Password", Body = body });
+
+            
+
+
+
+
+
+
+
             return RedirectToAction(nameof(Login));
         }
         public async Task<IActionResult> Logout()

@@ -10,6 +10,7 @@ namespace BetaBank.Models
         public string FIN { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public string FatherName { get; set; }
         public DateTime DateOfBirth { get; set; }
         public override string PhoneNumber { get; set; }
         public string ProfilePhoto { get; set; } = "default.png";

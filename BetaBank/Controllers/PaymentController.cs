@@ -32,7 +32,7 @@ namespace BetaBank.Controllers
         //public async Task<IActionResult> TransferToSubscription()+++++++++++++++++++
         //public async Task<IActionResult> TransferToOwnAccount()++++++++++++++++++++
         //public async Task<IActionResult> TransferToPhoneNumber()
-        //public async Task<IActionResult> TransferToBakuCard()
+        //public async Task<IActionResult> TransferToBakuCard()++++++++++++++++
 
 
         /* Start Tranfer Another Card */
@@ -196,6 +196,8 @@ namespace BetaBank.Controllers
             Models.Transaction transaction;
             transactionViewModel.DestinationId = transactionViewModel.DestinationId.Replace(" ", "");
             transactionViewModel.PaidById = transactionViewModel.PaidById.Replace(" ", "");
+            var CompletedStatus = await _context.TransactionStatusModels.FirstOrDefaultAsync(x => x.Name == "Completed");
+            var FailedStatus = await _context.TransactionStatusModels.FirstOrDefaultAsync(x => x.Name == "Failed");
             if (transactionViewModel.PaidById.Length == 16)
             {
                 //card
@@ -242,11 +244,11 @@ namespace BetaBank.Controllers
                         PaidById = transactionViewModel.PaidById,
                         DestinationTypeId = transactionCardTypeModel.Id,
                         DestinationId = destinationExternalCard.CardNumber,
-                        StatusId = paidByCard.Balance > transactionViewModel.Amount + transactionViewModel.Commission ? (await _context.TransactionStatusModels.FirstOrDefaultAsync(x => x.Name == "Completed")).Id : (await _context.TransactionStatusModels.FirstOrDefaultAsync(x => x.Name == "Failed")).Id,
+                        StatusId = paidByCard.Balance > transactionViewModel.Amount + transactionViewModel.Commission ? CompletedStatus.Id : FailedStatus.Id,
                         Title = "Card",
                         Description = destinationExternalCard.Title,
                     };
-                    if (transaction.StatusId == "Completed")
+                    if (transaction.StatusId == CompletedStatus.Id)
                     {
                         paidByCard.Balance -= transaction.BillingAmount;
                         //destinationExternalCard.Balance += transactionViewModel.Amount; // burani bu formada saxlama sebebi bizim amounttun gedib gedmediyi maraqlandirmamasidir 
@@ -259,7 +261,7 @@ namespace BetaBank.Controllers
                         }; await _context.CardUsages.AddAsync(cardUsage);
 
                     }
-                    else if (transaction.StatusId == "Failed")
+                    else if (transaction.StatusId == FailedStatus.Id)
                     {
 
                     }
@@ -304,11 +306,11 @@ namespace BetaBank.Controllers
                         PaidById = transactionViewModel.PaidById,
                         DestinationTypeId = transactionCardTypeModel.Id,
                         DestinationId = destinationCard.CardNumber,
-                        StatusId = paidByCard.Balance >= transactionViewModel.Amount + transactionViewModel.Commission ? (await _context.TransactionStatusModels.FirstOrDefaultAsync(x => x.Name == "Completed")).Id : (await _context.TransactionStatusModels.FirstOrDefaultAsync(x => x.Name == "Failed")).Id,
+                        StatusId = paidByCard.Balance >= transactionViewModel.Amount + transactionViewModel.Commission ? CompletedStatus.Id : FailedStatus.Id,
                         Title = "Card",
                         Description = "BetaBank",
                     };
-                    if (transaction.StatusId == "Completed")
+                    if (transaction.StatusId == CompletedStatus.Id)
                     {
                         paidByCard.Balance -= transaction.BillingAmount;
                         destinationCard.Balance += transactionViewModel.Amount;
@@ -325,7 +327,7 @@ namespace BetaBank.Controllers
                         await _context.CardUsages.AddAsync(cardUsage);
 
                     }
-                    else if (transaction.StatusId == "Failed")
+                    else if (transaction.StatusId == FailedStatus.Id)
                     {
 
                     }
@@ -379,17 +381,17 @@ namespace BetaBank.Controllers
                         PaidById = transactionViewModel.PaidById,
                         DestinationTypeId = transactionCardTypeModel.Id,
                         DestinationId = destinationExternalCard.CardNumber,
-                        StatusId = paidByBankAccount.Balance >= transactionViewModel.Amount + transactionViewModel.Commission ? (await _context.TransactionStatusModels.FirstOrDefaultAsync(x => x.Name == "Completed")).Id : (await _context.TransactionStatusModels.FirstOrDefaultAsync(x => x.Name == "Failed")).Id,
+                        StatusId = paidByBankAccount.Balance >= transactionViewModel.Amount + transactionViewModel.Commission ? CompletedStatus.Id : FailedStatus.Id,
                         Title = "Card",
                         Description = destinationExternalCard.Title,
                     };
-                    if (transaction.StatusId == "Completed")
+                    if (transaction.StatusId == CompletedStatus.Id)
                     {
                       paidByBankAccount.Balance -= transaction.BillingAmount;
                     //destinationExternalCard.Balance += transactionViewModel.Amount; // burani bu formada saxlama sebebi bizim amounttun gedib gedmediyi maraqlandirmamasidir 
 
                     }
-                    else if (transaction.StatusId == "Failed")
+                    else if (transaction.StatusId == FailedStatus.Id)
                     {
 
                     }
@@ -434,17 +436,17 @@ namespace BetaBank.Controllers
                         PaidById = transactionViewModel.PaidById,
                         DestinationTypeId = transactionCardTypeModel.Id,
                         DestinationId = destinationCard.CardNumber,
-                        StatusId = paidByBankAccount.Balance >= transactionViewModel.Amount + transactionViewModel.Commission ? (await _context.TransactionStatusModels.FirstOrDefaultAsync(x => x.Name == "Completed")).Id : (await _context.TransactionStatusModels.FirstOrDefaultAsync(x => x.Name == "Failed")).Id,
+                        StatusId = paidByBankAccount.Balance >= transactionViewModel.Amount + transactionViewModel.Commission ? CompletedStatus.Id : FailedStatus.Id,
                         Title = "Card",
                         Description = "BetaBank",
                     };
-                    if (transaction.StatusId == "Completed")
+                    if (transaction.StatusId == CompletedStatus.Id)
                     {
 paidByBankAccount.Balance -= transaction.BillingAmount;
                     destinationCard.Balance += transactionViewModel.Amount;
 
                     }
-                    else if (transaction.StatusId == "Failed")
+                    else if (transaction.StatusId == FailedStatus.Id)
                     {
 
                     }
@@ -504,18 +506,18 @@ paidByBankAccount.Balance -= transaction.BillingAmount;
                         PaidById = transactionViewModel.PaidById,
                         DestinationTypeId = transactionCardTypeModel.Id,
                         DestinationId = destinationExternalCard.CardNumber,
-                        StatusId = paidByCashBack.Balance >= transactionViewModel.Amount + transactionViewModel.Commission ? (await _context.TransactionStatusModels.FirstOrDefaultAsync(x => x.Name == "Completed")).Id : (await _context.TransactionStatusModels.FirstOrDefaultAsync(x => x.Name == "Failed")).Id,
+                        StatusId = paidByCashBack.Balance >= transactionViewModel.Amount + transactionViewModel.Commission ? CompletedStatus.Id : FailedStatus.Id,
                         Title = "Card",
                         Description = destinationExternalCard.Title,
                     };
-                    if (transaction.StatusId == "Completed")
+                    if (transaction.StatusId == CompletedStatus.Id)
                     {
                      paidByCashBack.Balance -= transaction.BillingAmount;
                     //destinationExternalCard.Balance += transactionViewModel.Amount; // burani bu formada saxlama sebebi bizim amounttun gedib gedmediyi maraqlandirmamasidir 
 
 
                     }
-                    else if (transaction.StatusId == "Failed")
+                    else if (transaction.StatusId == FailedStatus.Id)
                     {
 
                     }
@@ -559,18 +561,18 @@ paidByBankAccount.Balance -= transaction.BillingAmount;
                         PaidById = transactionViewModel.PaidById,
                         DestinationTypeId = transactionCardTypeModel.Id,
                         DestinationId = destinationCard.CardNumber,
-                        StatusId = paidByCashBack.Balance >= transactionViewModel.Amount + transactionViewModel.Commission ? (await _context.TransactionStatusModels.FirstOrDefaultAsync(x => x.Name == "Completed")).Id : (await _context.TransactionStatusModels.FirstOrDefaultAsync(x => x.Name == "Failed")).Id,
+                        StatusId = paidByCashBack.Balance >= transactionViewModel.Amount + transactionViewModel.Commission ? CompletedStatus.Id : FailedStatus.Id,
                         Title = "Card",
                         Description = "BetaBank",
                     };
-                    if (transaction.StatusId == "Completed")
+                    if (transaction.StatusId == CompletedStatus.Id)
                     {
 paidByCashBack.Balance -= transaction.BillingAmount;
                     destinationCard.Balance += transactionViewModel.Amount;
 
 
                     }
-                    else if (transaction.StatusId == "Failed")
+                    else if (transaction.StatusId == FailedStatus.Id)
                     {
 
                     }
@@ -686,7 +688,10 @@ if (transactionViewModel.Amount < 2)
             }
 
             Models.Transaction transaction;
-            if (transactionViewModel.PaidById.Replace(" ", "").Length == 16)
+            transactionViewModel.PaidById = transactionViewModel.PaidById.Replace(" ", "");
+            var CompletedStatus = await _context.TransactionStatusModels.FirstOrDefaultAsync(x => x.Name == "Completed");
+            var FailedStatus = await _context.TransactionStatusModels.FirstOrDefaultAsync(x => x.Name == "Failed");
+            if (transactionViewModel.PaidById.Length == 16)
             {
                 //card
                 var paidByCard = await _context.BankCards.FirstOrDefaultAsync(x => x.CardNumber == transactionViewModel.PaidById);
@@ -730,11 +735,11 @@ if (transactionViewModel.Amount < 2)
                     PaidById = transactionViewModel.PaidById,
                     DestinationTypeId = transactionAccountTypeModel.Id,
                     DestinationId = destinationAccount.AccountNumber,
-                    StatusId = paidByCard.Balance >= transactionViewModel.Amount + transactionViewModel.Commission ? (await _context.TransactionStatusModels.FirstOrDefaultAsync(x => x.Name == "Completed")).Id : (await _context.TransactionStatusModels.FirstOrDefaultAsync(x => x.Name == "Failed")).Id,
+                    StatusId = paidByCard.Balance >= transactionViewModel.Amount + transactionViewModel.Commission ? CompletedStatus.Id : FailedStatus.Id,
                     Title = "BankAccount",
                     Description = "BetaBank",
                 };
-                if (transaction.StatusId == "Completed")
+                if (transaction.StatusId == CompletedStatus.Id)
                 {
 paidByCard.Balance -= transaction.BillingAmount;
                 destinationAccount.Balance += transactionViewModel.Amount;
@@ -748,7 +753,7 @@ paidByCard.Balance -= transaction.BillingAmount;
 
 
                 }
-                else if (transaction.StatusId == "Failed")
+                else if (transaction.StatusId == FailedStatus.Id)
                 {
 
                 }
@@ -761,7 +766,7 @@ paidByCard.Balance -= transaction.BillingAmount;
 
 
             }
-            else if (transactionViewModel.PaidById.Replace(" ", "").Length == 15)
+            else if (transactionViewModel.PaidById.Length == 15)
             {
                 //cashback
                 var paidByCashBack = await _context.CashBacks.FirstOrDefaultAsync(x => x.CashBackNumber == transactionViewModel.PaidById);
@@ -807,17 +812,17 @@ paidByCard.Balance -= transaction.BillingAmount;
                     PaidById = transactionViewModel.PaidById,
                     DestinationTypeId = transactionAccountTypeModel.Id,
                     DestinationId = destinationAccount.AccountNumber,
-                    StatusId = paidByCashBack.Balance >= transactionViewModel.Amount + transactionViewModel.Commission ? (await _context.TransactionStatusModels.FirstOrDefaultAsync(x => x.Name == "Completed")).Id : (await _context.TransactionStatusModels.FirstOrDefaultAsync(x => x.Name == "Failed")).Id,
+                    StatusId = paidByCashBack.Balance >= transactionViewModel.Amount + transactionViewModel.Commission ? CompletedStatus.Id : FailedStatus.Id,
                     Title = "BankAccount",
                     Description = "BetaBank",
-                }; if (transaction.StatusId == "Completed")
+                }; if (transaction.StatusId == CompletedStatus.Id)
                 {
  paidByCashBack.Balance -= transaction.BillingAmount;
                 destinationAccount.Balance += transactionViewModel.Amount;
 
 
                 }
-                else if (transaction.StatusId == "Failed")
+                else if (transaction.StatusId == FailedStatus.Id)
                 {
 
                 }
@@ -991,6 +996,8 @@ paidByCard.Balance -= transaction.BillingAmount;
             Models.Transaction transaction;
             subscriptionPaymentViewModel.DestinationId = subscriptionPaymentViewModel.DestinationId.Replace(" ", "");
             subscriptionPaymentViewModel.PaidById = subscriptionPaymentViewModel.PaidById.Replace(" ", "");
+            var CompletedStatus = await _context.TransactionStatusModels.FirstOrDefaultAsync(x => x.Name == "Completed");
+            var FailedStatus = await _context.TransactionStatusModels.FirstOrDefaultAsync(x => x.Name == "Failed");
             if (subscriptionPaymentViewModel.PaidById.Length == 16)
             {
                 //card
@@ -1007,7 +1014,7 @@ paidByCard.Balance -= transaction.BillingAmount;
                     return View("Error");
                 }
 
-                var subscription = await _externalContext.Utilities.FirstOrDefaultAsync(x => x.SubscriberCode == subscriptionPaymentViewModel.DestinationId && x.AppointmentType == subscriptionPaymentViewModel.AppointmentType);
+                var subscription = await _externalContext.Utilities.FirstOrDefaultAsync(x => x.SubscriberCode == subscriptionPaymentViewModel.DestinationId  && (subscriptionPaymentViewModel.AppointmentType == null ? true : x.AppointmentType == subscriptionPaymentViewModel.AppointmentType));
 
                 if (subscription != null)
                 {
@@ -1034,11 +1041,11 @@ paidByCard.Balance -= transaction.BillingAmount;
                         PaidById = subscriptionPaymentViewModel.PaidById,
                         DestinationTypeId = transactionUtilityTypeModel.Id,
                         DestinationId = subscription.SubscriberCode,
-                        StatusId = paidByCard.Balance > subscriptionPaymentViewModel.Amount + subscriptionPaymentViewModel.Commission ? (await _context.TransactionStatusModels.FirstOrDefaultAsync(x => x.Name == "Completed")).Id : (await _context.TransactionStatusModels.FirstOrDefaultAsync(x => x.Name == "Failed")).Id,
+                        StatusId = paidByCard.Balance > subscriptionPaymentViewModel.Amount + subscriptionPaymentViewModel.Commission ? CompletedStatus.Id : FailedStatus.Id,
                         Title = "Utility",
                         Description = subscription.Title,
                     };
-                    if (transaction.StatusId == "Completed")
+                    if (transaction.StatusId == CompletedStatus.Id)
                     {
                         paidByCard.Balance -= transaction.BillingAmount;
                         //destinationExternalCard.Balance += transactionViewModel.Amount; // burani bu formada saxlama sebebi bizim amounttun gedib gedmediyi maraqlandirmamasidir 
@@ -1051,7 +1058,7 @@ paidByCard.Balance -= transaction.BillingAmount;
                         }; await _context.CardUsages.AddAsync(cardUsage);
 
                     }
-                    else if (transaction.StatusId == "Failed")
+                    else if (transaction.StatusId == FailedStatus.Id)
                     {
 
                     }
@@ -1081,7 +1088,7 @@ paidByCard.Balance -= transaction.BillingAmount;
                     return View("Error");
                 }
 
-                var subscription = await _externalContext.Utilities.FirstOrDefaultAsync(x => x.SubscriberCode == subscriptionPaymentViewModel.DestinationId && x.AppointmentType == subscriptionPaymentViewModel.AppointmentType);
+                var subscription = await _externalContext.Utilities.FirstOrDefaultAsync(x => x.SubscriberCode == subscriptionPaymentViewModel.DestinationId  && (subscriptionPaymentViewModel.AppointmentType == null ? true : x.AppointmentType == subscriptionPaymentViewModel.AppointmentType));
 
                 if (subscription != null)
                 {
@@ -1108,17 +1115,17 @@ paidByCard.Balance -= transaction.BillingAmount;
                         PaidById = subscriptionPaymentViewModel.PaidById,
                         DestinationTypeId = transactionUtilityTypeModel.Id,
                         DestinationId = subscription.SubscriberCode,
-                        StatusId = paidByBankAccount.Balance >= subscriptionPaymentViewModel.Amount + subscriptionPaymentViewModel.Commission ? (await _context.TransactionStatusModels.FirstOrDefaultAsync(x => x.Name == "Completed")).Id : (await _context.TransactionStatusModels.FirstOrDefaultAsync(x => x.Name == "Failed")).Id,
+                        StatusId = paidByBankAccount.Balance >= subscriptionPaymentViewModel.Amount + subscriptionPaymentViewModel.Commission ? CompletedStatus.Id : FailedStatus.Id,
                         Title = "Utility",
                         Description = subscription.Title,
                     };
-                    if (transaction.StatusId == "Completed")
+                    if (transaction.StatusId == CompletedStatus.Id)
                     {
                         paidByBankAccount.Balance -= transaction.BillingAmount;
                         //destinationExternalCard.Balance += transactionViewModel.Amount; // burani bu formada saxlama sebebi bizim amounttun gedib gedmediyi maraqlandirmamasidir 
 
                     }
-                    else if (transaction.StatusId == "Failed")
+                    else if (transaction.StatusId == FailedStatus.Id)
                     {
 
                     }
@@ -1152,7 +1159,7 @@ paidByCard.Balance -= transaction.BillingAmount;
                     return View("Warning");
                 }
 
-                var subscription = await _externalContext.Utilities.FirstOrDefaultAsync(x => x.SubscriberCode == subscriptionPaymentViewModel.DestinationId && x.AppointmentType == subscriptionPaymentViewModel.AppointmentType);
+                var subscription = await _externalContext.Utilities.FirstOrDefaultAsync(x => x.SubscriberCode == subscriptionPaymentViewModel.DestinationId  && (subscriptionPaymentViewModel.AppointmentType == null ? true : x.AppointmentType == subscriptionPaymentViewModel.AppointmentType));
 
                 if (subscription != null)
                 {
@@ -1178,18 +1185,18 @@ paidByCard.Balance -= transaction.BillingAmount;
                         PaidById = subscriptionPaymentViewModel.PaidById,
                         DestinationTypeId = transactionUtilityTypeModel.Id,
                         DestinationId = subscriptionPaymentViewModel.PaidById,
-                        StatusId = paidByCashBack.Balance >= subscriptionPaymentViewModel.Amount + subscriptionPaymentViewModel.Commission ? (await _context.TransactionStatusModels.FirstOrDefaultAsync(x => x.Name == "Completed")).Id : (await _context.TransactionStatusModels.FirstOrDefaultAsync(x => x.Name == "Failed")).Id,
+                        StatusId = paidByCashBack.Balance >= subscriptionPaymentViewModel.Amount + subscriptionPaymentViewModel.Commission ? CompletedStatus.Id : FailedStatus.Id,
                         Title = "Utility",
                         Description = subscription.Title,
                     };
-                    if (transaction.StatusId == "Completed")
+                    if (transaction.StatusId == CompletedStatus.Id)
                     {
                         paidByCashBack.Balance -= transaction.BillingAmount;
                         //destinationExternalCard.Balance += transactionViewModel.Amount; // burani bu formada saxlama sebebi bizim amounttun gedib gedmediyi maraqlandirmamasidir 
 
 
                     }
-                    else if (transaction.StatusId == "Failed")
+                    else if (transaction.StatusId == FailedStatus.Id)
                     {
 
                     }
@@ -1327,6 +1334,8 @@ paidByCard.Balance -= transaction.BillingAmount;
             Models.Transaction transaction;
             subscriptionPaymentViewModel.DestinationId = subscriptionPaymentViewModel.DestinationId.Replace(" ", "");
             subscriptionPaymentViewModel.PaidById = subscriptionPaymentViewModel.PaidById.Replace(" ", "");
+            var CompletedStatus = await _context.TransactionStatusModels.FirstOrDefaultAsync(x => x.Name == "Completed");
+            var FailedStatus = await _context.TransactionStatusModels.FirstOrDefaultAsync(x => x.Name == "Failed");
             if (subscriptionPaymentViewModel.PaidById.Length == 16)
             {
                 //card
@@ -1343,7 +1352,7 @@ paidByCard.Balance -= transaction.BillingAmount;
                     return View("Error");
                 }
 
-                var subscription = await _externalContext.InternetProviders.FirstOrDefaultAsync(x => x.SubscriberCode == subscriptionPaymentViewModel.DestinationId && x.AppointmentType == subscriptionPaymentViewModel.AppointmentType);
+                var subscription = await _externalContext.InternetProviders.FirstOrDefaultAsync(x => x.SubscriberCode == subscriptionPaymentViewModel.DestinationId && (subscriptionPaymentViewModel.AppointmentType == null ? true : x.AppointmentType == subscriptionPaymentViewModel.AppointmentType));
 
                 if (subscription != null)
                 {
@@ -1370,11 +1379,11 @@ paidByCard.Balance -= transaction.BillingAmount;
                         PaidById = subscriptionPaymentViewModel.PaidById,
                         DestinationTypeId = transactionUtilityTypeModel.Id,
                         DestinationId = subscription.SubscriberCode,
-                        StatusId = paidByCard.Balance > subscriptionPaymentViewModel.Amount + subscriptionPaymentViewModel.Commission ? (await _context.TransactionStatusModels.FirstOrDefaultAsync(x => x.Name == "Completed")).Id : (await _context.TransactionStatusModels.FirstOrDefaultAsync(x => x.Name == "Failed")).Id,
+                        StatusId = paidByCard.Balance > subscriptionPaymentViewModel.Amount + subscriptionPaymentViewModel.Commission ? CompletedStatus.Id : FailedStatus.Id,
                         Title = "Internet",
                         Description = subscription.Title,
                     };
-                    if (transaction.StatusId == "Completed")
+                    if (transaction.StatusId == CompletedStatus.Id)
                     {
                         paidByCard.Balance -= transaction.BillingAmount;
                         //destinationExternalCard.Balance += transactionViewModel.Amount; // burani bu formada saxlama sebebi bizim amounttun gedib gedmediyi maraqlandirmamasidir 
@@ -1387,7 +1396,7 @@ paidByCard.Balance -= transaction.BillingAmount;
                         }; await _context.CardUsages.AddAsync(cardUsage);
 
                     }
-                    else if (transaction.StatusId == "Failed")
+                    else if (transaction.StatusId == FailedStatus.Id)
                     {
 
                     }
@@ -1417,7 +1426,7 @@ paidByCard.Balance -= transaction.BillingAmount;
                     return View("Error");
                 }
 
-                var subscription = await _externalContext.InternetProviders.FirstOrDefaultAsync(x => x.SubscriberCode == subscriptionPaymentViewModel.DestinationId && x.AppointmentType == subscriptionPaymentViewModel.AppointmentType);
+                var subscription = await _externalContext.InternetProviders.FirstOrDefaultAsync(x => x.SubscriberCode == subscriptionPaymentViewModel.DestinationId  && (subscriptionPaymentViewModel.AppointmentType == null ? true : x.AppointmentType == subscriptionPaymentViewModel.AppointmentType));
 
                 if (subscription != null)
                 {
@@ -1444,17 +1453,17 @@ paidByCard.Balance -= transaction.BillingAmount;
                         PaidById = subscriptionPaymentViewModel.PaidById,
                         DestinationTypeId = transactionUtilityTypeModel.Id,
                         DestinationId = subscription.SubscriberCode,
-                        StatusId = paidByBankAccount.Balance >= subscriptionPaymentViewModel.Amount + subscriptionPaymentViewModel.Commission ? (await _context.TransactionStatusModels.FirstOrDefaultAsync(x => x.Name == "Completed")).Id : (await _context.TransactionStatusModels.FirstOrDefaultAsync(x => x.Name == "Failed")).Id,
+                        StatusId = paidByBankAccount.Balance >= subscriptionPaymentViewModel.Amount + subscriptionPaymentViewModel.Commission ? CompletedStatus.Id : FailedStatus.Id,
                         Title = "Internet",
                         Description = subscription.Title,
                     };
-                    if (transaction.StatusId == "Completed")
+                    if (transaction.StatusId == CompletedStatus.Id)
                     {
                         paidByBankAccount.Balance -= transaction.BillingAmount;
                         //destinationExternalCard.Balance += transactionViewModel.Amount; // burani bu formada saxlama sebebi bizim amounttun gedib gedmediyi maraqlandirmamasidir 
 
                     }
-                    else if (transaction.StatusId == "Failed")
+                    else if (transaction.StatusId == FailedStatus.Id)
                     {
 
                     }
@@ -1488,7 +1497,7 @@ paidByCard.Balance -= transaction.BillingAmount;
                     return View("Warning");
                 }
 
-                var subscription = await _externalContext.InternetProviders.FirstOrDefaultAsync(x => x.SubscriberCode == subscriptionPaymentViewModel.DestinationId && x.AppointmentType == subscriptionPaymentViewModel.AppointmentType);
+                var subscription = await _externalContext.InternetProviders.FirstOrDefaultAsync(x => x.SubscriberCode == subscriptionPaymentViewModel.DestinationId  && (subscriptionPaymentViewModel.AppointmentType == null ? true : x.AppointmentType == subscriptionPaymentViewModel.AppointmentType));
 
                 if (subscription != null)
                 {
@@ -1514,18 +1523,18 @@ paidByCard.Balance -= transaction.BillingAmount;
                         PaidById = subscriptionPaymentViewModel.PaidById,
                         DestinationTypeId = transactionUtilityTypeModel.Id,
                         DestinationId = subscriptionPaymentViewModel.PaidById,
-                        StatusId = paidByCashBack.Balance >= subscriptionPaymentViewModel.Amount + subscriptionPaymentViewModel.Commission ? (await _context.TransactionStatusModels.FirstOrDefaultAsync(x => x.Name == "Completed")).Id : (await _context.TransactionStatusModels.FirstOrDefaultAsync(x => x.Name == "Failed")).Id,
+                        StatusId = paidByCashBack.Balance >= subscriptionPaymentViewModel.Amount + subscriptionPaymentViewModel.Commission ? CompletedStatus.Id : FailedStatus.Id,
                         Title = "Internet",
                         Description = subscription.Title,
                     };
-                    if (transaction.StatusId == "Completed")
+                    if (transaction.StatusId == CompletedStatus.Id)
                     {
                         paidByCashBack.Balance -= transaction.BillingAmount;
                         //destinationExternalCard.Balance += transactionViewModel.Amount; // burani bu formada saxlama sebebi bizim amounttun gedib gedmediyi maraqlandirmamasidir 
 
 
                     }
-                    else if (transaction.StatusId == "Failed")
+                    else if (transaction.StatusId == FailedStatus.Id)
                     {
 
                     }
@@ -1623,10 +1632,622 @@ paidByCard.Balance -= transaction.BillingAmount;
 
             return View();
         }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> BakuCardTransaction(TransactionViewModel transactionViewModel)
+        {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return BadRequest();
+            }
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            if (transactionViewModel.DestinationId == null || transactionViewModel.PaidById == null || transactionViewModel.Amount == null)
+            {
+                ViewBag.Message = "Something went wrong!";
+                return View("Error");
+            }
+            if (transactionViewModel.Amount < 1)
+            {
+                ViewBag.Message = "Amount cannot be less than $1!";
+                return View("Error");
+            }
+            Models.Transaction transaction;
+            transactionViewModel.DestinationId = transactionViewModel.DestinationId.Replace(" ", "");
+            transactionViewModel.PaidById = transactionViewModel.PaidById.Replace(" ", "");
+            var CompletedStatus = await _context.TransactionStatusModels.FirstOrDefaultAsync(x => x.Name == "Completed");
+            var FailedStatus = await _context.TransactionStatusModels.FirstOrDefaultAsync(x => x.Name == "Failed");
+            if (transactionViewModel.PaidById.Length == 16)
+            {
+                //card
+                var paidByCard = await _context.BankCards.FirstOrDefaultAsync(x => x.CardNumber == transactionViewModel.PaidById);
+
+                if (paidByCard == null || user.Id != paidByCard.UserId || await paidByCard.IsDisabled(_context) || await paidByCard.IsBlocked(_context))
+                {
+                    ViewBag.Message = "Card Not Found";
+                    return View("Error");
+                }
+                if (!await paidByCard.CanUseCard(_context))
+                {
+                    ViewBag.Message = "The card has reached its daily usage limit.";
+                    return View("Error");
+                }
+
+                var bakuCard = await _externalContext.BakuCards.FirstOrDefaultAsync(x => x.BakuCardId == transactionViewModel.DestinationId);
+
+                if (bakuCard != null)
+                {
+
+                    if (paidByCard.Balance < transactionViewModel.Amount)
+                    {
+                        ViewBag.Message = "Ooo, you ain't got no money to spend !";
+                        return View("Warning");
+                    }
+
+                    var transactionCardTypeModel = await _context.TransactionTypeModels.FirstOrDefaultAsync(x => x.Name == "Card");
+                    var transactionBakuCardTypeModel = await _context.TransactionTypeModels.FirstOrDefaultAsync(x => x.Name == "BakuCard");
+                    transactionViewModel.Commission = 0;
+                    transaction = new()
+                    {
+                        Id = $"{Guid.NewGuid()}",
+                        ReceiptNumber = ReceiptNumberGenerator.GenerateReceiptNumber(),
+                        Amount = transactionViewModel.Amount,
+                        Commission = transactionViewModel.Commission,
+                        BillingAmount = transactionViewModel.Amount + transactionViewModel.Commission,
+                        CashbackAmount = 0,
+                        TransactionDate = DateTime.UtcNow,
+                        PaidByTypeId = transactionCardTypeModel.Id,
+                        PaidById = transactionViewModel.PaidById,
+                        DestinationTypeId = transactionBakuCardTypeModel.Id,
+                        DestinationId = bakuCard.BakuCardId,
+                        StatusId = paidByCard.Balance > transactionViewModel.Amount + transactionViewModel.Commission ? CompletedStatus.Id : FailedStatus.Id,
+                        Title = "BakuCard",
+                        Description = "Bakı Kart",
+                    };
+                    if (transaction.StatusId == CompletedStatus.Id)
+                    {
+                        paidByCard.Balance -= transaction.BillingAmount;
+                        bakuCard.Amount += transaction.Amount;
+                        var cardUsage = new BankCardUsage
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            CardId = paidByCard.Id,
+                            UsageDate = DateTime.UtcNow
+                        }; await _context.CardUsages.AddAsync(cardUsage);
+                        await _externalContext.SaveChangesAsync();
+
+
+                    }
+                    else if (transaction.StatusId == FailedStatus.Id)
+                    {
+
+                    }
+                    await _context.Transactions.AddAsync(transaction);
+                    await _context.SaveChangesAsync();
+
+
+
+                    return RedirectToAction("Transaction", new { id = transaction.Id });
+
+
+                }
+                else
+                {
+                    ViewBag.Message = "Card Not Found";
+                    return View("Error");
+
+                }
+            }
+            else if (transactionViewModel.PaidById.Length == 10)
+            {
+                //account
+                var paidByBankAccount = await _context.BankAccounts.FirstOrDefaultAsync(x => x.AccountNumber == transactionViewModel.PaidById);
+                if (paidByBankAccount == null || user.Id != paidByBankAccount.UserId || await paidByBankAccount.IsSuspended(_context))
+                {
+                    ViewBag.Message = "Bank Account Not Found";
+                    return View("Error");
+                }
+
+                var bakuCard = await _externalContext.BakuCards.FirstOrDefaultAsync(x => x.BakuCardId == transactionViewModel.DestinationId);
+
+                if (bakuCard != null)
+                {
+
+                    if (paidByBankAccount.Balance < transactionViewModel.Amount)
+                    {
+                        ViewBag.Message = "Ooo, you ain't got no money to spend !";
+                        return View("Warning");
+                    }
+
+                    var transactionBakuCardTypeModel = await _context.TransactionTypeModels.FirstOrDefaultAsync(x => x.Name == "BakuCard");
+                    var transactionBankAccountTypeModel = await _context.TransactionTypeModels.FirstOrDefaultAsync(x => x.Name == "BankAccount");
+                    transactionViewModel.Commission = 0;
+                    transaction = new()
+                    {
+                        Id = $"{Guid.NewGuid()}",
+                        ReceiptNumber = ReceiptNumberGenerator.GenerateReceiptNumber(),
+                        Amount = transactionViewModel.Amount,
+                        Commission = transactionViewModel.Commission,
+                        BillingAmount = transactionViewModel.Amount + transactionViewModel.Commission,
+                        CashbackAmount = 0,
+                        TransactionDate = DateTime.UtcNow,
+                        PaidByTypeId = transactionBankAccountTypeModel.Id,
+                        PaidById = transactionViewModel.PaidById,
+                        DestinationTypeId = transactionBakuCardTypeModel.Id,
+                        DestinationId = bakuCard.BakuCardId,
+                        StatusId = paidByBankAccount.Balance >= transactionViewModel.Amount + transactionViewModel.Commission ? CompletedStatus.Id : FailedStatus.Id,
+                        Title = "BakuCard",
+                        Description = "Bakı Kart",
+                    };
+                    if (transaction.StatusId == CompletedStatus.Id)
+                    {
+                        paidByBankAccount.Balance -= transaction.BillingAmount;
+                        bakuCard.Amount += transaction.Amount;
+                        await _externalContext.SaveChangesAsync();
+
+
+                    }
+                    else if (transaction.StatusId == FailedStatus.Id)
+                    {
+
+                    }
+                    await _context.Transactions.AddAsync(transaction);
+                    await _context.SaveChangesAsync();
+
+                    return RedirectToAction("Transaction", new { id = transaction.Id });
+
+
+
+                }
+                else
+                {
+                    ViewBag.Message = "Card Not Found";
+                    return View("Error");
+
+                }
+            }
+            else if (transactionViewModel.PaidById.Length == 15)
+            {
+                //cashback
+                var paidByCashBack = await _context.CashBacks.FirstOrDefaultAsync(x => x.CashBackNumber == transactionViewModel.PaidById);
+                if (paidByCashBack == null || user.Id != paidByCashBack.UserId)
+                {
+                    ViewBag.Message = "CashBack Wallet Not Found";
+                    return View("Error");
+                }
+                if (paidByCashBack.Balance < 5)
+                {
+                    ViewBag.Message = "You need to have at least 5 dollars to use CashBack Wallet";
+                    return View("Warning");
+                }
+
+                var bakuCard = await _externalContext.BakuCards.FirstOrDefaultAsync(x => x.BakuCardId == transactionViewModel.DestinationId);
+
+                if (bakuCard != null)
+                {
+
+                    if (paidByCashBack.Balance < transactionViewModel.Amount)
+                    {
+                        ViewBag.Message = "Ooo, you ain't got no money to spend !";
+                        return View("Warning");
+                    }
+                    var transactionBakuCardTypeModel = await _context.TransactionTypeModels.FirstOrDefaultAsync(x => x.Name == "BakuCard");
+                    var transactionCashBackTypeModel = await _context.TransactionTypeModels.FirstOrDefaultAsync(x => x.Name == "CashBack");
+                    transactionViewModel.Commission = 0;
+                    transaction = new()
+                    {
+                        Id = $"{Guid.NewGuid()}",
+                        ReceiptNumber = ReceiptNumberGenerator.GenerateReceiptNumber(),
+                        Amount = transactionViewModel.Amount,
+                        Commission = transactionViewModel.Commission,
+                        BillingAmount = transactionViewModel.Amount + transactionViewModel.Commission,
+                        CashbackAmount = 0,
+                        TransactionDate = DateTime.UtcNow,
+                        PaidByTypeId = transactionCashBackTypeModel.Id,
+                        PaidById = transactionViewModel.PaidById,
+                        DestinationTypeId = transactionBakuCardTypeModel.Id,
+                        DestinationId = transactionViewModel.PaidById,
+                        StatusId = paidByCashBack.Balance >= transactionViewModel.Amount + transactionViewModel.Commission ? CompletedStatus.Id : FailedStatus.Id,
+                        Title = "BakuCard",
+                        Description = "Bakı Kart",
+                    };
+                    if (transaction.StatusId == CompletedStatus.Id)
+                    {
+                        paidByCashBack.Balance -= transaction.BillingAmount;
+                        bakuCard.Amount += transaction.Amount;
+                        await _externalContext.SaveChangesAsync();
+
+
+
+                    }
+                    else if (transaction.StatusId == FailedStatus.Id)
+                    {
+
+                    }
+
+
+                    await _context.Transactions.AddAsync(transaction);
+                    await _context.SaveChangesAsync();
+
+                    return RedirectToAction("Transaction", new { id = transaction.Id });
+
+
+
+                }
+                else
+                {
+                    ViewBag.Message = "Card Not Found";
+                    return View("Error");
+
+                }
+            }
+            else
+            {
+                ViewBag.Message = "Something went wrong!";
+                return View("Error");
+            }
+        }
+
+        public async Task<IActionResult> GetBakuCard(string id)
+        {
+            var bakuCard = await _externalContext.BakuCards.FirstOrDefaultAsync(x => x.BakuCardId == id);
+            if (bakuCard == null)
+            {
+                return Json(new { message = "Card Not Found !" });
+            }
+            return Json(new { message = "null", balance = bakuCard.Amount });
+            
+
+        }
 
         /* End Transaction to BakuCard */
 
+        /* Start Transaction to BakuCard */
+        public async Task<IActionResult> PhoneNumberTransaction()
+        {
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            List<BankCard> bankCards = await _context.BankCards.Where(x => x.UserId == user.Id).ToListAsync();
+            List<BankCardViewModel> bankCardsViewModel = new List<BankCardViewModel>();
+            foreach (var bankCard in bankCards)
+            {
+                Models.BankCardType cardType = await _context.BankCardTypes.FirstOrDefaultAsync(x => x.CardId == bankCard.Id);
 
+                if (await bankCard.IsDisabled(_context) || await bankCard.IsBlocked(_context))
+                {
+                    continue;
+                }
+                bankCardsViewModel.Add(new BankCardViewModel
+                {
+                    Id = bankCard.Id,
+                    Balance = bankCard.Balance,
+                    CardNumber = bankCard.CardNumber,
+                    CardType = (await _context.BankCardTypeModels.FirstOrDefaultAsync(x => x.Id == cardType.TypeId)).Name,
+
+                });
+            }
+
+            var cashBack = await _context.CashBacks.FirstOrDefaultAsync(x => x.UserId == user.Id);
+            CashBackViewModel cashBackViewModel = new()
+            {
+                Balance = cashBack.Balance,
+                CashBackNumber = cashBack.CashBackNumber
+            };
+
+            var bankAccount = await _context.BankAccounts.FirstOrDefaultAsync(x => x.UserId == user.Id);
+
+
+
+            BankAccountViewModel bankAccountViewModel = new()
+            {
+                Balance = bankAccount.Balance,
+                AccountNumber = bankAccount.AccountNumber,
+            };
+
+
+
+
+            TransferViewModel transferViewModel = new()
+            {
+                BankCardViewModels = bankCardsViewModel,
+                CashBackViewModel = cashBackViewModel.Balance >= 5 ? cashBackViewModel : null,
+                BankAccountViewModel = await bankAccount.IsSuspended(_context) || bankAccount.Balance == 0 ? null : bankAccountViewModel
+            };
+            if (/*transferViewModel.BankCardViewModels.Count == 0 &&*/ transferViewModel.CashBackViewModel == null && transferViewModel.BankAccountViewModel == null)
+            {
+                ViewBag.Message = "Ooo, you ain't got no money to spend !";
+                return View("Warning");
+            }
+
+
+            ViewData["TransferViewModel"] = transferViewModel;
+
+            return View();
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> PhoneNumberTransaction(PhoneNumberTransactionViewModel phoneNumberTransactionViewModel)
+        {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return BadRequest();
+            }
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            if (phoneNumberTransactionViewModel.StartSection == null || phoneNumberTransactionViewModel.DestinationId == null || phoneNumberTransactionViewModel.PaidById == null || phoneNumberTransactionViewModel.Amount == null)
+            {
+                ViewBag.Message = "Something went wrong!";
+                return View("Error");
+            }
+            if (phoneNumberTransactionViewModel.Amount < 1)
+            {
+                ViewBag.Message = "Amount cannot be less than $1!";
+                return View("Error");
+            }
+            Models.Transaction transaction;
+            phoneNumberTransactionViewModel.DestinationId = phoneNumberTransactionViewModel.DestinationId.Replace(" ", "");
+            phoneNumberTransactionViewModel.PaidById = phoneNumberTransactionViewModel.PaidById.Replace(" ", "");
+            phoneNumberTransactionViewModel.StartSection = phoneNumberTransactionViewModel.StartSection.Replace(" ", "");
+
+            string formattedStartSection = "+994" + phoneNumberTransactionViewModel.StartSection.Substring(1,2);
+
+            phoneNumberTransactionViewModel.DestinationId = formattedStartSection + phoneNumberTransactionViewModel.DestinationId;
+
+            var CompletedStatus = await _context.TransactionStatusModels.FirstOrDefaultAsync(x => x.Name == "Completed");
+            var FailedStatus = await _context.TransactionStatusModels.FirstOrDefaultAsync(x => x.Name == "Failed");
+            if (phoneNumberTransactionViewModel.PaidById.Length == 16)
+            {
+                //card
+                var paidByCard = await _context.BankCards.FirstOrDefaultAsync(x => x.CardNumber == phoneNumberTransactionViewModel.PaidById);
+
+                if (paidByCard == null || user.Id != paidByCard.UserId || await paidByCard.IsDisabled(_context) || await paidByCard.IsBlocked(_context))
+                {
+                    ViewBag.Message = "Card Not Found";
+                    return View("Error");
+                }
+                if (!await paidByCard.CanUseCard(_context))
+                {
+                    ViewBag.Message = "The card has reached its daily usage limit.";
+                    return View("Error");
+                }
+
+                var phoneNumber = await _externalContext.PhoneNumbers.FirstOrDefaultAsync(x => x.Number == phoneNumberTransactionViewModel.DestinationId);
+
+                if (phoneNumber != null)
+                {
+
+                    if (paidByCard.Balance < phoneNumberTransactionViewModel.Amount)
+                    {
+                        ViewBag.Message = "Ooo, you ain't got no money to spend !";
+                        return View("Warning");
+                    }
+
+                    var transactionCardTypeModel = await _context.TransactionTypeModels.FirstOrDefaultAsync(x => x.Name == "Card");
+                    var transactionMobileOperatorsTypeModel = await _context.TransactionTypeModels.FirstOrDefaultAsync(x => x.Name == "MobileOperators");
+                    phoneNumberTransactionViewModel.Commission = 0;
+                    transaction = new()
+                    {
+                        Id = $"{Guid.NewGuid()}",
+                        ReceiptNumber = ReceiptNumberGenerator.GenerateReceiptNumber(),
+                        Amount = phoneNumberTransactionViewModel.Amount,
+                        Commission = phoneNumberTransactionViewModel.Commission,
+                        BillingAmount = phoneNumberTransactionViewModel.Amount + phoneNumberTransactionViewModel.Commission,
+                        CashbackAmount = 0,
+                        TransactionDate = DateTime.UtcNow,
+                        PaidByTypeId = transactionCardTypeModel.Id,
+                        PaidById = phoneNumberTransactionViewModel.PaidById,
+                        DestinationTypeId = transactionMobileOperatorsTypeModel.Id,
+                        DestinationId = phoneNumber.Number,
+                        StatusId = paidByCard.Balance > phoneNumberTransactionViewModel.Amount + phoneNumberTransactionViewModel.Commission ? CompletedStatus.Id : FailedStatus.Id,
+                        Title = "MobileOperators",
+                        Description = phoneNumber.MobileOperator,
+                    };
+                    if (transaction.StatusId == CompletedStatus.Id)
+                    {
+                        paidByCard.Balance -= transaction.BillingAmount;
+                        //destinationExternalCard.Balance += transactionViewModel.Amount; // burani bu formada saxlama sebebi bizim amounttun gedib gedmediyi maraqlandirmamasidir 
+
+                        var cardUsage = new BankCardUsage
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            CardId = paidByCard.Id,
+                            UsageDate = DateTime.UtcNow
+                        }; await _context.CardUsages.AddAsync(cardUsage);
+
+                    }
+                    else if (transaction.StatusId == FailedStatus.Id)
+                    {
+
+                    }
+                    await _context.Transactions.AddAsync(transaction);
+                    await _context.SaveChangesAsync();
+
+
+
+                    return RedirectToAction("Transaction", new { id = transaction.Id });
+
+
+                }
+                else
+                {
+                    ViewBag.Message = "Phone Number Not Found";
+                    return View("Error");
+
+                }
+            }
+            else if (phoneNumberTransactionViewModel.PaidById.Length == 10)
+            {
+                //account
+                var paidByBankAccount = await _context.BankAccounts.FirstOrDefaultAsync(x => x.AccountNumber == phoneNumberTransactionViewModel.PaidById);
+                if (paidByBankAccount == null || user.Id != paidByBankAccount.UserId || await paidByBankAccount.IsSuspended(_context))
+                {
+                    ViewBag.Message = "Bank Account Not Found";
+                    return View("Error");
+                }
+
+                var phoneNumber = await _externalContext.PhoneNumbers.FirstOrDefaultAsync(x => x.Number == phoneNumberTransactionViewModel.DestinationId);
+
+                if (phoneNumber != null)
+                {
+
+                    if (paidByBankAccount.Balance < phoneNumberTransactionViewModel.Amount)
+                    {
+                        ViewBag.Message = "Ooo, you ain't got no money to spend !";
+                        return View("Warning");
+                    }
+
+                    var transactionMobileOperatorsTypeModel = await _context.TransactionTypeModels.FirstOrDefaultAsync(x => x.Name == "MobileOperators");
+                    var transactionBankAccountTypeModel = await _context.TransactionTypeModels.FirstOrDefaultAsync(x => x.Name == "BankAccount");
+                    phoneNumberTransactionViewModel.Commission = 0;
+                    transaction = new()
+                    {
+                        Id = $"{Guid.NewGuid()}",
+                        ReceiptNumber = ReceiptNumberGenerator.GenerateReceiptNumber(),
+                        Amount = phoneNumberTransactionViewModel.Amount,
+                        Commission = phoneNumberTransactionViewModel.Commission,
+                        BillingAmount = phoneNumberTransactionViewModel.Amount + phoneNumberTransactionViewModel.Commission,
+                        CashbackAmount = 0,
+                        TransactionDate = DateTime.UtcNow,
+                        PaidByTypeId = transactionBankAccountTypeModel.Id,
+                        PaidById = phoneNumberTransactionViewModel.PaidById,
+                        DestinationTypeId = transactionMobileOperatorsTypeModel.Id,
+                        DestinationId = phoneNumber.Number,
+                        StatusId = paidByBankAccount.Balance >= phoneNumberTransactionViewModel.Amount + phoneNumberTransactionViewModel.Commission ? CompletedStatus.Id : FailedStatus.Id,
+                        Title = "MobileOperators",
+                        Description = phoneNumber.MobileOperator,
+                    };
+                    if (transaction.StatusId == CompletedStatus.Id)
+                    {
+                        paidByBankAccount.Balance -= transaction.BillingAmount;
+                        //destinationExternalCard.Balance += transactionViewModel.Amount; // burani bu formada saxlama sebebi bizim amounttun gedib gedmediyi maraqlandirmamasidir 
+
+                    }
+                    else if (transaction.StatusId == FailedStatus.Id)
+                    {
+
+                    }
+                    await _context.Transactions.AddAsync(transaction);
+                    await _context.SaveChangesAsync();
+
+                    return RedirectToAction("Transaction", new { id = transaction.Id });
+
+
+
+                }
+                else
+                {
+                    ViewBag.Message = "Phone Number Not Found";
+                    return View("Error");
+
+                }
+            }
+            else if (phoneNumberTransactionViewModel.PaidById.Length == 15)
+            {
+                //cashback
+                var paidByCashBack = await _context.CashBacks.FirstOrDefaultAsync(x => x.CashBackNumber == phoneNumberTransactionViewModel.PaidById);
+                if (paidByCashBack == null || user.Id != paidByCashBack.UserId)
+                {
+                    ViewBag.Message = "CashBack Wallet Not Found";
+                    return View("Error");
+                }
+                if (paidByCashBack.Balance < 5)
+                {
+                    ViewBag.Message = "You need to have at least 5 dollars to use CashBack Wallet";
+                    return View("Warning");
+                }
+
+                var phoneNumber = await _externalContext.PhoneNumbers.FirstOrDefaultAsync(x => x.Number == phoneNumberTransactionViewModel.DestinationId);
+
+                if (phoneNumber != null)
+                {
+
+                    if (paidByCashBack.Balance < phoneNumberTransactionViewModel.Amount)
+                    {
+                        ViewBag.Message = "Ooo, you ain't got no money to spend !";
+                        return View("Warning");
+                    }
+                    var transactionMobileOperatorsTypeModel = await _context.TransactionTypeModels.FirstOrDefaultAsync(x => x.Name == "MobileOperators");
+                    var transactionCashBackTypeModel = await _context.TransactionTypeModels.FirstOrDefaultAsync(x => x.Name == "CashBack");
+                    phoneNumberTransactionViewModel.Commission = 0;
+                    transaction = new()
+                    {
+                        Id = $"{Guid.NewGuid()}",
+                        ReceiptNumber = ReceiptNumberGenerator.GenerateReceiptNumber(),
+                        Amount = phoneNumberTransactionViewModel.Amount,
+                        Commission = phoneNumberTransactionViewModel.Commission,
+                        BillingAmount = phoneNumberTransactionViewModel.Amount + phoneNumberTransactionViewModel.Commission,
+                        CashbackAmount = 0,
+                        TransactionDate = DateTime.UtcNow,
+                        PaidByTypeId = transactionCashBackTypeModel.Id,
+                        PaidById = phoneNumberTransactionViewModel.PaidById,
+                        DestinationTypeId = transactionMobileOperatorsTypeModel.Id,
+                        DestinationId = phoneNumberTransactionViewModel.PaidById,
+                        StatusId = paidByCashBack.Balance >= phoneNumberTransactionViewModel.Amount + phoneNumberTransactionViewModel.Commission ? CompletedStatus.Id : FailedStatus.Id,
+                        Title = "MobileOperators",
+                        Description = phoneNumber.MobileOperator,
+                    };
+                    if (transaction.StatusId == CompletedStatus.Id)
+                    {
+                        paidByCashBack.Balance -= transaction.BillingAmount;
+                        //destinationExternalCard.Balance += transactionViewModel.Amount; // burani bu formada saxlama sebebi bizim amounttun gedib gedmediyi maraqlandirmamasidir 
+
+
+                    }
+                    else if (transaction.StatusId == FailedStatus.Id)
+                    {
+
+                    }
+
+
+
+
+                    await _context.Transactions.AddAsync(transaction);
+                    await _context.SaveChangesAsync();
+
+                    return RedirectToAction("Transaction", new { id = transaction.Id });
+
+
+
+                }
+                else
+                {
+                    ViewBag.Message = "Phone Number Not Found";
+                    return View("Error");
+
+                }
+            }
+            else
+            {
+                ViewBag.Message = "Something went wrong!";
+                return View("Error");
+            }
+        }
+        public async Task<IActionResult> CheckPhoneNumber(string id)
+        {
+            var phoneNumber = await _externalContext.PhoneNumbers.FirstOrDefaultAsync(x => x.Number == id.Replace(" ","+"));
+            if (phoneNumber == null)
+            {
+                return Json(new { message = false });
+            }
+            return Json(new { message = true});
+
+
+        }
+
+
+
+        /* End Transaction to BakuCard */
 
 
 

@@ -190,20 +190,24 @@ namespace BetaBank.Areas.SuperAdmin.Controllers
             if (transactionViewModel.DestinationType.Name == "Card")
             {
                 BankCard destinationBankCard = await _context.BankCards.FirstOrDefaultAsync(x => x.CardNumber == transactionViewModel.DestinationId);
-                BankCardStatus destinationCardStatus = await _context.BankCardStatuses.FirstOrDefaultAsync(x => x.CardId == destinationBankCard.Id);
-                BankCardType destinationCardType = await _context.BankCardTypes.FirstOrDefaultAsync(x => x.CardId == destinationBankCard.Id);
-                destinationBankCardViewModel = new UserBankCardViewModel()
+                if (destinationBankCard != null)
                 {
-                    Id = destinationBankCard.Id,
-                    CardNumber = destinationBankCard.CardNumber,
-                    CVV = destinationBankCard.CVV,
-                    ExpiryDate = destinationBankCard.ExpiryDate,
-                    Balance = destinationBankCard.Balance,
-                    CardStatus = await _context.BankCardStatusModels.FirstOrDefaultAsync(x => x.Id == destinationCardStatus.StatusId),
-                    CardType = await _context.BankCardTypeModels.FirstOrDefaultAsync(x => x.Id == destinationCardType.TypeId),
+                    Models.BankCardStatus destinationCardStatus = await _context.BankCardStatuses.FirstOrDefaultAsync(x => x.CardId == destinationBankCard.Id);
+                    Models.BankCardType destinationCardType = await _context.BankCardTypes.FirstOrDefaultAsync(x => x.CardId == destinationBankCard.Id);
+                    destinationBankCardViewModel = new UserBankCardViewModel()
+                    {
+                        Id = destinationBankCard.Id,
+                        CardNumber = destinationBankCard.CardNumber,
+                        CVV = destinationBankCard.CVV,
+                        ExpiryDate = destinationBankCard.ExpiryDate,
+                        Balance = destinationBankCard.Balance,
+                        CardStatus = await _context.BankCardStatusModels.FirstOrDefaultAsync(x => x.Id == destinationCardStatus.StatusId),
+                        CardType = await _context.BankCardTypeModels.FirstOrDefaultAsync(x => x.Id == destinationCardType.TypeId),
 
-                };
-                destination.User = await _context.Users.FirstOrDefaultAsync(x => x.Id == destinationBankCard.UserId);
+                    };
+                    destination.User = await _context.Users.FirstOrDefaultAsync(x => x.Id == destinationBankCard.UserId);
+                }
+
             }
 
 

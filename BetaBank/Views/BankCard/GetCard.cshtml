@@ -16,7 +16,7 @@
         </div>
         <form class="mt-3" method="post">
             <div class="d-flex" style="gap: 1rem;">
-                <input asp-for="IsTermsAndConditionsAccepted"  id="check" name="check" required>
+                <input asp-for="IsTermsAndConditionsAccepted" id="IsTermsAndConditionsAccepted" name="IsTermsAndConditionsAccepted" required>
                 <span asp-validation-for="IsTermsAndConditionsAccepted" class="text-danger"></span>
 
                 <label for="check" class="text-white">By obtaining the card, I accept the <a style="color: white; text-decoration: underline;" href="~/files/Terms and Conditions.pdf" download="Terms&Conditions.pdf">terms and conditions</a>.</label>
@@ -29,7 +29,7 @@
 </main>
 @section Scripts{
     <script>
-        document.getElementById('check').addEventListener('change', function () {
+        document.getElementById('IsTermsAndConditionsAccepted').addEventListener('change', function () {
             document.getElementById('orderButton').disabled = !this.checked;
         });
     </script>

@@ -115,21 +115,31 @@ namespace BetaBank.Areas.SuperAdmin.Controllers
         {
 
 
+            Models.Support support = await _context.Supports.FirstOrDefaultAsync(x => x.Id == id);
 
 
-            string path = Path.Combine(_webHostEnvironment.WebRootPath, "templates", "ConfirmEmail.html");
+
+            string path = Path.Combine(_webHostEnvironment.WebRootPath, "templates", "SupportMessage.html");
             using StreamReader streamReader = new(path);
 
             string content = await streamReader.ReadToEndAsync();
 
-            string body = content.Replace("[MaliBody]", answerSupportViewModel.Body);
-
+            string body = content.Replace("[FirstAndSurName]", $"{support.FirstName} {support.LastName}");
+            body = body.Replace("[Body]", answerSupportViewModel.Body);
+            body = body.Replace("[Subject]", answerSupportViewModel.Title);
+            body = body.Replace("[Link]", $"https://localhost:7110/");
 
 
 
 
             MailService mailService = new(_configuration);
-            await mailService.SendEmailAsync(new BetaBank.ViewModels.MailRequest { ToEmail = answerSupportViewModel.Mail, Subject = answerSupportViewModel.Title, Body = answerSupportViewModel.Body });
+            await mailService.SendEmailAsync(new BetaBank.ViewModels.MailRequest { ToEmail = answerSupportViewModel.Mail, Subject = answerSupportViewModel.Title, Body = body });
+
+
+
+
+
+
             SupportStatus supportStatus = await _context.SupportStatuses.FirstOrDefaultAsync(x => x.SupportId == id);
             SupportStatusModel supportStatusModel = await _context.SupportStatusModels.FirstOrDefaultAsync(x => x.Name == "Answered");
 

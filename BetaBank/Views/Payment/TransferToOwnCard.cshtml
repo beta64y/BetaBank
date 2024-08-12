@@ -4,96 +4,101 @@
 }
 
 @model TransactionViewModel
-<style>
-    /* General Styles */
-    body.bga {
-        background-color: #131311;
-    }
 
-    .navbar.nav {
-        background-color: #131311;
-        padding: 1rem;
-    }
+@section Styles {
+    <style>
+        /* General Styles */
+        body.bga {
+            background-color: #131311;
+        }
 
-    .bga {
-        padding: 120px 20px;
-    }
+        .navbar.nav {
+            background-color: #131311;
+            padding: 1rem;
+        }
 
-    .navbar .btn {
-        margin-right: 1rem;
-    }
+        .bga {
+            padding: 120px 20px;
+        }
 
-    .text-light {
-        color: #ffffff;
-    }
-
-    .text-size {
-        font-size: 1.5rem;
-    }
-
-    .font-weight-bold {
-        font-weight: bold;
-    }
-
-
-    .container.card {
-        background: #131311;
-        padding: 2rem;
-        border-radius: 8px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
-
-    h2.mb-4 {
-        margin-bottom: 1.5rem;
-    }
-
-    .form-group {
-        margin-bottom: 1.5rem;
-        color: white !important;
-    }
-
-    .radio-inline {
-        display: flex;
-        align-items: center;
-        margin-bottom: 1rem;
-    }
-
-        .radio-inline img {
-            width: 50px;
-            height: auto;
+        .navbar .btn {
             margin-right: 1rem;
         }
 
-    .form-control {
-        width: 100%;
-        padding: 0.5rem;
-        border-radius: 4px;
-        border: 1px solid #ced4da;
-    }
-
-    .btn-primary {
-        background-color: #74fa56;
-        width: 100%;
-        border: none;
-        color: #ffffff;
-        padding: 0.75rem 1.5rem;
-        border-radius: 4px;
-        cursor: pointer;
-    }
-
-        .btn-primary:hover {
-            background-color: #2fe404;
+        .text-light {
+            color: #ffffff;
         }
 
-    hr {
-        margin: 1.5rem 0;
-    }
+        .text-size {
+            font-size: 1.5rem;
+        }
 
-</style>
+        .font-weight-bold {
+            font-weight: bold;
+        }
+
+
+        .container.card {
+            background: #131311;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        h2.mb-4 {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            color: white !important;
+        }
+
+        .radio-inline {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+            .radio-inline img {
+                width: 50px;
+                height: auto;
+                margin-right: 1rem;
+            }
+
+        .form-control {
+            width: 100%;
+            padding: 0.5rem;
+            border-radius: 4px;
+            border: 1px solid #ced4da;
+        }
+
+        .btn-primary {
+            background-color: #74fa56;
+            width: 100%;
+            border: none;
+            color: #ffffff;
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+            .btn-primary:hover {
+                background-color: #2fe404;
+            }
+
+        hr {
+            margin: 1.5rem 0;
+        }
+
+    </style>
+
+}
+
 <main class="mtop" class="pb-3">
     <div class="container card bg-photo bga">
         <div class="container mt-5">
-            <h2 class="mb-4">Select Card and Transfer Money</h2>
+            <h2 class="mb-4">Transfer to own Card</h2>
             <form method="post" asp-action="TransferToCard">
                 <div class="form-group">
                     <h5 class="card-title text-light">Select Payment Method</h5>
@@ -174,70 +179,75 @@
 
 
 </main>
-<script>
-    document.getElementById('paymentButton').addEventListener('click', function () {
-        var amount = document.getElementById('DestinationId').value;
-        var commissionSection = document.getElementById('commissionSection');
-        var commissionLabel = document.getElementById('commissionLabel');
-        var paymentButton = document.getElementById('paymentButton');
-        var submitButton = document.getElementById('submitButton');
+
+
+@section Scripts {
+    <script>
+        document.getElementById('paymentButton').addEventListener('click', function () {
+            var amount = document.getElementById('DestinationId').value;
+            var commissionSection = document.getElementById('commissionSection');
+            var commissionLabel = document.getElementById('commissionLabel');
+            var paymentButton = document.getElementById('paymentButton');
+            var submitButton = document.getElementById('submitButton');
         @*
-        if (amount.startsWith('123')) {
-            commissionLabel.textContent = 'Commission - $0.5';
-        } else {
-            commissionLabel.textContent = 'Commission - $0';
-        }
-        *@
-            commissionLabel.textContent = 'Commission - $0';
+            if (amount.startsWith('123')) {
+            commissionLabel.textContent = 'Commission - .5';
+            } else {
+            commissionLabel.textContent = 'Commission - ';
+            }
+            *@
+                commissionLabel.textContent = 'Commission - ';
 
-        commissionSection.hidden = false;
-        paymentButton.hidden = true;
-        submitButton.hidden = false;
-    });
-</script>
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const paidByInputs = document.querySelectorAll('input[name="PaidById"]');
-        const destinationInputs = document.querySelectorAll('input[name="DestinationId"]');
+            commissionSection.hidden = false;
+            paymentButton.hidden = true;
+            submitButton.hidden = false;
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const paidByInputs = document.querySelectorAll('input[name="PaidById"]');
+            const destinationInputs = document.querySelectorAll('input[name="DestinationId"]');
 
-        function updateVisibility() {
-            const selectedPaidBy = document.querySelector('input[name="PaidById"]:checked');
-            const selectedDestination = document.querySelector('input[name="DestinationId"]:checked');
+            function updateVisibility() {
+                const selectedPaidBy = document.querySelector('input[name="PaidById"]:checked');
+                const selectedDestination = document.querySelector('input[name="DestinationId"]:checked');
+
+                paidByInputs.forEach(input => {
+                    const label = input.closest('.radio-inline');
+
+
+
+                    if (selectedDestination && input.value === selectedDestination.value) {
+                        input.disabled = true;
+                        label.style.opacity = '0.2';
+                    } else {
+                        input.disabled = false;
+                        label.style.opacity = '1';
+                    }
+                });
+
+                destinationInputs.forEach(input => {
+                    const label = input.closest('.radio-inline');
+                    if (selectedPaidBy && input.value === selectedPaidBy.value) {
+                        input.disabled = true;
+                        label.style.opacity = '0.2';
+                    } else {
+                        input.disabled = false;
+                        label.style.opacity = '1';
+                    }
+                });
+            }
 
             paidByInputs.forEach(input => {
-                const label = input.closest('.radio-inline');
-
-
-
-                if (selectedDestination && input.value === selectedDestination.value) {
-                    input.disabled = true;
-                    label.style.opacity = '0.2';
-                } else {
-                    input.disabled = false;
-                    label.style.opacity = '1';
-                }
+                input.addEventListener('change', updateVisibility);
             });
 
             destinationInputs.forEach(input => {
-                const label = input.closest('.radio-inline');
-                if (selectedPaidBy && input.value === selectedPaidBy.value) {
-                    input.disabled = true;
-                    label.style.opacity = '0.2';
-                } else {
-                    input.disabled = false;
-                    label.style.opacity = '1';
-                }
+                input.addEventListener('change', updateVisibility);
             });
-        }
 
-        paidByInputs.forEach(input => {
-            input.addEventListener('change', updateVisibility);
+            updateVisibility(); // Initialize visibility on load
         });
+    </script>
 
-        destinationInputs.forEach(input => {
-            input.addEventListener('change', updateVisibility);
-        });
-
-        updateVisibility(); // Initialize visibility on load
-    });
-</script>
+}

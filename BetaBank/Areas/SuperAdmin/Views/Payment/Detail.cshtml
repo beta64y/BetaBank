@@ -148,10 +148,11 @@
     <h2>Destination</h2>
     <div class="card mb-6">
         <div class="card-body">
-            @if (data.DestinationType.Name == "Card")
+            @if (data.DestinationType.Name == "Card" && data.Description == "BetaBank")
 
             {
-                    <div class="card-container mb-4"><a asp-controller="BankCard" asp-action="Detail" asp-route-id="@destinationData.Card.CardNumber">
+                <div class="card-container mb-4">
+                    <a asp-controller="BankCard" asp-action="Detail" asp-route-id="@destinationData.Card.CardNumber">
                         <div class="@destinationData.Card.CardType.Name.ToLower()-card  @destinationData.Card.CardStatus.Name.ToLower()">
                             <div class="head">
                                 <h3>@destinationData.Card.CardType.Name</h3>
@@ -185,8 +186,23 @@
                             </div>
                         </div>
                     </a>
+                </div>
+
+            }
+            else if (data.DestinationType.Name == "Card")
+            {
+                <div class="account-info">
+                    <div class="icon-and-info-div">
+
+                        <img src="~/img/Banks/@Html.Raw($"{data.Description}.png")" alt="">
+                        <div class="details-div">
+                            <div class="account-number-and-info" style="margin-top: 4%; color:#FFFFFF;">
+                                <h3>@data.Description <span class="account-number">@data.DestinationId</span></h3>
+                            </div>
+                        </div>
                     </div>
-              
+                </div>
+
             }
             else if (data.DestinationType.Name == "BankAccount")
             {
@@ -221,6 +237,51 @@
                         <a asp-controller="BankAccount" asp-action="Detail" asp-route-id="@destinationData.Account.AccountNumber" class="btn btn-primary">Details</a>
                     </div>
                 </div>
+            }
+            else if (data.DestinationType.Name == "BakuCard")
+            {
+
+                <div class="account-info">
+                    <div class="icon-and-info-div">
+                        <img src="~/img/icon/BakiKart-Icon-Green.png" alt="">
+                        <div class="details-div">
+                            <div class="account-number-and-info" style="margin-top: 4%;">
+                                <h3>@data.Description: <span class="account-number">@data.DestinationId</span></h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+            else if (data.DestinationType.Name == "MobileOperators")
+            {
+
+
+                <div class="account-info">
+                    <div class="icon-and-info-div">
+
+                        <img src="~/img/Mobil/@Html.Raw($"{data.Description}.png")" alt="">
+                        <div class="details-div">
+                            <div class="account-number-and-info" style="margin-top: 4%; color:#FFFFFF;">
+                                <h3>@data.Description <span class="account-number">@data.DestinationId</span></h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+            else if (data.DestinationType.Name == "Utility" || data.DestinationType.Name == "Internet")
+            {
+                <div class="account-info">
+                    <div class="icon-and-info-div">
+
+                        <img src="~/img/Subscriptions/@Html.Raw($"{data.Description}.png")" alt="">
+                        <div class="details-div">
+                            <div class="account-number-and-info" style="margin-top: 4%; color:#FFFFFF;">
+                                <h3>@data.Description : <span class="account-number">@data.DestinationId</span></h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             }
         </div>
     </div>

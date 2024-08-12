@@ -62,7 +62,7 @@ namespace BetaBank.Controllers
                 return NotFound();
             }
 
-            if (await _context.BankCards.Where(x => x.UserId == user.Id).CountAsync() <= 3)
+            if (await _context.BankCards.Where(x => x.UserId == user.Id).CountAsync() >= 3)
             {
                 ViewBag.Message = "Maximum card count reached!";
                 return View("Warning");

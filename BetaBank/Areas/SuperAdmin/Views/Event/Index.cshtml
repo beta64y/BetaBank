@@ -62,7 +62,7 @@
                                 }
                                 else if (eventViewModel.EntityType == "NotificationMail")
                                 {
-                                    <a asp-controller="NotificationMails" asp-action="Detail" asp-route-id="@eventViewModel.EntityId" style="color:#74FA56;">
+                                    <a asp-controller="NotificationMails" asp-action="ViewMail" asp-route-id="@eventViewModel.EntityId" style="color:#74FA56;">
                                         @eventViewModel.Title
                                     </a>
                                 }
@@ -82,15 +82,15 @@
                                 else if (eventViewModel.EntityType == "Transaction")
                                 {
                                     <a asp-controller="Payment" asp-action="Detail" asp-route-id="@eventViewModel.EntityId" style="color:#FFFFFF;">
-                                        <img src="~/img/data/@@eventViewModel.UserProfilePhoto" class="img-fluid rounded-circle" style="width: 45px; height: 45px; object-fit: cover;">
-                                        @eventViewModel.Title
+                                        <img src="~/areaAssets/images/payment.png" class="img-fluid rounded-circle" style="width: 45px; height: 45px; object-fit: cover;">
+                                        *@eventViewModel.Title[^6..]
                                     </a>
                                 }
                                 else if (eventViewModel.EntityType == "BankCard")
                                 {
                                     <a asp-controller="BankCard" asp-action="Detail" asp-route-id="@eventViewModel.EntityId" style="color:#FFFFFF;">
                                         <img src="~/areaAssets/images/@eventViewModel.Title.ToLower()-Easy.png" class="img-fluid" style="width: 52.5px; height: 30px; object-fit: cover; border-radius:2px;">
-                                        *@eventViewModel.EntityId.ToCreditCardFormat()
+                                        *@eventViewModel.EntityId.ToCreditCardFormat()[^4..]
 
                                     </a>
                                 }

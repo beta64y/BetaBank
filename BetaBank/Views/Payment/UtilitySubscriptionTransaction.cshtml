@@ -5,97 +5,100 @@
 }
 @model SubscriptionPaymentViewModel
 
+@section Styles {
+    <style>
+        /* General Styles */
+        body.bga {
+            background-color: #131311;
+        }
 
+        .navbar.nav {
+            background-color: #131311;
+            padding: 1rem;
+        }
 
+        .bga {
+            padding: 120px 20px;
+        }
 
-
-<style>
-    /* General Styles */
-    body.bga {
-        background-color: #131311;
-    }
-
-    .navbar.nav {
-        background-color: #131311;
-        padding: 1rem;
-    }
-
-    .bga {
-        padding: 120px 20px;
-    }
-
-    .navbar .btn {
-        margin-right: 1rem;
-    }
-
-    .text-light {
-        color: #ffffff;
-    }
-
-    .text-size {
-        font-size: 1.5rem;
-    }
-
-    .font-weight-bold {
-        font-weight: bold;
-    }
-
-
-    .container.card {
-        background: #131311;
-        padding: 2rem;
-        border-radius: 8px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
-
-    h2.mb-4 {
-        margin-bottom: 1.5rem;
-    }
-
-    .form-group {
-        margin-bottom: 1.5rem;
-        color: white !important;
-    }
-
-    .radio-inline {
-        display: flex;
-        align-items: center;
-        margin-bottom: 1rem;
-    }
-
-        .radio-inline img {
-            width: 50px;
-            height: auto;
+        .navbar .btn {
             margin-right: 1rem;
         }
 
-    .form-control {
-        width: 100%;
-        padding: 0.5rem;
-        border-radius: 4px;
-        border: 1px solid #ced4da;
-        color: #74FA56 !important;
+        .text-light {
+            color: #ffffff;
         }
 
-    .btn-primary {
-        background-color: #74fa56;
-        width: 100%;
-        border: none;
-        color: #ffffff;
-        padding: 0.75rem 1.5rem;
-        border-radius: 4px;
-        cursor: pointer;
-    }
-
-        .btn-primary:hover {
-            background-color: #2fe404;
+        .text-size {
+            font-size: 1.5rem;
         }
 
-    hr {
-        margin: 1.5rem 0;
-    }
+        .font-weight-bold {
+            font-weight: bold;
+        }
 
-</style>
+
+        .container.card {
+            background: #131311;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        h2.mb-4 {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            color: white !important;
+        }
+
+        .radio-inline {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+            .radio-inline img {
+                width: 50px;
+                height: auto;
+                margin-right: 1rem;
+            }
+
+        .form-control {
+            width: 100%;
+            padding: 0.5rem;
+            border-radius: 4px;
+            border: 1px solid #ced4da;
+            color: #74FA56 !important;
+        }
+
+        .btn-primary {
+            background-color: #74fa56;
+            width: 100%;
+            border: none;
+            color: #ffffff;
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+            .btn-primary:hover {
+                background-color: #2fe404;
+            }
+
+        hr {
+            margin: 1.5rem 0;
+        }
+
+    </style>
+
+}
+
+
+
+
 <main class="mtop" class="pb-3">
     <div class="container card bg-photo bga">
         <div class="container mt-5">
@@ -144,7 +147,7 @@
 
                 </div>
                 <div class="form-group" style="text-align:center; border-radius:4px;">
-                    <img  src="~/img/Komunallar/@Html.Raw($"{SecondaryData.Name}.png")" alt="Selected Company" style=" width: 100px; height: auto;">
+                    <img src="~/img/Komunallar/@Html.Raw($"{SecondaryData.Name}.png")" style=" width: 100px; height: auto;background-color: #FFF; border-radius: 10px;">
                     <div class="text-light" style="margin-top: 10px;">@SecondaryData.Name</div>
 
                 </div>
@@ -184,30 +187,35 @@
 
 
 </main>
-<script>
-    function validateNumberInput(input) {
-        input.value = input.value.replace(/[^0-9]/g, '');
-    }
 
-    
-</script>
-<script>
-    document.getElementById('paymentButton').addEventListener('click', function () {
-        var amount = document.getElementById('DestinationId').value;
-        var commissionSection = document.getElementById('commissionSection');
-        var commissionLabel = document.getElementById('commissionLabel');
-        var paymentButton = document.getElementById('paymentButton');
-        var submitButton = document.getElementById('submitButton');
+@section Scripts {
+    <script>
+        function validateNumberInput(input) {
+            input.value = input.value.replace(/[^0-9]/g, '');
+        }
+
+
+    </script>
+    <script>
+        document.getElementById('paymentButton').addEventListener('click', function () {
+            var amount = document.getElementById('DestinationId').value;
+            var commissionSection = document.getElementById('commissionSection');
+            var commissionLabel = document.getElementById('commissionLabel');
+            var paymentButton = document.getElementById('paymentButton');
+            var submitButton = document.getElementById('submitButton');
 
         @*if (amount.startsWith('6442 64')) {
-            commissionLabel.textContent = 'Commission - $0';
+            commissionLabel.textContent = 'Commission - ';
             } else {
-            commissionLabel.textContent = 'Commission - $0.5';
+            commissionLabel.textContent = 'Commission - .5';
             }*@
-        commissionLabel.textContent = 'Commission - $0';
+                commissionLabel.textContent = 'Commission - ';
 
-        commissionSection.hidden = false;
-        paymentButton.hidden = true;
-        submitButton.hidden = false;
-    });
-</script>
+            commissionSection.hidden = false;
+            paymentButton.hidden = true;
+            submitButton.hidden = false;
+        });
+    </script>
+
+
+}

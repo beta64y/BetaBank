@@ -1,55 +1,190 @@
 ﻿@{
-    ViewData["Title"] = "TransferToOwnCard";
+    ViewData["Title"] = "TransferToOwnAccount";
     var data = ViewData["TransferViewModel"] as TransferViewModel;
-    Layout = null;
 }
 
 @model TransactionViewModel
 
-<div class="container mt-5">
-    <h2>Select Card and Transfer Money</h2>
-    <form method="post" asp-action="TransferToOwnAccount">
-        <div class="form-group">
-            <label>Select Payment Method</label><br>
+@section Styles {
+    <style>
+        /* General Styles */
+        body.bga {
+            background-color: #131311;
+        }
 
-            @if (data.CashBackViewModel != null)
-            {
-                <label class="radio-inline">
-                    <input id="PaidById" type="radio" asp-for="PaidById" value="@data.CashBackViewModel.CashBackNumber">
-                    CashBack - @data.CashBackViewModel.Balance.ToString("C")
-                </label>
+        .navbar.nav {
+            background-color: #131311;
+            padding: 1rem;
+        }
 
-                <br>
+        .bga {
+            padding: 120px 20px;
+        }
+
+        .navbar .btn {
+            margin-right: 1rem;
+        }
+
+        .text-light {
+            color: #ffffff;
+        }
+
+        .text-size {
+            font-size: 1.5rem;
+        }
+
+        .font-weight-bold {
+            font-weight: bold;
+        }
+
+
+        .container.card {
+            background: #131311;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        h2.mb-4 {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            color: white !important;
+        }
+
+        .radio-inline {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+            .radio-inline img {
+                width: 50px;
+                height: auto;
+                margin-right: 1rem;
             }
-            @foreach (var card in data.BankCardViewModels)
-            {
-                <label class="radio-inline">
-                    <input id="PaidById" type="radio" asp-for="PaidById" value="@card.CardNumber">
-                    @card.CardNumber - @card.Balance.ToString("C")
-                </label>
 
-                <br>
+        .form-control {
+            width: 100%;
+            padding: 0.5rem;
+            border-radius: 4px;
+            border: 1px solid #ced4da;
+        }
+
+        .btn-primary {
+            background-color: #74fa56;
+            width: 100%;
+            border: none;
+            color: #ffffff;
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+            .btn-primary:hover {
+                background-color: #2fe404;
             }
+
+        hr {
+            margin: 1.5rem 0;
+        }
+
+    </style>
+
+}
+
+<main class="mtop" class="pb-3">
+    <div class="container card bg-photo bga">
+        <div class="container mt-5">
+            <h2 class="mb-4">Transfer to own Account</h2>
+            <form method="post" asp-action="TransferToOwnAccount">
+                <div class="form-group">
+                    <h5 class="card-title text-light">Select Payment Method</h5>
+                    @if (data.CashBackViewModel != null)
+                    {
+
+                        <div class="radio-inline">
+                            <input id="PaidById" type="radio" asp-for="PaidById" value="@data.CashBackViewModel.CashBackNumber" name="PaidById">
+                            <label for="PaidById1">
+                                <img src="~/img/icon/Cashback-Icon.png" alt="CashBack">
+                                CashBack - @data.CashBackViewModel.Balance.ToString("C")
+                            </label>
+                        </div>
+                    }               
+                    @foreach (var card in data.BankCardViewModels)
+                    {
+
+
+
+                        <div class="radio-inline">
+                            <input id="PaidById" type="radio" asp-for="PaidById" value="@card.CardNumber" name="PaidById">
+                            <label for="PaidById3">
+                                <img src="~/img/images/@card.CardType-Easy.png" alt="Card">
+                                @card.CardNumber - @card.Balance.ToString("C")
+                            </label>
+                        </div>
+
+                    }
+
+
+
+                </div>
+                <div class="form-group">
+                    <label class="radio-inline">
+                        Account Balance - @data.BankAccountViewModel.Balance.ToString("C")
+                    </label>
+                </div>
+                <hr />
+
+                <div class="form-group">
+                    <h5 class="card-title text-light">Amount</h5>
+                    <input asp-for="Amount" class="form-control" type="text" oninput="validateNumberInput(this)" id="Amount" name="Amount" required />
+                </div>
+                <hr hidden />
+
+                <div class="form-group" id="commissionSection" hidden>
+                    <Label id="commissionLabel">Commission - $0</Label>
+                </div>
+                <button type="button" id="paymentButton" class="btn btn-primary">Payment</button>
+                <button asp-action="TransferToOwnAccount" type="submit" id="submitButton" class="btn btn-primary" hidden>Submit</button>
+            </form>
         </div>
-        <hr />
-        <div class="form-group">
-            <label for="recipientCardNumber">Recipient Account Number</label><br>
-            <label class="radio-inline">
-                AccountNumber 
-                <input id="DestinationId" asp-for="DestinationId" value="@data.BankAccountViewModel.AccountNumber" disabled>
-                - @data.BankAccountViewModel.Balance.ToString("C")
-            </label>
-
-            <br>
-        </div>
-
-        <div class="form-group">
-            <label for="amount">Amount</label>
-            <input asp-for="Amount" class="form-control" />
-        </div>
+    </div>
 
 
+</main>
 
-        <button asp-action="TransferToOwnAccount" type="submit" class="btn btn-primary">Send Money</button>
-    </form>
-</div>
+
+@section Scripts {
+    <script>
+        function validateNumberInput(input) {
+            input.value = input.value.replace(/[^0-9]/g, '');
+        }
+
+
+    </script>
+    <script>
+        document.getElementById('paymentButton').addEventListener('click', function () {
+            var commissionSection = document.getElementById('commissionSection');
+            var commissionLabel = document.getElementById('commissionLabel');
+            var paymentButton = document.getElementById('paymentButton');
+            var submitButton = document.getElementById('submitButton');
+
+        @*if (amount.startsWith('6442 64')) {
+            commissionLabel.textContent = 'Commission - ';
+            } else {
+            commissionLabel.textContent = 'Commission - .5';
+            }*@
+                commissionLabel.textContent = 'Commission - ';
+
+
+            commissionSection.hidden = false;
+            paymentButton.hidden = true;
+            submitButton.hidden = false;
+        });
+    </script>
+
+
+}

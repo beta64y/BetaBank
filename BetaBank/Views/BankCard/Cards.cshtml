@@ -2,22 +2,26 @@
     ViewData["Title"] = "Cards";
     var data = ViewData["Types"] as List<BankCardTypeModel>;
 }
-<style>
-    .modal-content {
-        background-color: var(--background-cards);
-        color: var(--main-text-color);
-    }
+@section Styles {
+    <style>
+        .modal-content {
+            background-color: var(--background-cards);
+            color: var(--main-text-color);
+        }
 
-    .modal-header button {
-        color: #2fe404;
-        background-color: transparent;
-        border: none;
-    }
+        .modal-header button {
+            color: #2fe404;
+            background-color: transparent;
+            border: none;
+        }
 
-    .modal-content h5 {
-        color: #2fe404;
-    }
-</style>
+        .modal-content h5 {
+            color: #2fe404;
+        }
+    </style>
+
+}
+
 <main class="mtop">
     <div class="container card bg-photo bga height" style="width: 750px;">
         <div class="">

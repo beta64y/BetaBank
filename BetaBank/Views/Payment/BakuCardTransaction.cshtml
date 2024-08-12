@@ -2,110 +2,113 @@
     ViewData["Title"] = "BakuCard Transaction";
     var data = ViewData["TransferViewModel"] as TransferViewModel;
 }
-@model SubscriptionPaymentViewModel
+@model TransactionViewModel
 
 
 
+@section Styles {
+    <style>
+        body.bga {
+            background-color: #131311;
+        }
 
+        .navbar.nav {
+            background-color: #131311;
+            padding: 1rem;
+        }
 
-<style>
-    body.bga {
-        background-color: #131311;
-    }
+        .bga {
+            padding: 120px 20px;
+        }
 
-    .navbar.nav {
-        background-color: #131311;
-        padding: 1rem;
-    }
-
-    .bga {
-        padding: 120px 20px;
-    }
-
-    .navbar .btn {
-        margin-right: 1rem;
-    }
-
-    .text-light {
-        color: #ffffff;
-    }
-
-    .text-size {
-        font-size: 1.5rem;
-    }
-
-    .font-weight-bold {
-        font-weight: bold;
-    }
-
-
-    .container.card {
-        background: #131311;
-        padding: 2rem;
-        border-radius: 8px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
-
-    h2.mb-4 {
-        margin-bottom: 1.5rem;
-    }
-
-    .form-group {
-        margin-bottom: 1.5rem;
-        color: white !important;
-    }
-
-    .radio-inline {
-        display: flex;
-        align-items: center;
-        margin-bottom: 1rem;
-    }
-
-        .radio-inline img {
-            width: 50px;
-            height: auto;
+        .navbar .btn {
             margin-right: 1rem;
         }
 
-    .form-control {
-        width: 100%;
-        padding: 0.5rem;
-        border-radius: 4px;
-        border: 1px solid #ced4da;
-        color: #74FA56 !important;
-    }
-
-    .btn-primary {
-        background-color: #74fa56;
-        width: 100%;
-        border: none;
-        color: #ffffff;
-        padding: 0.75rem 1.5rem;
-        border-radius: 4px;
-        cursor: pointer;
-    }
-
-        .btn-primary:hover {
-            background-color: #2fe404;
+        .text-light {
+            color: #ffffff;
         }
 
-    hr {
-        margin: 1.5rem 0;
-    }
+        .text-size {
+            font-size: 1.5rem;
+        }
 
-</style>
+        .font-weight-bold {
+            font-weight: bold;
+        }
+
+
+        .container.card {
+            background: #131311;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        h2.mb-4 {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            color: white !important;
+        }
+
+        .radio-inline {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+            .radio-inline img {
+                width: 50px;
+                height: auto;
+                margin-right: 1rem;
+            }
+
+        .form-control {
+            width: 100%;
+            padding: 0.5rem;
+            border-radius: 4px;
+            border: 1px solid #ced4da;
+            color: #74FA56 !important;
+        }
+
+        .btn-primary {
+            background-color: #74fa56;
+            width: 100%;
+            border: none;
+            color: #ffffff;
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+            .btn-primary:hover {
+                background-color: #2fe404;
+            }
+
+        hr {
+            margin: 1.5rem 0;
+        }
+
+    </style>
+
+}
+
+
 <main class="mtop" class="pb-3">
     <div class="container card bg-photo bga">
         <div class="container mt-5">
-            <h2 class="mb-4">Utility Subscription</h2>
-            <form method="post" asp-action="UtilitySubscriptionTransaction">
+            <h2 class="mb-4">Bakı Card</h2>
+            <form method="post" asp-action="BakuCardTransaction">
                 <div class="form-group">
                     <h5 class="card-title text-light">Select Payment Method</h5>
                     @if (data.CashBackViewModel != null)
                     {
 
                         <div class="radio-inline">
-                            <input id="PaidById" type="radio" asp-for="PaidById" value="@data.CashBackViewModel.CashBackNumber" name="PaidById">
+                            <input id="PaidById" type="radio" asp-for="PaidById" value="@data.CashBackViewModel.CashBackNumber" name="PaidById" required>
                             <label for="PaidById1">
                                 <img src="~/img/icon/Cashback-Icon.png" alt="CashBack">
                                 CashBack - @data.CashBackViewModel.Balance.ToString("C")
@@ -116,7 +119,7 @@
                     {
 
                         <div class="radio-inline">
-                            <input id="PaidById" type="radio" asp-for="PaidById" value="@data.BankAccountViewModel.AccountNumber" name="PaidById">
+                            <input id="PaidById" type="radio" asp-for="PaidById" value="@data.BankAccountViewModel.AccountNumber" name="PaidById" required>
                             <label for="PaidById2">
                                 <img src="~/img/icon/Bank-Account.png" alt="Bank Account">
                                 @data.BankAccountViewModel.AccountNumber - @data.BankAccountViewModel.Balance.ToString("C")
@@ -129,7 +132,7 @@
 
 
                         <div class="radio-inline">
-                            <input id="PaidById" type="radio" asp-for="PaidById" value="@card.CardNumber" name="PaidById">
+                            <input id="PaidById" type="radio" asp-for="PaidById" value="@card.CardNumber" name="PaidById" required>
                             <label for="PaidById3">
                                 <img src="~/img/images/@card.CardType-Easy.png" alt="Card">
                                 @card.CardNumber - @card.Balance.ToString("C")
@@ -142,7 +145,7 @@
 
                 </div>
                 <div class="form-group" style="text-align:center; border-radius:4px;">
-                    <img src="~/img/icon/BakiKart-Icon-Green.png" alt="Selected Company" style=" width: 100px; height: auto;">
+                    <img src="~/img/icon/BakiKart-Icon-Green.png" alt="Selected Company" style=" width: 100px; height: auto;background-color: #FFF; border-radius: 10px;">
                     <div class="text-light" style="margin-top: 10px;">Baku Card</div>
 
                 </div>
@@ -162,34 +165,45 @@
                 <hr hidden />
 
                 <div class="form-group" id="commissionSection" hidden>
-                    <Label id="commissionLabel">Commission - $0</Label>
+                    <Label id="commissionLabel"></Label>
                 </div>
-                <button type="button" id="paymentButton" class="btn btn-primary">Payment</button>
-                <button asp-action="UtilitySubscriptionTransaction" type="submit" id="submitButton" class="btn btn-primary" hidden>Submit</button>
+                <button  type="button" id="paymentButton" class="btn btn-primary">Payment</button>
+                <button asp-action="BakuCardTransaction" type="submit" id="submitButton" class="btn btn-primary" hidden>Submit</button>
             </form>
         </div>
     </div>
 
 
 </main>
+@section Scripts {
+    <script>
+        document.getElementById('paymentButton').addEventListener('click', function () {
+            var destinationId = document.getElementById('DestinationId').value;
+            var commissionSection = document.getElementById('commissionSection');
+            var commissionLabel = document.getElementById('commissionLabel');
+            var paymentButton = document.getElementById('paymentButton');
+            var submitButton = document.getElementById('submitButton');
 
-<script>
-    document.getElementById('paymentButton').addEventListener('click', function () {
-        var amount = document.getElementById('DestinationId').value;
-        var commissionSection = document.getElementById('commissionSection');
-        var commissionLabel = document.getElementById('commissionLabel');
-        var paymentButton = document.getElementById('paymentButton');
-        var submitButton = document.getElementById('submitButton');
+            fetch(`/Payment/GetBakuCard?id=${destinationId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.message === "Card Not Found !") {
+                        commissionLabel.textContent = 'Card Not Found!';
+                    } else {
+                        commissionLabel.textContent = `Card Balance: ${data.balance}`;
+                    }
 
-    @*if (amount.startsWith('6442 64')) {
-            commissionLabel.textContent = 'Commission - $0';
-            } else {
-            commissionLabel.textContent = 'Commission - $0.5';
-            }*@
-            commissionLabel.textContent = 'Commission - $0';
+                    commissionSection.hidden = false;
+                    paymentButton.hidden = true;
+                    submitButton.hidden = false;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    commissionLabel.textContent = 'An error occurred!';
+                    commissionSection.hidden = false;
+                });
+        });
+    </script>
 
-        commissionSection.hidden = false;
-        paymentButton.hidden = true;
-        submitButton.hidden = false;
-    });
-</script>
+}
+

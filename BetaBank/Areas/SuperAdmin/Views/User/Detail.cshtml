@@ -265,15 +265,15 @@
                                 }
                                 else if (transaction.DestinationType.Name == "BakuCard")
                                 {
-                                    <a href="#" style="color:#FFFFFF;">
-                                        <img src="~/img/data/default.png" class="img-fluid " style="width: 45px; height: 45px; object-fit: cover;">
+                                    <a  style="color:#FFFFFF;">
+                                        <img src="~/img/icon/BakiKart-Icon-Green.png" class="img-fluid " style="width: 45px; height: 45px; object-fit: cover;">
                                         BakuCard
                                     </a>
                                 }
                                 else if (transaction.DestinationType.Name == "MobileOperators")
                                 {
                                     <a href="#" style="color:#FFFFFF;">
-                                        <img src="~/img/data/default.png" class="img-fluid " style="width: 45px; height: 45px; object-fit: cover;">
+                                        <img src="~/img/images/@Html.Raw($"{transaction.Description}.png")" class="img-fluid " style="width: 45px; height: 45px; object-fit: cover;">
                                         @transaction.Title
                                     </a>
                                 }
